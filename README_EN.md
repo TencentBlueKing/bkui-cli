@@ -1,4 +1,5 @@
-# BKUI-CLI
+![bkui-vue3](docs/logo_en.png)
+---
 [![license](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](https://github.com/TencentBlueKing/bkui-cli/blob/master/LICENSE.txt) [![Release Version](https://img.shields.io/github/v/release/TencentBlueKing/bkui-cli?include_prereleases)](https://github.com/TencentBlueKing/bkui-cli/releases) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/TencentBlueKing/bkui-cli/pulls)
 
 English | [简体中文](README.md)
@@ -43,7 +44,7 @@ $ bkui -h
 - [BK-JOB](https://github.com/Tencent/bk-job):BlueKing JOB is a set of operation and maintenance script management platform with the ability to handle a large number of tasks concurrently.
 
 ## Contributing
-- Please read [Contributing(In Chinese)](CONTRIBUTING.md) for the branch management, issue and pr specifications of bkui-cli.
+- Please read [Contributing(In Chinese)](docs/CONTRIBUTING.md) for the branch management, issue and pr specifications of bkui-cli.
 - [Tencent Open Source Incentive Program](https://opensource.tencent.com/contribution) encourages the participation and contribution of developers. We look forward to having you join it.
 
 ## License

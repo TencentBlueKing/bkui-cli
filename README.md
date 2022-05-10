@@ -1,4 +1,5 @@
-# BKUI-CLI
+![bkui-vue3](docs/logo.png)
+---
 [![license](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](https://github.com/TencentBlueKing/bkui-cli/blob/master/LICENSE.txt) [![Release Version](https://img.shields.io/github/v/release/TencentBlueKing/bkui-cli?include_prereleases)](https://github.com/TencentBlueKing/bkui-cli/releases) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/TencentBlueKing/bkui-cli/pulls)
 
 [English](README_EN.md) | 简体中文
@@ -43,7 +44,7 @@ $ bkui -h
 - [BK-JOB](https://github.com/Tencent/bk-job) 蓝鲸作业平台(Job)是一套运维脚本管理系统，具备海量任务并发处理能力。
 
 ## Contributing
-- 关于 bkui-cli 分支管理、issue 以及 pr 规范，请阅读 [Contributing](CONTRIBUTING.md)
+- 关于 bkui-cli 分支管理、issue 以及 pr 规范，请阅读 [Contributing](docs/CONTRIBUTING.md)
 - [腾讯开源激励计划](https://opensource.tencent.com/contribution) 鼓励开发者的参与和贡献，期待你的加入
 
 ## License
