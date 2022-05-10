@@ -1,4 +1,4 @@
-# Contributing to bkui-cli
+# Contributing to BKUI-CLI
 
 蓝鲸团队秉持开放的态度，欢迎志同道合的开发者一起贡献项目。在开始之前，请认真阅读以下指引。
 
