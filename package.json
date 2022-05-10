@@ -1,0 +1,21 @@
+{
+  "name": "bkui-cli",
+  "version": "0.0.0",
+  "description": "",
+  "private": true,
+  "workspaces": [
+    "packages/@bkui/*",
+    "packages/wiki"
+  ],
+  "scripts": {
+    "lint": "eslint --fix --ext .js,.vue,.ts packages",
+    "lint-without-fix": "eslint packages"
+  },
+  "precommit": "lint-without-fix",
+  "devDependencies": {
+    "@blueking/eslint-config-bk": "^2.0.0",
+    "lerna": "^3.18.3",
+    "pre-commit": "^1.2.2"
+  },
+  "dependencies": {}
+}

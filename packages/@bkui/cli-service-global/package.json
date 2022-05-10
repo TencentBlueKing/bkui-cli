@@ -1,0 +1,33 @@
+{
+  "name": "@blueking/cli-service-global",
+  "version": "2.0.0",
+  "description": "",
+  "main": "index.js",
+  "keywords": [],
+  "author": "bkfe",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/core": "^7.8.4",
+    "@babel/plugin-proposal-optional-chaining": "^7.14.2",
+    "@vue/babel-helper-vue-jsx-merge-props": "^1.2.1",
+    "@vue/babel-preset-jsx": "^1.2.4",
+    "babel-loader": "^8.2.2",
+    "css-loader": "^5.2.4",
+    "friendly-errors-webpack-plugin": "^1.7.0",
+    "html-webpack-plugin": "^4.5.0",
+    "http-server": "^0.12.3",
+    "open": "^8.0.9",
+    "portfinder": "^1.0.28",
+    "sass": "^1.32.13",
+    "sass-loader": "^10.2.0",
+    "ts-loader": "^8.2.0",
+    "vue": "^2.6.12",
+    "vue-loader": "^15.9.6",
+    "vue-template-compiler": "^2.6.12",
+    "webpack": "^4.40.2",
+    "webpack-chain": "^6.5.1",
+    "webpack-dev-server": "^3.11.1",
+    "webpack-merge": "^5.7.3"
+  },
+  "devDependencies": {}
+}

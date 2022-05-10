@@ -1,0 +1,9 @@
+{
+  "packages": [
+    "packages/@bkui/*",
+    "packages/wiki"
+  ],
+  "npmClient": "yarn",
+  "useWorkspaces": true,
+  "version": "independent"
+}

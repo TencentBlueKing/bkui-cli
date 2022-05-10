@@ -1,0 +1,26 @@
+{
+  "name": "@blueking/eslint-config-bk",
+  "version": "2.1.0-beta.06",
+  "main": "index.js",
+  "dependencies": {
+    "@babel/eslint-parser": "^7.14.3",
+    "@typescript-eslint/eslint-plugin": "~5.20.0",
+    "@typescript-eslint/parser": "~5.20.0",
+    "@vue/eslint-config-standard": "~6.1.0",
+    "@vue/eslint-config-typescript": "~10.0.0",
+    "eslint": "^8.14.0",
+    "eslint-config-tencent": "^1.0.4",
+    "eslint-plugin-import": "^2.23.3",
+    "eslint-plugin-node": "~11.1.0",
+    "eslint-plugin-promise": "~6.0.0",
+    "eslint-plugin-standard": "~5.0.0",
+    "eslint-plugin-vue": "^8.7.1",
+    "typescript": "~4.6.3"
+  },
+  "keywords": [
+    "eslint-config-bk",
+    "blueking"
+  ],
+  "author": "bkfe",
+  "license": "MIT"
+}

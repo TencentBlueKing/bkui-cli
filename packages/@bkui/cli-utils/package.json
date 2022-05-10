@@ -1,0 +1,11 @@
+{
+  "name": "@blueking/cli-utils",
+  "version": "2.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": "bkfe",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^4.1.0"
+  }
+}
