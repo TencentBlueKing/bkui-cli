@@ -35,13 +35,14 @@ import webpack from 'webpack';
 export default (config: ServiceConfig): webpack.Configuration & {devServer?: Configuration} => {
   const isProd = process.env.NODE_ENV === 'production';
   const { assetsPath } = config;
+
   const baseConfig: webpack.Configuration = {
     mode: isProd ? 'production' : 'development',
-    entry: { main: config.appIndex },
+    // entry: config.entry,
     output: {
       path: config.dist,
-      filename: assetsPath(isProd ? 'js/[name].[chunkhash].js' : 'js/[name].js'),
-      chunkFilename: assetsPath(isProd ? 'js/[name].[chunkhash].js' : 'js/[name].js'),
+      filename: assetsPath(config.needHashName ? 'js/[name].[chunkhash].js' : 'js/[name].js'),
+      chunkFilename: assetsPath(config.needHashName ? 'js/[name].[chunkhash].js' : 'js/[name].js'),
       publicPath: '/',
       clean: true, // 5.20.0+
     },
@@ -80,11 +81,11 @@ export default (config: ServiceConfig): webpack.Configuration & {devServer?: Con
     cache: {
       type: 'filesystem',
       buildDependencies: {
-        config: [__filename]
-      }
+        config: [__filename],
+      },
     },
     optimization: {
-      ...getOptimize(isProd),
+      ...getOptimize(isProd, config),
     },
     plugins: [
       ...getPlugins(isProd, config),

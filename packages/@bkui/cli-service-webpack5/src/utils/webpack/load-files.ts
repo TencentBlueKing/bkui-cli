@@ -32,7 +32,7 @@ export default (config: ServiceConfig) => {
       test: /\.(png|jpe?g|gif|svg)$/,
       type: 'asset',
       generator: {
-        filename: assetsPath('img/[name].[hash:7].[ext]'),
+        filename: assetsPath(`${config.classificatoryStatic ? 'img/' : ''}[name]${config.needHashName ? '.[hash:7]' : ''}.[ext]`),
       },
       parser: {
         dataUrlCondition: {
@@ -44,14 +44,14 @@ export default (config: ServiceConfig) => {
       test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
       type: 'asset',
       generator: {
-        filename: assetsPath('media/[name].[hash:7].[ext]'),
+        filename: assetsPath(`${config.classificatoryStatic ? 'media/' : ''}[name]${config.needHashName ? '.[hash:7]' : ''}.[ext]`),
       },
     },
     {
       test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
       type: 'asset',
       generator: {
-        filename: assetsPath('fonts/[name].[hash:7].[ext]'),
+        filename: assetsPath(`${config.classificatoryStatic ? 'font/' : ''}[name]${config.needHashName ? '.[hash:7]' : ''}.[ext]`),
       },
     },
   ];
