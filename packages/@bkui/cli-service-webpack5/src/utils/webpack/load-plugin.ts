@@ -35,7 +35,6 @@ import chalk from 'chalk';
 import { resolveClientEnv } from '../read-env';
 
 export default (isProd: boolean, config: any) => {
-
   const plugins =  [
     config.eslintOnSave ? new ESLintPlugin({
       extensions: ['js', 'vue'],
@@ -64,6 +63,7 @@ export default (isProd: boolean, config: any) => {
     config.minChunkSize !== 0 ? new webpack.optimize.MinChunkSizePlugin({
       minChunkSize: config.minChunkSize,
     }) : undefined,
+    ...(config.pages || []),
     new webpack.NoEmitOnErrorsPlugin(),
     config.analyze ? new BundleAnalyzerPlugin({
       analyzerMode: 'server',

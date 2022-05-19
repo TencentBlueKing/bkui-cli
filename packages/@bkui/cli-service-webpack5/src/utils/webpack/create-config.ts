@@ -41,8 +41,8 @@ export default (config: ServiceConfig): webpack.Configuration & {devServer?: Con
     entry,
     output: {
       path: config.dist,
-      filename: assetsPath(isProd ? `${classificatoryStatic ? 'js/' : ''}[name]${needHashName ? '.[chunkhash]' : ''}.js` : 'js/[name].js'),
-      chunkFilename: assetsPath(isProd ? `${classificatoryStatic ? 'js/' : ''}[name]${needHashName ? '.[chunkhash]' : ''}.js` : 'js/[name].js'),
+      filename: assetsPath(`${classificatoryStatic ? 'js/' : ''}[name]${needHashName ? '.[chunkhash]' : ''}.js`),
+      chunkFilename: assetsPath(`${classificatoryStatic ? 'js/' : ''}[name]${needHashName ? '.[chunkhash]' : ''}.js`),
       publicPath,
       clean: true, // 5.20.0+
     },
@@ -111,6 +111,11 @@ export default (config: ServiceConfig): webpack.Configuration & {devServer?: Con
     baseConfig.devServer = {
       ...getDevServer(),
     };
+  }
+  if (config.target !== 'web') {
+    Object.assign(baseConfig.output, {
+      libraryTarget: 'umd',
+    });
   }
 
   return baseConfig;

@@ -52,11 +52,12 @@ export interface ServiceConfig {
   publicPath: string;
   css: CssOptions;
   entry: OutputEntry,
-  pages: object[],
+  pages?: object[],
   needSplitChunks: boolean,
   needHashName: boolean,
   minChunkSize: number,
   classificatoryStatic: boolean,
+  target: 'web'|'lib'|'wc'
   assetsPath(path: string): string,
 }
 export interface BundleOptions {
@@ -82,7 +83,8 @@ export interface AppConfig {
   pages?: OutPages,
   entry: OutputEntry,
   minChunkSize?: number,
-  classificatoryStatic: boolean
+  classificatoryStatic: boolean,
+  target: 'web'|'lib'|'wc'
 }
 
 export interface CssOptions {

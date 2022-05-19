@@ -38,6 +38,13 @@ export default async function (appConfig: AppConfig, { analyze }: BundleOptions)
   const pages: HtmlWebpackPlugin[] = [];
   const entry: OutputEntry = {};
   let pagesConfig: OutPages = appConfig.pages;
+  const { target = 'web' }  = appConfig;
+  let { classificatoryStatic = true, needSplitChunks = true, needHashName = isProd } = appConfig;
+  if (target !== 'web') {
+    classificatoryStatic = false;
+    needSplitChunks = false;
+    needHashName = false;
+  }
   if (!pagesConfig) {
     pagesConfig = {
       main: {
@@ -55,32 +62,34 @@ export default async function (appConfig: AppConfig, { analyze }: BundleOptions)
     }
     const { filename = `${key}.html`, template = templateHtml, entry: entryConfig } = item;
     entry[key] = entryConfig;
-    let chunks = [`${key}`];
-    if (appConfig.needSplitChunks !== false) {
-      chunks =  ['chunk-bk-magic', 'vendors', `${key}`];
-    }
-    pages.push(new HtmlWebpackPlugin(Object.assign(
-      {
-        filename,
-        template,
-        chunks,
-        // templateParameters: { ...resolveClientEnv(), ...appConfig.env },
-      },
-      isProd ? {
-        minify: {
-          removeComments: true,
-          collapseWhitespace: true,
-          removeRedundantAttributes: true,
-          useShortDoctype: true,
-          removeEmptyAttributes: true,
-          removeStyleLinkTypeAttributes: true,
-          keepClosingSlash: true,
-          minifyJS: true,
-          minifyCSS: true,
-          minifyURLs: true,
+    if (target === 'web') {
+      let chunks = [`${key}`];
+      if (appConfig.needSplitChunks !== false) {
+        chunks =  ['chunk-bk-magic', 'vendors', `${key}`];
+      }
+      pages.push(new HtmlWebpackPlugin(Object.assign(
+        {
+          filename,
+          template,
+          chunks,
+          // templateParameters: { ...resolveClientEnv(), ...appConfig.env },
         },
-      } : {},
-    )));
+        isProd ? {
+          minify: {
+            removeComments: true,
+            collapseWhitespace: true,
+            removeRedundantAttributes: true,
+            useShortDoctype: true,
+            removeEmptyAttributes: true,
+            removeStyleLinkTypeAttributes: true,
+            keepClosingSlash: true,
+            minifyJS: true,
+            minifyCSS: true,
+            minifyURLs: true,
+          },
+        } : {},
+      )));
+    }
   });
   const commonConfig = {
     analyze,
@@ -88,21 +97,23 @@ export default async function (appConfig: AppConfig, { analyze }: BundleOptions)
     env: {
       ...appConfig.env,
     },
+    target,
     dist: resolveApp(appConfig.outputDir || './dist'),
     appDir: resolveApp(appConfig.sourceDir || './src/'),
     publicPath: appConfig.publicPath ?? '/',
     assetsPath(subPath: string) {
-      return path.posix.join(appConfig.assetsDir === undefined ? appConfig.assetsDir : 'static', subPath);
+      return path.posix.join(appConfig.assetsDir === undefined ? 'static' : appConfig.assetsDir, subPath);
     },
     eslintOnSave: appConfig.eslintOnSave ?? false,
     stylelintOnSave: appConfig.stylelintOnSave ?? false,
     css: appConfig.css ?? {},
-    classificatoryStatic: appConfig.classificatoryStatic !== false,
-    needSplitChunks: appConfig.needSplitChunks !== false,
-    needHashName: isProd ? appConfig.needHashName !== false : true,
+    classificatoryStatic,
+    needSplitChunks,
+    needHashName,
     minChunkSize: appConfig.minChunkSize === undefined ? 10000 : appConfig.minChunkSize,
-    pages,
     entry,
+    pages,
   };
+
   return commonConfig;
 }
