@@ -48,7 +48,7 @@ export default async function (appConfig: AppConfig, { analyze }: BundleOptions)
   if (!pagesConfig) {
     pagesConfig = {
       main: {
-        entry: resolveApp(appConfig.mainPath || './src/main.ts'),
+        entry: resolveApp(appConfig?.mainPath || './src/main.js'),
         template: templateHtml,
         filename: 'index.html',
       },
@@ -56,7 +56,7 @@ export default async function (appConfig: AppConfig, { analyze }: BundleOptions)
   }
   const keys = Object.keys(pagesConfig);
   keys.forEach((key) => {
-    const item = appConfig.pages[key];
+    const item = pagesConfig[key];
     if (!item) {
       return;
     }
