@@ -34,16 +34,16 @@ import { Configuration } from 'webpack-dev-server';
 import webpack from 'webpack';
 export default (config: ServiceConfig): webpack.Configuration & {devServer?: Configuration} => {
   const isProd = process.env.NODE_ENV === 'production';
-  const { assetsPath } = config;
+  const { assetsPath, publicPath = '/', entry, needHashName, classificatoryStatic } = config;
 
   const baseConfig: webpack.Configuration = {
     mode: isProd ? 'production' : 'development',
-    // entry: config.entry,
+    entry,
     output: {
       path: config.dist,
-      filename: assetsPath(config.needHashName ? 'js/[name].[chunkhash].js' : 'js/[name].js'),
-      chunkFilename: assetsPath(config.needHashName ? 'js/[name].[chunkhash].js' : 'js/[name].js'),
-      publicPath: '/',
+      filename: assetsPath(isProd ? `${classificatoryStatic ? 'js/' : ''}[name]${needHashName ? '.[chunkhash]' : ''}.js` : 'js/[name].js'),
+      chunkFilename: assetsPath(isProd ? `${classificatoryStatic ? 'js/' : ''}[name]${needHashName ? '.[chunkhash]' : ''}.js` : 'js/[name].js'),
+      publicPath,
       clean: true, // 5.20.0+
     },
     resolve: {

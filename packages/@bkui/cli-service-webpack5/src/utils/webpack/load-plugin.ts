@@ -34,42 +34,43 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import chalk from 'chalk';
 import { resolveClientEnv } from '../read-env';
 
-export default (isProd: boolean, config: any) => [
-  config.eslintOnSave ? new ESLintPlugin({
-    extensions: ['js', 'vue'],
-    files: [config.appDir],
-    failOnWarning: true,
-    formatter: require('eslint-friendly-formatter'),
-  }) : undefined,
+export default (isProd: boolean, config: any) => {
 
-  config.stylelintOnSave ? new StylelintPlugin({
-    files: ['**/*.vue', '**/*.s?(a|c)ss'],
-    failOnWarning: true,
-    // formatter: stylelintFormatter,
-  }) : undefined,
-  ...config.pages,
-  new ProgressBarPlugin({
-    format: `  build [:bar] ${chalk.green.bold(':percent')} (:elapsed seconds)\n`,
-  }),
+  const plugins =  [
+    config.eslintOnSave ? new ESLintPlugin({
+      extensions: ['js', 'vue'],
+      files: [config.appDir],
+      failOnWarning: true,
+      formatter: require('eslint-friendly-formatter'),
+    }) : undefined,
 
-  new webpack.DefinePlugin({ ...resolveClientEnv(), ...config.env }),
+    config.stylelintOnSave ? new StylelintPlugin({
+      files: ['**/*.vue', '**/*.s?(a|c)ss'],
+      failOnWarning: true,
+      // formatter: stylelintFormatter,
+    }) : undefined,
+    new ProgressBarPlugin({
+      format: `  build [:bar] ${chalk.green.bold(':percent')} (:elapsed seconds)\n`,
+    }),
 
-  new VueLoaderPlugin(),
+    new webpack.DefinePlugin({ ...resolveClientEnv(), ...config.env }),
 
-  isProd ? new MiniCssExtractPlugin({
-    filename: config.assetsPath(`${config.classificatoryStatic ? 'css/' : ''}[name]${config.needHashName ? '.[contenthash:7]' : ''}.css`),
-    ignoreOrder: true,
-  }) : undefined,
-  config.minChunkSize !== 0 ? new webpack.optimize.MinChunkSizePlugin({
-    minChunkSize: config.minChunkSize,
-  }) : undefined,
+    new VueLoaderPlugin(),
 
-  new webpack.NoEmitOnErrorsPlugin(),
+    isProd ? new MiniCssExtractPlugin({
+      filename: config.assetsPath(`${config.classificatoryStatic ? 'css/' : ''}[name]${config.needHashName ? '.[contenthash:7]' : ''}.css`),
+      ignoreOrder: true,
+    }) : undefined,
+    config.minChunkSize !== 0 ? new webpack.optimize.MinChunkSizePlugin({
+      minChunkSize: config.minChunkSize,
+    }) : undefined,
+    new webpack.NoEmitOnErrorsPlugin(),
+    config.analyze ? new BundleAnalyzerPlugin({
+      analyzerMode: 'server',
+      analyzerHost: '127.0.0.1',
+      analyzerPort: 7002,
+    }) : undefined,
 
-  config.analyze ? new BundleAnalyzerPlugin({
-    analyzerMode: 'server',
-    analyzerHost: '127.0.0.1',
-    analyzerPort: 7002,
-  }) : undefined,
-
-].filter(Boolean);
+  ];
+  return plugins;
+};

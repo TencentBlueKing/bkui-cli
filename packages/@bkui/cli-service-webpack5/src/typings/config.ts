@@ -49,6 +49,7 @@ export interface ServiceConfig {
   env: any;
   dist: string;
   appDir: string;
+  publicPath: string;
   css: CssOptions;
   entry: OutputEntry,
   pages: object[],
@@ -67,6 +68,7 @@ export interface BundleOptions {
 export interface AppConfig {
   outputDir?: string;
   sourceDir?: string;
+  publicPath?: string;
   mainPath?: string;
   indexPath?: string;
   assetsDir?: string;

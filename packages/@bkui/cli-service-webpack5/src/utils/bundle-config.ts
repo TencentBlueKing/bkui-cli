@@ -28,38 +28,43 @@ import path from 'path';
 import fs from 'fs';
 import { ServiceConfig, BundleOptions, AppConfig, OutPages, OutputEntry } from '../typings/config';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import { resolveClientEnv } from './read-env';
+// import { resolveClientEnv } from './read-env';
 export const appDirectory = fs.realpathSync(process.cwd());
 export const resolveApp = (relativePath: string): string => path.resolve(appDirectory, relativePath || '.');
 
 export default async function (appConfig: AppConfig, { analyze }: BundleOptions): Promise<ServiceConfig> {
   const isProd = process.env.NODE_ENV === 'production';
-  let pagesConfig: OutPages = {};
-  if (!Array.isArray(appConfig.pages)) {
+  const templateHtml = resolveApp(appConfig.indexPath || './index.html');
+  const pages: HtmlWebpackPlugin[] = [];
+  const entry: OutputEntry = {};
+  let pagesConfig: OutPages = appConfig.pages;
+  if (!pagesConfig) {
     pagesConfig = {
       main: {
-        entry: resolveApp(appConfig.mainPath || './src/main.js'),
-        template: resolveApp(appConfig.indexPath || './index.html'),
+        entry: resolveApp(appConfig.mainPath || './src/main.ts'),
+        template: templateHtml,
         filename: 'index.html',
       },
     };
   }
-  const pages: HtmlWebpackPlugin[] = [];
-  const entry: OutputEntry = {};
-  Object.keys(pagesConfig).forEach((key) => {
-    const item = pagesConfig[key];
+  const keys = Object.keys(pagesConfig);
+  keys.forEach((key) => {
+    const item = appConfig.pages[key];
     if (!item) {
       return;
     }
-    const { filename, template, entry: entryConfig } = item;
+    const { filename = `${key}.html`, template = templateHtml, entry: entryConfig } = item;
     entry[key] = entryConfig;
-
+    let chunks = [`${key}`];
+    if (appConfig.needSplitChunks !== false) {
+      chunks =  ['chunk-bk-magic', 'vendors', `${key}`];
+    }
     pages.push(new HtmlWebpackPlugin(Object.assign(
       {
         filename,
         template,
-        chunks: [`${key}`],
-        templateParameters: { ...resolveClientEnv(), ...appConfig.env },
+        chunks,
+        // templateParameters: { ...resolveClientEnv(), ...appConfig.env },
       },
       isProd ? {
         minify: {
@@ -85,15 +90,16 @@ export default async function (appConfig: AppConfig, { analyze }: BundleOptions)
     },
     dist: resolveApp(appConfig.outputDir || './dist'),
     appDir: resolveApp(appConfig.sourceDir || './src/'),
+    publicPath: appConfig.publicPath ?? '/',
     assetsPath(subPath: string) {
       return path.posix.join(appConfig.assetsDir === undefined ? appConfig.assetsDir : 'static', subPath);
     },
     eslintOnSave: appConfig.eslintOnSave ?? false,
     stylelintOnSave: appConfig.stylelintOnSave ?? false,
     css: appConfig.css ?? {},
-    classificatoryStatic: appConfig.classificatoryStatic === undefined ? true : appConfig.classificatoryStatic,
-    needSplitChunks: appConfig.needSplitChunks === undefined ? true : appConfig.needSplitChunks,
-    needHashName: appConfig.needHashName === undefined ? isProd : appConfig.needHashName,
+    classificatoryStatic: appConfig.classificatoryStatic !== false,
+    needSplitChunks: appConfig.needSplitChunks !== false,
+    needHashName: isProd ? appConfig.needHashName !== false : true,
     minChunkSize: appConfig.minChunkSize === undefined ? 10000 : appConfig.minChunkSize,
     pages,
     entry,

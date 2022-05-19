@@ -42,7 +42,7 @@ export default (isProd: boolean, config: ServiceConfig)  => {
       }),
     ],
   };
-  if (config) {
+  if (config.needSplitChunks) {
     Object.assign(optimization, {
       splitChunks: {
         chunks: 'all',
