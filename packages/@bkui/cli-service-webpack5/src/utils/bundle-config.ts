@@ -38,7 +38,7 @@ export default async function (appConfig: AppConfig, { analyze }: BundleOptions)
   const pages: HtmlWebpackPlugin[] = [];
   const entry: OutputEntry = {};
   let pagesConfig: OutPages = appConfig.pages;
-  const { target = 'web' }  = appConfig;
+  const { target = 'web', library, useCustomDevServer = false }  = appConfig;
   let { classificatoryStatic = true, needSplitChunks = true, needHashName = isProd } = appConfig;
   if (target !== 'web') {
     classificatoryStatic = false;
@@ -93,11 +93,12 @@ export default async function (appConfig: AppConfig, { analyze }: BundleOptions)
   });
   const commonConfig = {
     analyze,
-    useCustomDevServer: appConfig.useCustomDevServer || false,
+    useCustomDevServer,
     env: {
       ...appConfig.env,
     },
     target,
+    library,
     dist: resolveApp(appConfig.outputDir || './dist'),
     appDir: resolveApp(appConfig.sourceDir || './src/'),
     publicPath: appConfig.publicPath ?? '/',

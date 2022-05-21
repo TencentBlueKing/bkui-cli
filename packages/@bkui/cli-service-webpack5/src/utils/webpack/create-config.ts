@@ -113,9 +113,13 @@ export default (config: ServiceConfig): webpack.Configuration & {devServer?: Con
     };
   }
   if (config.target !== 'web') {
-    Object.assign(baseConfig.output, {
+    const outputConfig: {[props: string]: string} = {
       libraryTarget: 'umd',
-    });
+    };
+    if (config.library) {
+      outputConfig.library = config.library;
+    }
+    Object.assign(baseConfig.output, outputConfig);
   }
 
   return baseConfig;

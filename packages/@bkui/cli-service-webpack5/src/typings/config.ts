@@ -57,7 +57,8 @@ export interface ServiceConfig {
   needHashName: boolean,
   minChunkSize: number,
   classificatoryStatic: boolean,
-  target: 'web'|'lib'|'wc'
+  target: 'web'|'lib'|'wc',
+  library: string,
   assetsPath(path: string): string,
 }
 export interface BundleOptions {
@@ -84,7 +85,8 @@ export interface AppConfig {
   entry: OutputEntry,
   minChunkSize?: number,
   classificatoryStatic: boolean,
-  target: 'web'|'lib'|'wc'
+  target: 'web'|'lib'|'wc',
+  library: string,
 }
 
 export interface CssOptions {
