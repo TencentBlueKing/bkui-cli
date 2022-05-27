@@ -28,7 +28,7 @@ import path from 'path';
 import fs from 'fs';
 import { ServiceConfig, BundleOptions, AppConfig, OutPages, OutputEntry } from '../typings/config';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-// import { resolveClientEnv } from './read-env';
+import { resolveClientEnv } from './read-env';
 export const appDirectory = fs.realpathSync(process.cwd());
 export const resolveApp = (relativePath: string): string => path.resolve(appDirectory, relativePath || '.');
 
@@ -38,7 +38,7 @@ export default async function (appConfig: AppConfig, { analyze }: BundleOptions)
   const pages: HtmlWebpackPlugin[] = [];
   const entry: OutputEntry = {};
   let pagesConfig: OutPages = appConfig.pages;
-  const { target = 'web', library, useCustomDevServer = false }  = appConfig;
+  const { target = 'web', library, useCustomDevServer = false, devServer }  = appConfig;
   let { classificatoryStatic = true, needSplitChunks = true, needHashName = isProd } = appConfig;
   if (target !== 'web') {
     classificatoryStatic = false;
@@ -60,35 +60,37 @@ export default async function (appConfig: AppConfig, { analyze }: BundleOptions)
     if (!item) {
       return;
     }
-    const { filename = `${key}.html`, template = templateHtml, entry: entryConfig } = item;
+    const { filename = `${key}.html`, template = templateHtml, entry: entryConfig, title } = item;
     entry[key] = entryConfig;
     if (target === 'web') {
       let chunks = [`${key}`];
       if (appConfig.needSplitChunks !== false) {
         chunks =  ['chunk-bk-magic', 'vendors', `${key}`];
       }
-      pages.push(new HtmlWebpackPlugin(Object.assign(
-        {
-          filename,
-          template,
-          chunks,
-          // templateParameters: { ...resolveClientEnv(), ...appConfig.env },
-        },
-        isProd ? {
-          minify: {
-            removeComments: true,
-            collapseWhitespace: true,
-            removeRedundantAttributes: true,
-            useShortDoctype: true,
-            removeEmptyAttributes: true,
-            removeStyleLinkTypeAttributes: true,
-            keepClosingSlash: true,
-            minifyJS: true,
-            minifyCSS: true,
-            minifyURLs: true,
-          },
-        } : {},
-      )));
+      const obj: Record<string, any> = {
+        filename,
+        template,
+        chunks,
+        templateParameters: { ...resolveClientEnv(), ...appConfig.env },
+      };
+      if (title) {
+        obj.title = title;
+      }
+      if (isProd) {
+        obj.minify = {
+          removeComments: true,
+          collapseWhitespace: true,
+          removeRedundantAttributes: true,
+          useShortDoctype: true,
+          removeEmptyAttributes: true,
+          removeStyleLinkTypeAttributes: true,
+          keepClosingSlash: true,
+          minifyJS: true,
+          minifyCSS: true,
+          minifyURLs: true,
+        };
+      }
+      pages.push(new HtmlWebpackPlugin(obj));
     }
   });
   const commonConfig = {
@@ -114,6 +116,7 @@ export default async function (appConfig: AppConfig, { analyze }: BundleOptions)
     minChunkSize: appConfig.minChunkSize === undefined ? 10000 : appConfig.minChunkSize,
     entry,
     pages,
+    devServer,
   };
 
   return commonConfig;

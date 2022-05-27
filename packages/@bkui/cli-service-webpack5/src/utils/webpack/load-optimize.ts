@@ -33,12 +33,18 @@ export default (isProd: boolean, config: ServiceConfig)  => {
     moduleIds: 'deterministic',
     minimizer: [
       new CssMinimizerPlugin({
-        cache: true,
         parallel: true,
       }),
       new TerserPlugin({
         exclude: /\.min\.js$/,
         parallel: true,
+        terserOptions: {
+          compress: {
+            // drop_debugger: true,
+            drop_console: true,
+            pure_funcs: ['console.log', 'console.info'], // 删除console.log
+          },
+        },
       }),
     ],
   };

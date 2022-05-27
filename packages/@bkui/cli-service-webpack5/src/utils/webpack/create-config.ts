@@ -30,17 +30,16 @@ import getOptimize from './load-optimize';
 import getPlugins from './load-plugin';
 import getDevServer from './load-devserver';
 import { ServiceConfig } from '../../typings/config';
-import { Configuration } from 'webpack-dev-server';
-import webpack from 'webpack';
-export default (config: ServiceConfig): webpack.Configuration & {devServer?: Configuration} => {
+import {  Configuration as WebpackConfiguration } from 'webpack';
+export default (config: ServiceConfig): WebpackConfiguration => {
   const isProd = process.env.NODE_ENV === 'production';
-  const { assetsPath, publicPath = '/', entry, needHashName, classificatoryStatic } = config;
+  const { assetsPath, publicPath = '/', dist, entry, needHashName, classificatoryStatic, devServer } = config;
 
-  const baseConfig: webpack.Configuration = {
+  const baseConfig: WebpackConfiguration = {
     mode: isProd ? 'production' : 'development',
     entry,
     output: {
-      path: config.dist,
+      path: dist,
       filename: assetsPath(`${classificatoryStatic ? 'js/' : ''}[name]${needHashName ? '.[chunkhash]' : ''}.js`),
       chunkFilename: assetsPath(`${classificatoryStatic ? 'js/' : ''}[name]${needHashName ? '.[chunkhash]' : ''}.js`),
       publicPath,
@@ -106,10 +105,10 @@ export default (config: ServiceConfig): webpack.Configuration & {devServer?: Con
       source: false,
     },
   };
-
   if (!config.useCustomDevServer) {
     baseConfig.devServer = {
       ...getDevServer(),
+      ...devServer,
     };
   }
   if (config.target !== 'web') {

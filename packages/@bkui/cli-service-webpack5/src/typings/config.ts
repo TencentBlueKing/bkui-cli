@@ -23,6 +23,7 @@
 * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
+import { Configuration  } from 'webpack-dev-server';
 export interface HtmlWebPackPluginPage{
   entry: string,
   // the source template
@@ -59,6 +60,7 @@ export interface ServiceConfig {
   classificatoryStatic: boolean,
   target: 'web'|'lib'|'wc',
   library: string,
+  devServer: Configuration,
   assetsPath(path: string): string,
 }
 export interface BundleOptions {
@@ -83,6 +85,7 @@ export interface AppConfig {
   needHashName?: boolean,
   pages?: OutPages,
   entry: OutputEntry,
+  devServer: Configuration,
   minChunkSize?: number,
   classificatoryStatic: boolean,
   target: 'web'|'lib'|'wc',
