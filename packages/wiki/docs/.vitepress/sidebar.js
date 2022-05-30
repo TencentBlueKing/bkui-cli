@@ -53,6 +53,15 @@ export default {
             ]
         },
         {
+            text:"CLI 参数说明",
+            children:[
+                {
+                    text:'cli-webpack5 参数详细说明',
+                    link:'/intro/cli-webpack5-props'
+                },
+            ]
+        },
+        {
             text:"CLI 配置包",
             children:[
                 {

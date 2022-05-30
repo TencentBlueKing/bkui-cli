@@ -108,7 +108,7 @@ export default (config: ServiceConfig): WebpackConfiguration => {
   if (!config.useCustomDevServer) {
     baseConfig.devServer = {
       ...getDevServer(),
-      ...devServer,
+      ...(devServer || {}),
     };
   }
   if (config.target !== 'web') {
