@@ -29,7 +29,7 @@ import { ServiceConfig } from '../../typings/config';
 export default (isProd: boolean, config: ServiceConfig) => {
   const { loaderOptions = {} } = config.css;
 
-  const cssLoaders = (isCssModule: boolean = false) => [
+  const cssLoaders = (isCssModule = false) => [
     isProd ? { loader: MiniCssExtractPlugin.loader } : 'vue-style-loader',
     {
       loader: 'css-loader',
@@ -37,18 +37,18 @@ export default (isProd: boolean, config: ServiceConfig) => {
         esModule: false,
         sourceMap: !isProd,
         modules: {
-          localIdentName: '[name]_[local]_[hash:base64:5]'
-        }
+          localIdentName: '[name]_[local]_[hash:base64:5]',
+        },
       } : {
         esModule: false,
-        sourceMap: !isProd
+        sourceMap: !isProd,
       }, loaderOptions.css),
     },
     {
       loader: 'postcss-loader',
       options: {
         ...loaderOptions.postcss,
-      }
+      },
     },
   ];
 
@@ -66,7 +66,7 @@ export default (isProd: boolean, config: ServiceConfig) => {
           use: [
             ...cssLoaders(),
           ],
-        }
+        },
       ],
     },
     {
@@ -82,7 +82,7 @@ export default (isProd: boolean, config: ServiceConfig) => {
           use: [
             ...cssLoaders(),
           ],
-        }
+        },
       ],
     },
     {
@@ -106,7 +106,7 @@ export default (isProd: boolean, config: ServiceConfig) => {
               options: { ...(loaderOptions.scss || loaderOptions.sass) },
             },
           ],
-        }
+        },
       ],
     },
     {
@@ -130,7 +130,7 @@ export default (isProd: boolean, config: ServiceConfig) => {
               options: { ...loaderOptions.less },
             },
           ],
-        }
+        },
       ],
     },
     {
@@ -154,7 +154,7 @@ export default (isProd: boolean, config: ServiceConfig) => {
               options: { ...loaderOptions.stylus },
             },
           ],
-        }
+        },
       ],
     },
   ];

@@ -6,7 +6,7 @@ module.exports = {
       'tsconfig.json',
     ],
   },
-  extends: ['@bktest/eslint-config-bk/ts'],
+  extends: ['@blueking/eslint-config-bk/ts'],
   ignorePatterns: ['.eslintrc.js', 'bin/index.js'],
   overrides: [
     {

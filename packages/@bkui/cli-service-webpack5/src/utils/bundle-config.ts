@@ -26,27 +26,98 @@
 /* eslint-disable no-nested-ternary */
 import path from 'path';
 import fs from 'fs';
-import { ServiceConfig, BundleOptions, AppConfig } from '../typings/config';
+import { ServiceConfig, BundleOptions, AppConfig, OutPages, OutputEntry } from '../typings/config';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import { resolveClientEnv } from './read-env';
 export const appDirectory = fs.realpathSync(process.cwd());
 export const resolveApp = (relativePath: string): string => path.resolve(appDirectory, relativePath || '.');
 
 export default async function (appConfig: AppConfig, { analyze }: BundleOptions): Promise<ServiceConfig> {
+  const isProd = process.env.NODE_ENV === 'production';
+  const templateHtml = resolveApp(appConfig.indexPath || './index.html');
+  const pages: HtmlWebpackPlugin[] = [];
+  const entry: OutputEntry = {};
+  let pagesConfig: OutPages = appConfig.pages;
+  const { target = 'web', library, useCustomDevServer = false, devServer }  = appConfig;
+  let { classificatoryStatic = true, needSplitChunks = true, needHashName = isProd } = appConfig;
+  if (target !== 'web') {
+    classificatoryStatic = false;
+    needSplitChunks = false;
+    needHashName = false;
+  }
+  if (!pagesConfig) {
+    pagesConfig = {
+      main: {
+        entry: resolveApp(appConfig?.mainPath || './src/main.js'),
+        template: templateHtml,
+        filename: 'index.html',
+      },
+    };
+  }
+  const keys = Object.keys(pagesConfig);
+  keys.forEach((key) => {
+    const item = pagesConfig[key];
+    if (!item) {
+      return;
+    }
+    const { filename = `${key}.html`, template = templateHtml, entry: entryConfig, title } = item;
+    entry[key] = entryConfig;
+    if (target === 'web') {
+      let chunks = [`${key}`];
+      if (appConfig.needSplitChunks !== false) {
+        chunks =  ['chunk-bk-magic', 'vendors', `${key}`];
+      }
+      const obj: Record<string, any> = {
+        filename,
+        template,
+        chunks,
+        templateParameters: { ...resolveClientEnv(), ...appConfig.env },
+      };
+      if (title) {
+        obj.title = title;
+      }
+      if (isProd) {
+        obj.minify = {
+          removeComments: true,
+          collapseWhitespace: true,
+          removeRedundantAttributes: true,
+          useShortDoctype: true,
+          removeEmptyAttributes: true,
+          removeStyleLinkTypeAttributes: true,
+          keepClosingSlash: true,
+          minifyJS: true,
+          minifyCSS: true,
+          minifyURLs: true,
+        };
+      }
+      pages.push(new HtmlWebpackPlugin(obj));
+    }
+  });
   const commonConfig = {
     analyze,
-    useCustomDevServer: appConfig.useCustomDevServer || false,
+    useCustomDevServer,
     env: {
       ...appConfig.env,
     },
+    target,
+    library,
     dist: resolveApp(appConfig.outputDir || './dist'),
     appDir: resolveApp(appConfig.sourceDir || './src/'),
-    appIndex: resolveApp(appConfig.mainPath || './src/main.js'),
-    appIndexHtml: resolveApp(appConfig.indexPath || './index.html'),
+    publicPath: appConfig.publicPath ?? '/',
     assetsPath(subPath: string) {
-      return path.posix.join(appConfig.assetsDir || 'static', subPath);
+      return path.posix.join(appConfig.assetsDir === undefined ? 'static' : appConfig.assetsDir, subPath);
     },
     eslintOnSave: appConfig.eslintOnSave ?? false,
     stylelintOnSave: appConfig.stylelintOnSave ?? false,
-    css: appConfig.css ?? {}
+    css: appConfig.css ?? {},
+    classificatoryStatic,
+    needSplitChunks,
+    needHashName,
+    minChunkSize: appConfig.minChunkSize === undefined ? 10000 : appConfig.minChunkSize,
+    entry,
+    pages,
+    devServer,
   };
+
   return commonConfig;
 }

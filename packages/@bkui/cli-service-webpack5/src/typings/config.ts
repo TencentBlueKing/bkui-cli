@@ -23,16 +23,45 @@
 * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
+import { Configuration  } from 'webpack-dev-server';
+export interface HtmlWebPackPluginPage{
+  entry: string,
+  // the source template
+  template: string,
+  // output as dist/index.html
+  filename: string,
+  // when using title option,
+  // template title tag needs to be <title><%= htmlWebpackPlugin.options.title %></title>
+  title?: string,
+  // chunks to include on this page, by default includes
+  // extracted common chunks and vendor chunks.
+  chunks?: string[]
+}
+export interface OutPages {
+  [props: string]: HtmlWebPackPluginPage
+}
+export interface OutputEntry {
+  [props: string]: string
+}
+
 export interface ServiceConfig {
   analyze: boolean;
   useCustomDevServer: boolean;
   env: any;
   dist: string;
   appDir: string;
-  appIndex: string;
-  appIndexHtml: string;
-  assetsPath(path: string): string;
-  css?: cssOptions;
+  publicPath: string;
+  css: CssOptions;
+  entry: OutputEntry,
+  pages?: object[],
+  needSplitChunks: boolean,
+  needHashName: boolean,
+  minChunkSize: number,
+  classificatoryStatic: boolean,
+  target: 'web'|'lib'|'wc',
+  library: string,
+  devServer: Configuration,
+  assetsPath(path: string): string,
 }
 export interface BundleOptions {
   production: boolean;
@@ -43,6 +72,7 @@ export interface BundleOptions {
 export interface AppConfig {
   outputDir?: string;
   sourceDir?: string;
+  publicPath?: string;
   mainPath?: string;
   indexPath?: string;
   assetsDir?: string;
@@ -50,14 +80,23 @@ export interface AppConfig {
   useCustomDevServer?: boolean;
   eslintOnSave?: boolean;
   stylelintOnSave?: boolean;
-  css?: cssOptions;
+  css?: CssOptions;
+  needSplitChunks?: boolean,
+  needHashName?: boolean,
+  pages?: OutPages,
+  entry: OutputEntry,
+  devServer: Configuration,
+  minChunkSize?: number,
+  classificatoryStatic: boolean,
+  target: 'web'|'lib'|'wc',
+  library: string,
 }
 
-export interface cssOptions {
-  loaderOptions?: loaderOptions;
+export interface CssOptions {
+  loaderOptions?: LoaderOptions;
 }
 
-export interface loaderOptions {
+export interface LoaderOptions {
   css?: object;
   postcss?: object;
   sass?: object;
