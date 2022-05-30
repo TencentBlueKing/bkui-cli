@@ -119,7 +119,7 @@ module.exports = {
                 },
             },
             devServer : { // webpack-dev-server
-                host: 'dev.bkapps.oa.com',
+                host: 'dev.myapp.com',
                 port: 7008,
                 proxy: {
                     '/api/': {

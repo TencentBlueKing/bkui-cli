@@ -32,7 +32,7 @@ webpack5-cli-service dev
 module.exports = {
     appConfig: {
         devServer : {
-            host: 'dev.bkapps.oa.com',
+            host: 'dev.myapp.com',
             port: 7008,
         }
     }
@@ -44,7 +44,7 @@ module.exports = {
     appConfig() {
         return {
             devServer : {
-                host: 'dev.bkapps.oa.com',
+                host: 'dev.myapp.com',
                 port: 7008,
             }
         }
@@ -136,7 +136,7 @@ module.exports = {
                 },
             },
             devServer : { // webpack-dev-server
-                host: 'dev.bkapps.oa.com',
+                host: 'dev.myapp.com',
                 port: 7008,
                 proxy: {
                     '/api/': {
