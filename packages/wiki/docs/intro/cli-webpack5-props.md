@@ -26,7 +26,7 @@
 | minChunkSize         | `webpack.optimize.MinChunkSizePlugin`  minChunkSize配置项                            | Number         | 10000           |
 | classificatoryStatic | 生成的静态资源(js、css、img、fonts)  是否放置在 `assetsDir` 目录下                                  | Boolean        | true            |
 | target               | `webpack.output.libraryTarget`   配置属性 ,  target为：'lib' 'wc' libraryTarget为： `umd` |  web、lib、wc、umd、window、var、umd  | web             |
-| library              | `webpack.output.libraryTarget`   配置属性                                             | String         | `web`           |
+| library              | `webpack.output.libraryTarget`   配置属性                                             | String         |          |
 
 ### css参数说明
 向 CSS 相关的 loader 传递选项，如想sass 公共变量设置
