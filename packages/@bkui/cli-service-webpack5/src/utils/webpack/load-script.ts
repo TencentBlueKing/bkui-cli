@@ -53,9 +53,6 @@ export default (config: ServiceConfig) => [
     exclude: [/\/node_modules\//],
     use: [
       {
-        loader: 'thread-loader',
-      },
-      {
         loader: 'babel-loader',
         options: {
           cacheDirectory: true,

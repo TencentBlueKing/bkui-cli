@@ -37,11 +37,12 @@ module.exports = {
     ],
     // 主题配置
     themeConfig: {
-        search: true,
+        // 暂时没有公开地址，先去掉搜索
+        /*search: true,
         algolia: {
             apiKey: '',
             indexName: 'bk-cli'
-        },
+        },*/
         // 保存解析 Markdown 的元数据
         // pages: await getPages(),
         repo: '', // 你的 github 仓库地址，网页的右上角会跳转

@@ -24,7 +24,7 @@
 * IN THE SOFTWARE.
 */
 import webpack from 'webpack';
-import WebpackDevServer from 'webpack-dev-server';
+import WebpackDevServer, { Configuration } from 'webpack-dev-server';
 import chalk from 'chalk';
 import { loadWebpackConfig } from './webpack/load-config';
 import { BundleOptions } from '../typings/config';
@@ -33,7 +33,7 @@ export default async ({ production, analyze = false, silent = false }: BundleOpt
   const webpackConfig = await loadWebpackConfig({ production, analyze });
   const webpackPromise = new Promise<void>((resolve, reject) => {
     if (!production) {
-      WebpackDevServer.addDevServerEntrypoints(webpackConfig, webpackConfig.devServer);
+      const devServerConfig: Configuration = webpackConfig.devServer;
       const compiler = webpack(webpackConfig);
 
       if (!silent) {
@@ -42,8 +42,8 @@ export default async ({ production, analyze = false, silent = false }: BundleOpt
         });
       }
 
-      const devServer = new WebpackDevServer(compiler, webpackConfig.devServer);
-      devServer.listen(webpackConfig.devServer.port || 7000, webpackConfig.devServer.host || '127.0.0.1', (err) => {
+      const devServer = new WebpackDevServer(compiler, devServerConfig);
+      devServer.listen(devServerConfig.port, devServerConfig.host, (err: any) => {
         if (err) {
           return console.error(err);
         }
@@ -57,7 +57,7 @@ export default async ({ production, analyze = false, silent = false }: BundleOpt
         compiler.hooks.done.tapAsync('done', (stats, callback) => {
           if (!stats.hasErrors()) {
             console.clear();
-            console.log(chalk.cyan(`\n  App running at http://${webpackConfig.devServer.host}:${webpackConfig.devServer.port}\n`));
+            console.log(chalk.cyan(`\n  App running at http://${devServerConfig.host}:${devServerConfig.port}\n`));
           }
           callback();
         });
