@@ -77,9 +77,9 @@ module.exports = {
     },
 };
 ```
-
+打包成js库 ，建议不分包`needSplitChunks` 设置为`false`，css、js、img、font建议扁平化  `classificatoryStatic` 设置为`false`
 ### 打包vue组件配置
-如把项目打包js-sdk输出
+如把项目打包js-vue组件
 ```javascript
 module.exports = {
     appConfig() {

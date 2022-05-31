@@ -60,7 +60,7 @@ export default {
                     link:'/intro/cli-webpack5-props'
                 },
                 {
-                    text:'cli-webpack5 各种参加配置案例',
+                    text:'cli-webpack5 配置案例及说明',
                     link:'/intro/cli-webpack5-example'
                 },
             ]
