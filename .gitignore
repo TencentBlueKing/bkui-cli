@@ -8,4 +8,4 @@ webpack_cache
 .codecc
 .idea
 build.yml
-dist
+*/dist/
