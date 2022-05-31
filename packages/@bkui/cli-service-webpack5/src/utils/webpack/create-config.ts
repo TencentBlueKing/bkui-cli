@@ -33,7 +33,8 @@ import { ServiceConfig } from '../../typings/config';
 import {  Configuration as WebpackConfiguration } from 'webpack';
 export default (config: ServiceConfig): WebpackConfiguration => {
   const isProd = process.env.NODE_ENV === 'production';
-  const { assetsPath, publicPath = '/', dist, entry, needHashName, classificatoryStatic, devServer } = config;
+  const { assetsPath, publicPath = '/', dist, entry, needHashName, classificatoryStatic,
+    devServer, target, library, useCustomDevServer } = config;
 
   const baseConfig: WebpackConfiguration = {
     mode: isProd ? 'production' : 'development',
@@ -105,18 +106,19 @@ export default (config: ServiceConfig): WebpackConfiguration => {
       source: false,
     },
   };
-  if (!config.useCustomDevServer) {
+  if (!useCustomDevServer) {
     baseConfig.devServer = {
       ...getDevServer(),
       ...(devServer || {}),
     };
   }
-  if (config.target !== 'web') {
+  if (target !== 'web') {
+    const libraryTarget = ['lib','wc'].includes(target)?'umd':target
     const outputConfig: {[props: string]: string} = {
-      libraryTarget: 'umd',
+      libraryTarget,
     };
-    if (config.library) {
-      outputConfig.library = config.library;
+    if (library) {
+      outputConfig.library =library;
     }
     Object.assign(baseConfig.output, outputConfig);
   }

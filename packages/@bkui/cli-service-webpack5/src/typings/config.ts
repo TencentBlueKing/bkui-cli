@@ -43,7 +43,7 @@ export interface OutPages {
 export interface OutputEntry {
   [props: string]: string
 }
-
+export type TargetType = 'web'|'lib'|'wc'|'umd'|'window'|'var'|'umd'
 export interface ServiceConfig {
   analyze: boolean;
   useCustomDevServer: boolean;
@@ -58,7 +58,7 @@ export interface ServiceConfig {
   needHashName: boolean,
   minChunkSize: number,
   classificatoryStatic: boolean,
-  target: 'web'|'lib'|'umd',
+  target: TargetType,
   library: string,
   devServer: Configuration,
   assetsPath(path: string): string,
@@ -88,7 +88,7 @@ export interface AppConfig {
   devServer: Configuration,
   minChunkSize?: number,
   classificatoryStatic?: boolean,
-  target?: 'web'|'lib'|'umd',
+  target?: TargetType,
   library?: string,
 }
 

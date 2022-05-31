@@ -9,24 +9,24 @@
 ```
 生态，相关的插件参数请注意更新
 ### appConfig 参数
-| 参数                   | 说明                                                              | 类型      | 默认值           |
-|----------------------|-----------------------------------------------------------------|---------|---------------|
-| outputDir            | 当运行`webpack5-cli-service build`   时生成的生产环境构建文件的目录。              | String  | `./dist`      |
-| sourceDir            | `alias: {'@': sourceDir },`                                     | String  | `./src`       |
-| mainPath             | 页面入口（如果配置了`pages`，此配置将不起作用)                                     | String  | './src/main.js' |
-| indexPath            | 指定生成的 index.html 模板路径，如果 `pages` 配置了`filename`属性，将以`filename`为准 | String  | `index.html`  |
-| assetsDir            | 放置生成的静态资源 (js、css、img、fonts) 的 (相对于 ` outputDir`的) 目录。          | String  | `static`      |
-| eslintOnSave         | 是否启用`eslint-webpack-plugin`                                     | Boolean | false         |
-| stylelintOnSave      | 是否启用 `stylelint-webpack-plugin`                                 | Boolean | false         |
-| css                  | 向 CSS 相关的 loader 传递选项 ，具体查看 [### css参数说明](#css参数说明)             | Object  | null          |
-| needSplitChunks      | 是否启用默认的配置分包策略`webpack.optimization.splitChunks`                 | Boolean | true          |
-| needHashName         | 文件名是否hash                                                       | Boolean | true          |
-| pages                | 多页面入口,具体查看 [pages参数说明](#pages参数说明)                              | Object  | null          |
-| devServer            | `webpack.devServer` 配置项，具体查看[devServer参数说明](#devServer参数说明)                  | Object  | ————          |
-| minChunkSize         | `webpack.optimize.MinChunkSizePlugin`  minChunkSize配置项          | Number  | 10000         |
-| classificatoryStatic | 生成的静态资源(js、css、img、fonts)  是否放置在 `assetsDir` 目录下                | Boolean  | true          |
-| target               | `webpack.output.libraryTarget`   配置属性                           | String  |            |
-| library              | `webpack.output.libraryTarget`   配置属性                           | String  | `web`         |
+| 参数                   | 说明                                                                                | 类型             | 默认值             |
+|----------------------|-----------------------------------------------------------------------------------|----------------|-----------------|
+| outputDir            | 当运行`webpack5-cli-service build`   时生成的生产环境构建文件的目录。                                | String         | `./dist`        |
+| sourceDir            | `alias: {'@': sourceDir },`                                                       | String         | `./src`         |
+| mainPath             | 页面入口（如果配置了`pages`，此配置将不起作用)                                                       | String         | './src/main.js' |
+| indexPath            | 指定生成的 index.html 模板路径，如果 `pages` 配置了`filename`属性，将以`filename`为准                   | String         | `index.html`    |
+| assetsDir            | 放置生成的静态资源 (js、css、img、fonts) 的 (相对于 ` outputDir`的) 目录。                            | String         | `static`        |
+| eslintOnSave         | 是否启用`eslint-webpack-plugin`                                                       | Boolean        | false           |
+| stylelintOnSave      | 是否启用 `stylelint-webpack-plugin`                                                   | Boolean        | false           |
+| css                  | 向 CSS 相关的 loader 传递选项 ，具体查看 [### css参数说明](#css参数说明)                               | Object         | null            |
+| needSplitChunks      | 是否启用默认的配置分包策略`webpack.optimization.splitChunks`                                   | Boolean        | true            |
+| needHashName         | 文件名是否hash                                                                         | Boolean        | true            |
+| pages                | 多页面入口,具体查看 [pages参数说明](#pages参数说明)                                                | Object         | null            |
+| devServer            | `webpack.devServer` 配置项，具体查看[devServer参数说明](#devServer参数说明)                       | Object         | ————            |
+| minChunkSize         | `webpack.optimize.MinChunkSizePlugin`  minChunkSize配置项                            | Number         | 10000           |
+| classificatoryStatic | 生成的静态资源(js、css、img、fonts)  是否放置在 `assetsDir` 目录下                                  | Boolean        | true            |
+| target               | `webpack.output.libraryTarget`   配置属性 ,  target为：'lib' 'wc' libraryTarget为： `umd` |  web、lib、wc、umd、window、var、umd  | web             |
+| library              | `webpack.output.libraryTarget`   配置属性                                             | String         | `web`           |
 
 ### css参数说明
 向 CSS 相关的 loader 传递选项，如想sass 公共变量设置
