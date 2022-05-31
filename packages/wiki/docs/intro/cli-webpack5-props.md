@@ -12,7 +12,7 @@
 | 参数                   | 说明                                                                                | 类型             | 默认值             |
 |----------------------|-----------------------------------------------------------------------------------|----------------|-----------------|
 | outputDir            | 当运行`webpack5-cli-service build`   时生成的生产环境构建文件的目录。                                | String         | `./dist`        |
-| sourceDir            | `alias: {'@': sourceDir },`                                                       | String         | `./src`         |
+| sourceDir            | 源文件入口配置，`alias: {'@': sourceDir },`                                               | String         | `./src`         |
 | mainPath             | 页面入口（如果配置了`pages`，此配置将不起作用)                                                       | String         | './src/main.js' |
 | indexPath            | 指定生成的 index.html 模板路径，如果 `pages` 配置了`filename`属性，将以`filename`为准                   | String         | `index.html`    |
 | assetsDir            | 放置生成的静态资源 (js、css、img、fonts) 的 (相对于 ` outputDir`的) 目录。                            | String         | `static`        |
