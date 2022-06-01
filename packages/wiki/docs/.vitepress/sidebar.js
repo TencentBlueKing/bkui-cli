@@ -90,5 +90,14 @@ export default {
                 },
             ]
         },
+        {
+            text:"CLI 版本审计",
+            children:[
+                {
+                    text:'老版本适配更新',
+                    link:'/config/index'
+                },
+            ]
+        },
     ]
 }

@@ -1,4 +1,4 @@
-## 配置声明
+## 配置与依赖
 
 `@blueking/cli-service-webpack5`  适配webpack版本为:
 ```json
@@ -8,7 +8,7 @@
   "webpack-dev-server": "^4.9.0"
 }
 ```
-生态，相关的插件参数请注意更新
+相关的插件参数请注意更新
 
 ### 需要关注的包更新
 ```json
