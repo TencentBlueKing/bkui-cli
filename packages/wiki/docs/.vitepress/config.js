@@ -45,7 +45,7 @@ module.exports = {
         },*/
         // 保存解析 Markdown 的元数据
         // pages: await getPages(),
-        repo: '', // 你的 github 仓库地址，网页的右上角会跳转
+        repo: 'https://github.com/TencentBlueKing/bkui-cli', // 你的 github 仓库地址，网页的右上角会跳转
         // logo: '/images/logo.png', //左侧标题logo
         //   头部导航
         nav,
