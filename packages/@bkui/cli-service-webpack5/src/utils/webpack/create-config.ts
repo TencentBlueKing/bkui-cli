@@ -51,9 +51,6 @@ export default (config: ServiceConfig): WebpackConfiguration => {
       alias: {
         '@': config.appDir,
       },
-      modules: [
-        'node_modules',
-      ],
       fallback: {
         fs: false,
         path: require.resolve('path-browserify'),
@@ -90,21 +87,7 @@ export default (config: ServiceConfig): WebpackConfiguration => {
     plugins: [
       ...getPlugins(isProd, config),
     ].filter(Boolean),
-    watchOptions: {
-      ignored: /node_modules/,
-    },
-    node: {
-      global: false,
-      __filename: false,
-      __dirname: false,
-    },
-    performance: false,
     devtool: isProd ? false : 'eval-source-map',
-    stats: {
-      children: false,
-      warningsFilter: /export .* was not found in/,
-      source: false,
-    },
   };
   if (!useCustomDevServer) {
     baseConfig.devServer = {
@@ -112,13 +95,15 @@ export default (config: ServiceConfig): WebpackConfiguration => {
       ...(devServer || {}),
     };
   }
-  if (target !== 'web') {
-    const libraryTarget = ['lib','wc'].includes(target)?'umd':target
+  if (target === 'web') {
+    baseConfig.target = 'web';
+  } else {
+    const libraryTarget = ['lib', 'wc'].includes(target) ? 'umd' : target;
     const outputConfig: {[props: string]: string} = {
       libraryTarget,
     };
     if (library) {
-      outputConfig.library =library;
+      outputConfig.library = library;
     }
     Object.assign(baseConfig.output, outputConfig);
   }
