@@ -23,11 +23,10 @@
 * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
-import { Configuration  } from 'webpack-dev-server';
-export default (): Configuration => ({
+export default ():object=> ({
   host: '127.0.0.1',
   port: 7000,
   hot: true,
+  publicPath: '/',
   open: true,
-  allowedHosts: 'all',
 });

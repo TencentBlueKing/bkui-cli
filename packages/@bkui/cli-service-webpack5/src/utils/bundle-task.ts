@@ -24,7 +24,7 @@
 * IN THE SOFTWARE.
 */
 import webpack from 'webpack';
-import WebpackDevServer, { Configuration } from 'webpack-dev-server';
+import WebpackDevServer from 'webpack-dev-server';
 import chalk from 'chalk';
 import { loadWebpackConfig } from './webpack/load-config';
 import { BundleOptions } from '../typings/config';
@@ -32,30 +32,32 @@ import { BundleOptions } from '../typings/config';
 export default async ({ production, analyze = false, silent = false }: BundleOptions) => {
   const webpackConfig = await loadWebpackConfig({ production, analyze });
   const webpackPromise = new Promise<void>((resolve, reject) => {
-    const compiler = webpack(webpackConfig);
-    if (!production) { // dev模式
+    if (!production) {
+      WebpackDevServer.addDevServerEntrypoints(webpackConfig, webpackConfig.devServer);
+      const compiler = webpack(webpackConfig);
 
-      const devServerConfig: Configuration = webpackConfig.devServer;
-
-
-      const devServer = new WebpackDevServer(compiler, devServerConfig);
-      devServer.startCallback((err) => {
-        if (err) {
-          return console.error(err);
-        }
-        if (!silent) {
-          console.log(chalk.cyan('Starting the development server...\n'));
-        }
-      });
       if (!silent) {
         compiler.hooks.invalid.tap('invalid', () => {
           console.log('Compiling...');
         });
-      }else {
+      }
+
+      const devServer = new WebpackDevServer(compiler, webpackConfig.devServer);
+      devServer.listen(webpackConfig.devServer.port || 7000, webpackConfig.devServer.host || '127.0.0.1', (err:any) => {
+        if (err) {
+          return console.error(err);
+        }
+
+        if (!silent) {
+          console.log(chalk.cyan('Starting the development server...\n'));
+        }
+      });
+
+      if (silent) {
         compiler.hooks.done.tapAsync('done', (stats, callback) => {
           if (!stats.hasErrors()) {
             console.clear();
-            console.log(chalk.cyan(`\n  App running at http://${devServerConfig.host}:${devServerConfig.port}\n`));
+            console.log(chalk.cyan(`\n  App running at http://${webpackConfig.devServer.host}:${webpackConfig.devServer.port}\n`));
           }
           callback();
         });
@@ -63,6 +65,7 @@ export default async ({ production, analyze = false, silent = false }: BundleOpt
 
       resolve();
     } else {
+      const compiler = webpack(webpackConfig);
       compiler.run((err: Error, stats: webpack.Stats) => {
         if (err) {
           reject(err.message);

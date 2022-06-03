@@ -28,6 +28,7 @@ import fs from 'fs';
 import util from 'util';
 import path from 'path';
 import { merge } from 'webpack-merge';
+import { Configuration } from 'webpack-dev-server'
 import createWebpackConfig from './create-config';
 import createBundleConfig from '../bundle-config';
 import { BundleOptions } from '../../typings/config';
@@ -36,11 +37,11 @@ const isFn = function (exp: any) {
   return Object.prototype.toString.call(exp) === '[object Function]';
 };
 
-type WebpackConfigurationGetter = (options: BundleOptions) => Promise<webpack.Configuration>;
+type WebpackConfigurationGetter = (options: BundleOptions) => Promise<webpack.Configuration& {devServer?: Configuration}>;
 
 export type CustomWebpackConfigurationGetter = (
   originalConfig: webpack.Configuration,
-  options: any
+  options: any,
 ) => webpack.Configuration;
 
 export const loadWebpackConfig: WebpackConfigurationGetter = async (option: BundleOptions) => {

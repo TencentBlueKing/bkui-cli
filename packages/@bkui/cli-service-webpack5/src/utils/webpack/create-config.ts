@@ -31,12 +31,13 @@ import getPlugins from './load-plugin';
 import getDevServer from './load-devserver';
 import { ServiceConfig } from '../../typings/config';
 import {  Configuration as WebpackConfiguration } from 'webpack';
-export default (config: ServiceConfig): WebpackConfiguration => {
+import { Configuration } from 'webpack-dev-server'
+export default (config: ServiceConfig): WebpackConfiguration  & {devServer?: Configuration} => {
   const isProd = process.env.NODE_ENV === 'production';
   const { assetsPath, publicPath = '/', dist, entry, needHashName, classificatoryStatic,
     devServer, target, library, useCustomDevServer } = config;
 
-  const baseConfig: WebpackConfiguration = {
+  const baseConfig: WebpackConfiguration& {devServer?: object} = {
     mode: isProd ? 'production' : 'development',
     entry,
     output: {
