@@ -55,7 +55,6 @@ export default (isProd: boolean, config: any) => {
     new webpack.DefinePlugin({ ...resolveClientEnv(), ...config.env }),
 
     new VueLoaderPlugin(),
-    !isProd ? new webpack.HotModuleReplacementPlugin() : undefined,
     isProd ? new MiniCssExtractPlugin({
       filename: config.assetsPath(`${config.classificatoryStatic ? 'css/' : ''}[name]${config.needHashName ? '.[contenthash:7]' : ''}.css`),
       ignoreOrder: true,

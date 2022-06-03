@@ -87,7 +87,8 @@ export default (config: ServiceConfig): WebpackConfiguration => {
     plugins: [
       ...getPlugins(isProd, config),
     ].filter(Boolean),
-    devtool: isProd ? false : 'eval-source-map',
+    devtool: isProd ? false : 'source-map',
+    stats: 'errors-only',
   };
   if (!useCustomDevServer) {
     baseConfig.devServer = {
@@ -95,9 +96,7 @@ export default (config: ServiceConfig): WebpackConfiguration => {
       ...(devServer || {}),
     };
   }
-  if (target === 'web') {
-    baseConfig.target = 'web';
-  } else {
+  if (target !== 'web') {
     const libraryTarget = ['lib', 'wc'].includes(target) ? 'umd' : target;
     const outputConfig: {[props: string]: string} = {
       libraryTarget,

@@ -24,21 +24,10 @@
 * IN THE SOFTWARE.
 */
 import { Configuration  } from 'webpack-dev-server';
-import path from 'path';
 export default (): Configuration => ({
   host: '127.0.0.1',
   port: 7000,
   hot: true,
-  https: false,
-  static: path.join(__dirname, 'static'),
   open: true,
   allowedHosts: 'all',
-  client: {
-    progress: true,
-    overlay: { // 只显示错误信息
-      errors: true,
-      warnings: false,
-    },
-    logging: 'warn', // 控制台只显示warn以上信息
-  },
 });
