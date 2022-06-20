@@ -63,7 +63,7 @@ export const loadWebpackConfig: WebpackConfigurationGetter = async (option: Bund
         return merge(baseConfig, resultConfig);
       }
 
-      return baseConfig
+      return baseConfig;
     }
 
     return merge(baseConfig, configureWebpack);

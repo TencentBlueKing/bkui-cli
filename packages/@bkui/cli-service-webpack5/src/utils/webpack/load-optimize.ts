@@ -25,47 +25,61 @@
 */
 import TerserPlugin from 'terser-webpack-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
-export default (isProd: boolean)  => ({
-  minimize: isProd,
-  runtimeChunk: 'single',
-  moduleIds: 'deterministic',
-  minimizer: [
-    new CssMinimizerPlugin({
-      cache: true,
-      parallel: true,
-    }),
-    new TerserPlugin({
-      exclude: /\.min\.js$/,
-      parallel: true,
-    }),
-  ],
-  splitChunks: {
-    chunks: 'all',
-    minChunks: 1,
-    cacheGroups: {
-      bkMagic: {
-        enforce: true,
-        chunks: 'initial',
-        name: 'chunk-bk-magic',
-        priority: 20,
-        reuseExistingChunk: true,
-        test: /\/bk-magic/,
+import { ServiceConfig } from '../../typings/config';
+export default (isProd: boolean, config: ServiceConfig)  => {
+  const optimization = {
+    minimize: isProd,
+    runtimeChunk: 'single',
+    moduleIds: 'deterministic',
+    minimizer: [
+      new CssMinimizerPlugin({
+        parallel: true,
+      }),
+      new TerserPlugin({
+        exclude: /\.min\.js$/,
+        parallel: true,
+        terserOptions: {
+          compress: {
+            // drop_debugger: true,
+            drop_console: true,
+            pure_funcs: ['console.log', 'console.info'], // 删除console.log
+          },
+        },
+      }),
+    ],
+  };
+  if (config.needSplitChunks) {
+    Object.assign(optimization, {
+      splitChunks: {
+        chunks: 'all',
+        minChunks: 1,
+        cacheGroups: {
+          bkMagic: {
+            enforce: true,
+            chunks: 'initial',
+            name: 'chunk-bk-magic',
+            priority: 20,
+            reuseExistingChunk: true,
+            test: /\/bk-magic/,
+          },
+          vendors: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendors',
+            chunks: 'initial',
+            priority: -10,
+            reuseExistingChunk: true,
+            enforce: false,
+          },
+          default: {
+            priority: -20,
+            chunks: 'initial',
+            test: /.*[jt]sx?$/,
+            reuseExistingChunk: true,
+            enforce: false,
+          },
+        },
       },
-      vendors: {
-        test: /[\\/]node_modules[\\/]/,
-        name: 'vendors',
-        chunks: 'initial',
-        priority: -10,
-        reuseExistingChunk: true,
-        enforce: false,
-      },
-      default: {
-        priority: -20,
-        chunks: 'initial',
-        test: /.*[jt]sx?$/,
-        reuseExistingChunk: true,
-        enforce: false,
-      },
-    },
-  },
-} as any);
+    });
+  }
+  return optimization as any;
+};

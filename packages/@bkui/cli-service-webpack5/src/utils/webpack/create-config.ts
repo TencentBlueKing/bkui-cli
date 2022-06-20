@@ -30,19 +30,20 @@ import getOptimize from './load-optimize';
 import getPlugins from './load-plugin';
 import getDevServer from './load-devserver';
 import { ServiceConfig } from '../../typings/config';
-import { Configuration } from 'webpack-dev-server';
-import webpack from 'webpack';
-export default (config: ServiceConfig): webpack.Configuration & {devServer?: Configuration} => {
+import {  Configuration as WebpackConfiguration } from 'webpack';
+export default (config: ServiceConfig): WebpackConfiguration => {
   const isProd = process.env.NODE_ENV === 'production';
-  const { assetsPath } = config;
-  const baseConfig: webpack.Configuration = {
+  const { assetsPath, publicPath = '/', dist, entry, needHashName, classificatoryStatic,
+    devServer, target, library, useCustomDevServer } = config;
+
+  const baseConfig: WebpackConfiguration = {
     mode: isProd ? 'production' : 'development',
-    entry: { main: config.appIndex },
+    entry,
     output: {
-      path: config.dist,
-      filename: assetsPath(isProd ? 'js/[name].[chunkhash].js' : 'js/[name].js'),
-      chunkFilename: assetsPath(isProd ? 'js/[name].[chunkhash].js' : 'js/[name].js'),
-      publicPath: '/',
+      path: dist,
+      filename: assetsPath(`${classificatoryStatic ? 'js/' : ''}[name]${needHashName ? '.[chunkhash]' : ''}.js`),
+      chunkFilename: assetsPath(`${classificatoryStatic ? 'js/' : ''}[name]${needHashName ? '.[chunkhash]' : ''}.js`),
+      publicPath,
       clean: true, // 5.20.0+
     },
     resolve: {
@@ -50,9 +51,6 @@ export default (config: ServiceConfig): webpack.Configuration & {devServer?: Con
       alias: {
         '@': config.appDir,
       },
-      modules: [
-        'node_modules',
-      ],
       fallback: {
         fs: false,
         path: require.resolve('path-browserify'),
@@ -80,36 +78,34 @@ export default (config: ServiceConfig): webpack.Configuration & {devServer?: Con
     cache: {
       type: 'filesystem',
       buildDependencies: {
-        config: [__filename]
-      }
+        config: [__filename],
+      },
     },
     optimization: {
-      ...getOptimize(isProd),
+      ...getOptimize(isProd, config),
     },
     plugins: [
       ...getPlugins(isProd, config),
     ].filter(Boolean),
-    watchOptions: {
-      ignored: /node_modules/,
-    },
-    node: {
-      global: false,
-      __filename: false,
-      __dirname: false,
-    },
-    performance: false,
     devtool: isProd ? false : 'eval-source-map',
-    stats: {
-      children: false,
-      warningsFilter: /export .* was not found in/,
-      source: false,
-    },
   };
-
-  if (!config.useCustomDevServer) {
+  if (!useCustomDevServer) {
     baseConfig.devServer = {
       ...getDevServer(),
+      ...(devServer || {}),
     };
+  }
+  if (target === 'web') {
+    baseConfig.target = 'web';
+  } else {
+    const libraryTarget = ['lib', 'wc'].includes(target) ? 'umd' : target;
+    const outputConfig: {[props: string]: string} = {
+      libraryTarget,
+    };
+    if (library) {
+      outputConfig.library = library;
+    }
+    Object.assign(baseConfig.output, outputConfig);
   }
 
   return baseConfig;

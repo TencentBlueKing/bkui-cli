@@ -27,7 +27,6 @@ import webpack from 'webpack';
 import VueLoaderPlugin  from 'vue-loader/lib/plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import ProgressBarPlugin from 'progress-bar-webpack-plugin';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
 import ESLintPlugin from 'eslint-webpack-plugin';
 import StylelintPlugin from 'stylelint-webpack-plugin';
 // import stylelintFormatter from 'stylelint-formatter-pretty';
@@ -35,65 +34,43 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import chalk from 'chalk';
 import { resolveClientEnv } from '../read-env';
 
-export default (isProd: boolean, config: any) => [
-  config.eslintOnSave ? new ESLintPlugin({
-    extensions: ['js', 'vue'],
-    files: [config.appDir],
-    failOnWarning: true,
-    formatter: require('eslint-friendly-formatter'),
-  }) : undefined,
+export default (isProd: boolean, config: any) => {
+  const plugins =  [
+    config.eslintOnSave ? new ESLintPlugin({
+      extensions: ['js', 'vue'],
+      files: [config.appDir],
+      failOnWarning: true,
+      formatter: require('eslint-friendly-formatter'),
+    }) : undefined,
 
-  config.stylelintOnSave ? new StylelintPlugin({
-    files: ['**/*.vue', '**/*.s?(a|c)ss'],
-    failOnWarning: true,
-    // formatter: stylelintFormatter,
-  }) : undefined,
+    config.stylelintOnSave ? new StylelintPlugin({
+      files: ['**/*.vue', '**/*.s?(a|c)ss'],
+      failOnWarning: true,
+      // formatter: stylelintFormatter,
+    }) : undefined,
+    new ProgressBarPlugin({
+      format: `  build [:bar] ${chalk.green.bold(':percent')} (:elapsed seconds)\n`,
+    }),
 
-  new HtmlWebpackPlugin(Object.assign(
-    {
-      filename: 'index.html',
-      template: config.appIndexHtml,
-      templateParameters: { ...resolveClientEnv(), ...config.env },
-    },
-    isProd ? {
-      minify: {
-        removeComments: true,
-        collapseWhitespace: true,
-        removeRedundantAttributes: true,
-        useShortDoctype: true,
-        removeEmptyAttributes: true,
-        removeStyleLinkTypeAttributes: true,
-        keepClosingSlash: true,
-        minifyJS: true,
-        minifyCSS: true,
-        minifyURLs: true,
-      },
-    } : {},
-  )),
+    new webpack.DefinePlugin({ ...resolveClientEnv(), ...config.env }),
 
-  new ProgressBarPlugin({
-    format: `  build [:bar] ${chalk.green.bold(':percent')} (:elapsed seconds)\n`,
-  }),
+    new VueLoaderPlugin(),
+    !isProd ? new webpack.HotModuleReplacementPlugin() : undefined,
+    isProd ? new MiniCssExtractPlugin({
+      filename: config.assetsPath(`${config.classificatoryStatic ? 'css/' : ''}[name]${config.needHashName ? '.[contenthash:7]' : ''}.css`),
+      ignoreOrder: true,
+    }) : undefined,
+    config.minChunkSize !== 0 ? new webpack.optimize.MinChunkSizePlugin({
+      minChunkSize: config.minChunkSize,
+    }) : undefined,
+    ...(config.pages || []),
+    new webpack.NoEmitOnErrorsPlugin(),
+    config.analyze ? new BundleAnalyzerPlugin({
+      analyzerMode: 'server',
+      analyzerHost: '127.0.0.1',
+      analyzerPort: 7002,
+    }) : undefined,
 
-  new webpack.DefinePlugin({ ...resolveClientEnv(), ...config.env }),
-
-  new VueLoaderPlugin(),
-
-  isProd ? new MiniCssExtractPlugin({
-    filename: config.assetsPath('css/[name][contenthash:7].css'),
-    ignoreOrder: true,
-  }) : undefined,
-
-  new webpack.optimize.MinChunkSizePlugin({
-    minChunkSize: 10000,
-  }),
-
-  new webpack.NoEmitOnErrorsPlugin(),
-
-  config.analyze ? new BundleAnalyzerPlugin({
-    analyzerMode: 'server',
-    analyzerHost: '127.0.0.1',
-    analyzerPort: 7002,
-  }) : undefined,
-
-].filter(Boolean);
+  ];
+  return plugins;
+};
