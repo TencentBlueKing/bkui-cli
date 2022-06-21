@@ -24,7 +24,7 @@
 * IN THE SOFTWARE.
 */
 import webpack from 'webpack';
-import VueLoaderPlugin  from 'vue-loader/lib/plugin';
+import { VueLoaderPlugin }  from 'vue-loader';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import ProgressBarPlugin from 'progress-bar-webpack-plugin';
 import ESLintPlugin from 'eslint-webpack-plugin';
