@@ -1,6 +1,6 @@
 {
-  "name": "@blueking/cli-service-webpack5",
-  "version": "2.1.0",
+  "name": "bk-vision-cli",
+  "version": "4.1.4",
   "description": "",
   "main": "./dist/index.js",
   "bin": {
