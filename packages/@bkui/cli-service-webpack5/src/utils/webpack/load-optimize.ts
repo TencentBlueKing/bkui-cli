@@ -27,13 +27,13 @@ import TerserPlugin from 'terser-webpack-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 import { ServiceConfig } from '../../typings/config';
 export default (isProd: boolean, config: ServiceConfig)  => {
-  if(!isProd){
+  if (!isProd) {
     return {
       runtimeChunk: true,
       removeAvailableModules: false,
       removeEmptyChunks: false,
       splitChunks: false,
-    }
+    };
   }
   const optimization = {
     minimize: isProd,
@@ -49,7 +49,7 @@ export default (isProd: boolean, config: ServiceConfig)  => {
         terserOptions: {
           compress: {
             // drop_debugger: true,
-            drop_console: true,
+            drop_console: config.dropConsole,
             pure_funcs: ['console.log', 'console.info'], // 删除console.log
           },
         },

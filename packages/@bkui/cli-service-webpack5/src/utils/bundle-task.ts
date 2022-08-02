@@ -33,6 +33,7 @@ export default async ({ production, analyze = false, silent = false }: BundleOpt
   const webpackConfig = await loadWebpackConfig({ production, analyze });
   const webpackPromise = new Promise<void>((resolve, reject) => {
     if (!production) {
+      // @ts-ignore
       WebpackDevServer.addDevServerEntrypoints(webpackConfig, webpackConfig.devServer);
       const compiler = webpack(webpackConfig);
 
@@ -42,6 +43,7 @@ export default async ({ production, analyze = false, silent = false }: BundleOpt
         });
       }
 
+      // @ts-ignore
       const devServer = new WebpackDevServer(compiler, webpackConfig.devServer);
       devServer.listen(webpackConfig.devServer.port || 7000, webpackConfig.devServer.host || '127.0.0.1', (err:any) => {
         if (err) {

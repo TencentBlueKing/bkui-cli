@@ -23,7 +23,7 @@
 * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
-import { Configuration } from 'webpack-dev-server'
+import { Configuration } from 'webpack-dev-server';
 export interface HtmlWebPackPluginPage{
   entry: string,
   // the source template
@@ -43,7 +43,7 @@ export interface OutPages {
 export interface OutputEntry {
   [props: string]: string
 }
-export type TargetType = 'web'|'lib'|'wc'|'umd'|'window'|'var'|'umd'
+export type TargetType = 'web'|'lib'|'wc'|'window'|'var'|'umd';
 export interface ServiceConfig {
   analyze: boolean;
   useCustomDevServer: boolean;
@@ -61,6 +61,7 @@ export interface ServiceConfig {
   target: TargetType,
   library: string,
   devServer: Configuration,
+  dropConsole: boolean
   assetsPath(path: string): string,
 }
 export interface BundleOptions {
@@ -90,6 +91,7 @@ export interface AppConfig {
   classificatoryStatic?: boolean,
   target?: TargetType,
   library?: string,
+  dropConsole: boolean
 }
 
 export interface CssOptions {

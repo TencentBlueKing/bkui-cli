@@ -1,7 +1,7 @@
 {
   "name": "bk-vision-cli",
-  "version": "4.1.4",
-  "description": "",
+  "version": "4.1.5",
+  "description": "vue3版本打包工具",
   "main": "./dist/index.js",
   "bin": {
     "webpack5-cli-service": "./bin/index.js"
