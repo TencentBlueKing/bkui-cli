@@ -32,28 +32,26 @@ import { BundleOptions } from '../typings/config';
 export default async ({ production, analyze = false, silent = false }: BundleOptions) => {
   const webpackConfig = await loadWebpackConfig({ production, analyze });
   const webpackPromise = new Promise<void>((resolve, reject) => {
-    if (!production) {
-      const devServerConfig: Configuration = webpackConfig.devServer;
-      const compiler = webpack(webpackConfig);
+    const compiler = webpack(webpackConfig);
+    if (!production) { // dev模式
 
-      if (!silent) {
-        compiler.hooks.invalid.tap('invalid', () => {
-          console.log('Compiling...');
-        });
-      }
+      const devServerConfig: Configuration = webpackConfig.devServer;
+
 
       const devServer = new WebpackDevServer(compiler, devServerConfig);
-      devServer.listen(devServerConfig.port, devServerConfig.host, (err: any) => {
+      devServer.startCallback((err) => {
         if (err) {
           return console.error(err);
         }
-
         if (!silent) {
           console.log(chalk.cyan('Starting the development server...\n'));
         }
       });
-
-      if (silent) {
+      if (!silent) {
+        compiler.hooks.invalid.tap('invalid', () => {
+          console.log('Compiling...');
+        });
+      }else {
         compiler.hooks.done.tapAsync('done', (stats, callback) => {
           if (!stats.hasErrors()) {
             console.clear();
@@ -65,7 +63,6 @@ export default async ({ production, analyze = false, silent = false }: BundleOpt
 
       resolve();
     } else {
-      const compiler = webpack(webpackConfig);
       compiler.run((err: Error, stats: webpack.Stats) => {
         if (err) {
           reject(err.message);

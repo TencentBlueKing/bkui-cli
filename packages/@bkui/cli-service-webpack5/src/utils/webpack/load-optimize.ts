@@ -27,6 +27,14 @@ import TerserPlugin from 'terser-webpack-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 import { ServiceConfig } from '../../typings/config';
 export default (isProd: boolean, config: ServiceConfig)  => {
+  if(!isProd){
+    return {
+      runtimeChunk: true,
+      removeAvailableModules: false,
+      removeEmptyChunks: false,
+      splitChunks: false,
+    }
+  }
   const optimization = {
     minimize: isProd,
     runtimeChunk: 'single',
