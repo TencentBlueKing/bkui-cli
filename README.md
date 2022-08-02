@@ -3,6 +3,9 @@
 [![license](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](https://github.com/TencentBlueKing/bkui-cli/blob/master/LICENSE.txt) [![Release Version](https://img.shields.io/github/v/release/TencentBlueKing/bkui-cli?include_prereleases)](https://github.com/TencentBlueKing/bkui-cli/releases) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/TencentBlueKing/bkui-cli/pulls)
 
 [English](README_EN.md) | 简体中文
+
+
+
 # BKUI-CLI
 基于蓝鲸 Magicbox 和 Vue 的前端脚手架
 
@@ -10,6 +13,10 @@
 ```bash
 $ npm install -g @blueking/cli
 ```
+### 
+# 版本说明：
+^4.0.4 为vue3版本，分支为 vue3
+^2.2.6  为vue2版本
 
 ## 快速使用
 ```bash
