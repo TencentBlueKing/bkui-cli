@@ -97,3 +97,23 @@ module.exports = {
 };
 ```
 
+### tsx支持
+需要安装 @vue/babel-plugin-jsx
+配置`babel.config.js` 文件内容如下：
+```typescript
+module.exports = {
+  presets: [
+    [
+      '@babel/preset-env',
+      {
+        'targets': {
+          'browsers': ['last 2 versions'] // 最近 2 个版本的浏览器
+        }
+      }]
+  ],
+  plugins:[
+    "@vue/babel-plugin-jsx",
+  ]
+}
+
+```

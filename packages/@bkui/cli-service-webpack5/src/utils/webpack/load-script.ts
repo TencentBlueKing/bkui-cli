@@ -23,8 +23,9 @@
 * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
+import os from 'os';
 import { ServiceConfig } from '../../typings/config';
-
+const cpus = os.cpus().length;
 export default (config: ServiceConfig) => [
   {
     test: /\.tsx?$/,
@@ -52,6 +53,12 @@ export default (config: ServiceConfig) => [
     test: /\.js$/,
     exclude: [/\/node_modules\//],
     use: [
+      {
+        loader: 'thread-loader',
+        options: {
+          workers: cpus - 1,
+        },
+      },
       {
         loader: 'babel-loader',
         options: {

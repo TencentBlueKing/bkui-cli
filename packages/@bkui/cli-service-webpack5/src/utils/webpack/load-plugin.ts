@@ -24,7 +24,7 @@
 * IN THE SOFTWARE.
 */
 import webpack from 'webpack';
-import VueLoaderPlugin  from 'vue-loader/lib/plugin';
+import { VueLoaderPlugin }  from 'vue-loader';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import ProgressBarPlugin from 'progress-bar-webpack-plugin';
 import ESLintPlugin from 'eslint-webpack-plugin';
@@ -55,7 +55,6 @@ export default (isProd: boolean, config: any) => {
     new webpack.DefinePlugin({ ...resolveClientEnv(), ...config.env }),
 
     new VueLoaderPlugin(),
-    !isProd ? new webpack.HotModuleReplacementPlugin() : undefined,
     isProd ? new MiniCssExtractPlugin({
       filename: config.assetsPath(`${config.classificatoryStatic ? 'css/' : ''}[name]${config.needHashName ? '.[contenthash:7]' : ''}.css`),
       ignoreOrder: true,

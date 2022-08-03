@@ -31,12 +31,13 @@ import getPlugins from './load-plugin';
 import getDevServer from './load-devserver';
 import { ServiceConfig } from '../../typings/config';
 import {  Configuration as WebpackConfiguration } from 'webpack';
-export default (config: ServiceConfig): WebpackConfiguration => {
+import { Configuration } from 'webpack-dev-server'
+export default (config: ServiceConfig): WebpackConfiguration  & {devServer?: Configuration} => {
   const isProd = process.env.NODE_ENV === 'production';
   const { assetsPath, publicPath = '/', dist, entry, needHashName, classificatoryStatic,
     devServer, target, library, useCustomDevServer } = config;
 
-  const baseConfig: WebpackConfiguration = {
+  const baseConfig: WebpackConfiguration& {devServer?: object} = {
     mode: isProd ? 'production' : 'development',
     entry,
     output: {
@@ -87,7 +88,8 @@ export default (config: ServiceConfig): WebpackConfiguration => {
     plugins: [
       ...getPlugins(isProd, config),
     ].filter(Boolean),
-    devtool: isProd ? false : 'eval-source-map',
+    devtool: isProd ? false : 'source-map',
+    stats: 'errors-only',
   };
   if (!useCustomDevServer) {
     baseConfig.devServer = {
@@ -95,9 +97,7 @@ export default (config: ServiceConfig): WebpackConfiguration => {
       ...(devServer || {}),
     };
   }
-  if (target === 'web') {
-    baseConfig.target = 'web';
-  } else {
+  if (target !== 'web') {
     const libraryTarget = ['lib', 'wc'].includes(target) ? 'umd' : target;
     const outputConfig: {[props: string]: string} = {
       libraryTarget,

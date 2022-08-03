@@ -38,7 +38,7 @@ export default async function (appConfig: AppConfig, { analyze }: BundleOptions)
   const pages: HtmlWebpackPlugin[] = [];
   const entry: OutputEntry = {};
   let pagesConfig: OutPages = appConfig.pages;
-  const { target = 'web', library, useCustomDevServer = false, devServer }  = appConfig;
+  const { target = 'web', library, useCustomDevServer = false, devServer, dropConsole = true }  = appConfig;
   let { classificatoryStatic = true, needSplitChunks = true, needHashName = isProd } = appConfig;
   if (target !== 'web') {
     classificatoryStatic = false;
@@ -117,6 +117,7 @@ export default async function (appConfig: AppConfig, { analyze }: BundleOptions)
     entry,
     pages,
     devServer,
+    dropConsole,
   };
 
   return commonConfig;
