@@ -37,7 +37,6 @@ export default (isProd: boolean, config: ServiceConfig)  => {
   }
   const optimization = {
     minimize: isProd,
-    runtimeChunk: 'single',
     moduleIds: 'deterministic',
     minimizer: [
       new CssMinimizerPlugin({
@@ -58,6 +57,7 @@ export default (isProd: boolean, config: ServiceConfig)  => {
   };
   if (config.needSplitChunks) {
     Object.assign(optimization, {
+      runtimeChunk: 'single',
       splitChunks: {
         chunks: 'all',
         minChunks: 1,
