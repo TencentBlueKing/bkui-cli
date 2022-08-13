@@ -38,6 +38,7 @@ export default (isProd: boolean, config: ServiceConfig)  => {
   const optimization = {
     minimize: isProd,
     moduleIds: 'deterministic',
+    splitChunks: false,
     minimizer: [
       new CssMinimizerPlugin({
         parallel: true,
