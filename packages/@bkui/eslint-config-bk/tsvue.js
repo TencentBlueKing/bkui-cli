@@ -38,7 +38,7 @@ module.exports = {
       jsx: true,
     },
   },
-  extends: ['plugin:vue/recommended', '@vue/typescript', './vue.js', './ts.js'],
+  extends: ['plugin:vue/recommended', '@vue/typescript','plugin:prettier/recommended', './vue.js', './ts.js'],
   plugins: ['vue'],
   rules,
   settings: {
