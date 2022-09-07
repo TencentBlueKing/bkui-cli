@@ -35,8 +35,6 @@ $ bkui -h
 
 - [BK-BCS](https://github.com/Tencent/bk-bcs): BlueKing Container Service is a container-based basic service platform that provides management service to microservice businesses.
 
-- [BK-BCS-SaaS](https://github.com/Tencent/bk-bcs-saas): BlueKing Container Service SaaS is based on two modes: original Kubernetes and self-developed Mesos, offering users highly scalable, flexible container service.
-
 - [BK-PaaS](https://github.com/Tencent/bk-paas): BlueKing PaaS is an open development platform that allows developers to efficiently create, develop, set up, and manage SaaS apps.
 
 - [BK-SOPS](https://github.com/Tencent/bk-sops): BlueKing SOPS is a system that features workflow arrangement and execution using a graphical interface. It's a lightweight task scheduling and arrangement SaaS product of the Blueking system.
