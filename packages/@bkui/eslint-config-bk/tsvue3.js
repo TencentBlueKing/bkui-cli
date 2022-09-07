@@ -39,7 +39,7 @@ module.exports = {
     },
   },
   extends: ['plugin:prettier/recommended', 'plugin:vue/vue3-recommended', '@vue/typescript', './vue3.js', './ts.js',],
-  plugins: ['prettier', 'vue'],
+  plugins: ['vue'],
   rules,
   settings: {
     'import/extensions': [
