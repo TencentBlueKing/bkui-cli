@@ -26,31 +26,31 @@
 const rules = require('./vue3.rule');
 
 module.exports = {
-  root: true,
-  parser: 'vue-eslint-parser',
-  parserOptions: {
-    parser: '@typescript-eslint/parser',
-    sourceType: 'module',
-    ecmaVersion: 2019,
-    ecmaFeatures: {
-      globalReturn: false,
-      impliedStrict: false,
-      jsx: true,
+    root: true,
+    parser: 'vue-eslint-parser',
+    parserOptions: {
+        parser: '@typescript-eslint/parser',
+        sourceType: 'module',
+        ecmaVersion: 2019,
+        ecmaFeatures: {
+            globalReturn: false,
+            impliedStrict: false,
+            jsx: true,
+        },
     },
-  },
-  extends: ['plugin:vue/vue3-recommended', '@vue/typescript', './vue3.js', './ts.js'],
-  plugins: ['vue'],
-  rules,
-  settings: {
-    'import/extensions': [
-      '.js',
-      '.jsx',
-      '.ts',
-      '.tsx',
-      '.vue',
-    ],
-    'import/parsers': {
-      'vue-eslint-parser': ['.vue'],
+    extends: ['plugin:vue/vue3-recommended', '@vue/typescript', './vue3.js', './ts.js', 'plugin:prettier/recommended',],
+    plugins: ['vue', 'prettier'],
+    rules,
+    settings: {
+        'import/extensions': [
+            '.js',
+            '.jsx',
+            '.ts',
+            '.tsx',
+            '.vue',
+        ],
+        'import/parsers': {
+            'vue-eslint-parser': ['.vue'],
+        },
     },
-  },
 };
