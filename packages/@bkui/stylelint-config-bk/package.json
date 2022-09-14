@@ -1,14 +1,17 @@
 {
   "name": "@blueking/stylelint-config-bk",
-  "version": "2.0.0",
+  "version": "2.1.0-beta.09",
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "stylelint": "^13.6.1",
-    "stylelint-order": "^4.1.0",
-    "stylelint-scss": "^3.18.0"
+    "stylelint": "^14.9.1",
+    "stylelint-order": "^5.0.0",
+    "stylelint-scss": "^4.3.0"
   },
-  "keywords": ["blueking", "stylelint-config-bk"],
+  "keywords": [
+    "blueking",
+    "stylelint-config-bk"
+  ],
   "author": "bkfe",
   "license": "MIT"
 }
