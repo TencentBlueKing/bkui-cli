@@ -1,6 +1,6 @@
 {
   "name": "@blueking/cli-service-webpack4",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "bkui-cli-service-webpack4",
   "bin": {
     "bk-cli-service": "./bin/index.js"

@@ -43,7 +43,7 @@ module.exports = ({ config }) => () => {
           },
         },
         cache: true,
-        parallel: true,
+        parallel: 4,
         sourceMap: true,
       }]);
     config.optimization
