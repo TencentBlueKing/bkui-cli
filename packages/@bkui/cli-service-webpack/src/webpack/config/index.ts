@@ -23,71 +23,51 @@
 * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
-var semver = require('semver');
 
-module.exports = function (__, options) {
-  var vueVersion = 2
-  try {
-    var Vue = require('vue')
-    vueVersion = semver.major(Vue.version)
-  } catch (e) {}
+import { IContext } from 'typings';
+import { Configuration } from 'webpack';
+import Config from 'webpack-chain';
 
-  var envOptions = {
-    loose: false,
-    useBuiltIns: 'usage',
-    corejs: {
-      version: 3,
-    },
-    targets: {
-      browsers: [
-        'Chrome >= 46',
-        'Firefox >= 45',
-        'Safari >= 10',
-        'Edge >= 13',
-        'iOS >= 10',
-        'Electron >= 0.36',
-      ],
-    },
-    ...options
-  }
+import {
+  loadUserConfig,
+  applyUserConfig,
+} from './user/index';
+import loadMode from './mode/index';
+import loadEntry from './entry/index';
+import loadModule from './module/index';
+import loadOptimization from './optimization/index';
+import loadOutput from './output/index';
+import loadPlugins from './plugins/index';
+import loadResolve from './resolve/index';
+import loadDevServer from './dev-server/index';
+import loadDevtool from './devtool/index';
+import loadCache from './cache/index';
+import loadStats from './stats/index';
 
-  var presets = [
-    [
-      require('@babel/preset-env'),
-      envOptions,
-    ],
-  ]
+/**
+ * 生成 webpack 的配置
+ */
+export default (context: IContext): Configuration => {
+  const config = new Config();
 
-  var plugins = [
-    require('@babel/plugin-syntax-dynamic-import'),
-    require('@babel/plugin-transform-modules-commonjs'),
-    require('@babel/plugin-proposal-export-namespace-from'),
-    require('@babel/plugin-proposal-class-properties'),
-    [require('@babel/plugin-transform-runtime'), {
-      regenerator: false,
-      corejs: false,
-      helpers: true,
-      useESModules: false,
-    }],
-  ]
+  // load user config
+  loadUserConfig(config, context);
 
-  if (vueVersion === 2) {
-    presets.push([require('@vue/babel-preset-jsx'), { compositionAPI: 'auto' }]);
-  } else if (vueVersion === 3) {
-    plugins.push([require('@vue/babel-plugin-jsx')]);
-  }
+  // load default config
+  loadMode(config, context);
+  loadEntry(config, context);
+  loadModule(config, context);
+  loadOptimization(config, context);
+  loadOutput(config, context);
+  loadPlugins(config, context);
+  loadResolve(config, context);
+  loadDevServer(config, context);
+  loadDevtool(config, context);
+  loadCache(config, context);
+  loadStats(config, context);
 
-  return  {
-    sourceType: 'unambiguous',
-    overrides: [{
-      exclude: [/@babel[/|\\\\]runtime/, /core-js/],
-      presets,
-      plugins
-    }, {
-      include: [/@babel[/|\\\\]runtime/],
-      presets: [
-        [require('@babel/preset-env'), envOptions]
-      ]
-    }]
-  }
+  // apply user config
+  const finalConfig = applyUserConfig(config, context);
+
+  return finalConfig.toConfig();
 };

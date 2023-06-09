@@ -23,71 +23,43 @@
 * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
-var semver = require('semver');
 
-module.exports = function (__, options) {
-  var vueVersion = 2
-  try {
-    var Vue = require('vue')
-    vueVersion = semver.major(Vue.version)
-  } catch (e) {}
+import { IContext } from 'typings';
+import Config from 'webpack-chain';
+import { getAssetPath } from '../../../lib/util';
 
-  var envOptions = {
-    loose: false,
-    useBuiltIns: 'usage',
-    corejs: {
-      version: 3,
-    },
-    targets: {
-      browsers: [
-        'Chrome >= 46',
-        'Firefox >= 45',
-        'Safari >= 10',
-        'Edge >= 13',
-        'iOS >= 10',
-        'Electron >= 0.36',
-      ],
-    },
-    ...options
-  }
+export default (config: Config, context: IContext) => {
+  const getFileSubPath = (dir: string) => `${dir}/[name].[hash:8][ext]`;
 
-  var presets = [
-    [
-      require('@babel/preset-env'),
-      envOptions,
-    ],
-  ]
+  config.module
+    .rule('svg')
+    .test(/\.(svg)(\?.*)?$/)
+    .set('type', 'asset/resource')
+    .set('generator', {
+      filename: getAssetPath(context.options, getFileSubPath('svg')),
+    });
 
-  var plugins = [
-    require('@babel/plugin-syntax-dynamic-import'),
-    require('@babel/plugin-transform-modules-commonjs'),
-    require('@babel/plugin-proposal-export-namespace-from'),
-    require('@babel/plugin-proposal-class-properties'),
-    [require('@babel/plugin-transform-runtime'), {
-      regenerator: false,
-      corejs: false,
-      helpers: true,
-      useESModules: false,
-    }],
-  ]
+  config.module
+    .rule('images')
+    .test(/\.(png|jpe?g|gif|webp|avif)(\?.*)?$/)
+    .set('type', 'asset')
+    .set('generator', {
+      filename: getAssetPath(context.options, getFileSubPath('img')),
+    });
 
-  if (vueVersion === 2) {
-    presets.push([require('@vue/babel-preset-jsx'), { compositionAPI: 'auto' }]);
-  } else if (vueVersion === 3) {
-    plugins.push([require('@vue/babel-plugin-jsx')]);
-  }
+  config.module
+    .rule('media')
+    .test(/\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/)
+    .set('type', 'asset')
+    .set('generator', {
+      filename: getAssetPath(context.options, getFileSubPath('media')),
+    });
 
-  return  {
-    sourceType: 'unambiguous',
-    overrides: [{
-      exclude: [/@babel[/|\\\\]runtime/, /core-js/],
-      presets,
-      plugins
-    }, {
-      include: [/@babel[/|\\\\]runtime/],
-      presets: [
-        [require('@babel/preset-env'), envOptions]
-      ]
-    }]
-  }
+  config.module
+    .rule('fonts')
+    .test(/\.(woff2?|eot|ttf|otf)(\?.*)?$/i)
+    .set('type', 'asset')
+    .set('generator', {
+      filename: getAssetPath(context.options, getFileSubPath('fonts')),
+    });
 };

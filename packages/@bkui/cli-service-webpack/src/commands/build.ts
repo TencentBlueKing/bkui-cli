@@ -23,71 +23,22 @@
 * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
-var semver = require('semver');
 
-module.exports = function (__, options) {
-  var vueVersion = 2
-  try {
-    var Vue = require('vue')
-    vueVersion = semver.major(Vue.version)
-  } catch (e) {}
+import { Command } from 'commander';
 
-  var envOptions = {
-    loose: false,
-    useBuiltIns: 'usage',
-    corejs: {
-      version: 3,
-    },
-    targets: {
-      browsers: [
-        'Chrome >= 46',
-        'Firefox >= 45',
-        'Safari >= 10',
-        'Edge >= 13',
-        'iOS >= 10',
-        'Electron >= 0.36',
-      ],
-    },
-    ...options
-  }
-
-  var presets = [
-    [
-      require('@babel/preset-env'),
-      envOptions,
-    ],
-  ]
-
-  var plugins = [
-    require('@babel/plugin-syntax-dynamic-import'),
-    require('@babel/plugin-transform-modules-commonjs'),
-    require('@babel/plugin-proposal-export-namespace-from'),
-    require('@babel/plugin-proposal-class-properties'),
-    [require('@babel/plugin-transform-runtime'), {
-      regenerator: false,
-      corejs: false,
-      helpers: true,
-      useESModules: false,
-    }],
-  ]
-
-  if (vueVersion === 2) {
-    presets.push([require('@vue/babel-preset-jsx'), { compositionAPI: 'auto' }]);
-  } else if (vueVersion === 3) {
-    plugins.push([require('@vue/babel-plugin-jsx')]);
-  }
-
-  return  {
-    sourceType: 'unambiguous',
-    overrides: [{
-      exclude: [/@babel[/|\\\\]runtime/, /core-js/],
-      presets,
-      plugins
-    }, {
-      include: [/@babel[/|\\\\]runtime/],
-      presets: [
-        [require('@babel/preset-env'), envOptions]
-      ]
-    }]
-  }
+module.exports = (program: Command) => {
+  program
+    .command('build')
+    .description('构建生产环境')
+    .option('-m, --mode [type]', '生产环境')
+    .action(() => {
+      const { default: build } = require('../actions/build');
+      build()
+        .then(() => {
+          process.exit(0);
+        })
+        .catch(() => {
+          process.exit(1);
+        });
+    });
 };

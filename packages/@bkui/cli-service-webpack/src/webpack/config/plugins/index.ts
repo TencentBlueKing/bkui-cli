@@ -23,71 +23,35 @@
 * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
-var semver = require('semver');
 
-module.exports = function (__, options) {
-  var vueVersion = 2
-  try {
-    var Vue = require('vue')
-    vueVersion = semver.major(Vue.version)
-  } catch (e) {}
+import { IContext } from 'typings';
+import Config from 'webpack-chain';
 
-  var envOptions = {
-    loose: false,
-    useBuiltIns: 'usage',
-    corejs: {
-      version: 3,
-    },
-    targets: {
-      browsers: [
-        'Chrome >= 46',
-        'Firefox >= 45',
-        'Safari >= 10',
-        'Edge >= 13',
-        'iOS >= 10',
-        'Electron >= 0.36',
-      ],
-    },
-    ...options
-  }
+import loadHtmlWebpackPlugin from './html';
+import loadTypescript from './typescript';
+import loadCss from './css';
+import loadDefine from './define';
+import loadCaseSensitivePath from './case-sensitive-path';
+import loadVue from './vue';
+import loadProgress from './progress';
+import loadEslint from './eslint';
+import loadCopy from './copy';
+import loadBundleAnalyzer from './bundle-analyzer';
+import loadReplaceStaticUrl from './replace-static-url-plugin';
+import loadLimitChunkCount from './limit-chunk-count-plugin';
 
-  var presets = [
-    [
-      require('@babel/preset-env'),
-      envOptions,
-    ],
-  ]
-
-  var plugins = [
-    require('@babel/plugin-syntax-dynamic-import'),
-    require('@babel/plugin-transform-modules-commonjs'),
-    require('@babel/plugin-proposal-export-namespace-from'),
-    require('@babel/plugin-proposal-class-properties'),
-    [require('@babel/plugin-transform-runtime'), {
-      regenerator: false,
-      corejs: false,
-      helpers: true,
-      useESModules: false,
-    }],
-  ]
-
-  if (vueVersion === 2) {
-    presets.push([require('@vue/babel-preset-jsx'), { compositionAPI: 'auto' }]);
-  } else if (vueVersion === 3) {
-    plugins.push([require('@vue/babel-plugin-jsx')]);
-  }
-
-  return  {
-    sourceType: 'unambiguous',
-    overrides: [{
-      exclude: [/@babel[/|\\\\]runtime/, /core-js/],
-      presets,
-      plugins
-    }, {
-      include: [/@babel[/|\\\\]runtime/],
-      presets: [
-        [require('@babel/preset-env'), envOptions]
-      ]
-    }]
-  }
+// 加载插件
+export default (config: Config, context: IContext) => {
+  loadHtmlWebpackPlugin(config, context);
+  loadTypescript(config, context);
+  loadCss(config, context);
+  loadDefine(config, context);
+  loadCaseSensitivePath(config, context);
+  loadVue(config, context);
+  loadProgress(config, context);
+  loadEslint(config, context);
+  loadCopy(config, context);
+  loadBundleAnalyzer(config, context);
+  loadReplaceStaticUrl(config, context);
+  loadLimitChunkCount(config, context);
 };

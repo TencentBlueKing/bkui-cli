@@ -23,71 +23,44 @@
 * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
-var semver = require('semver');
 
-module.exports = function (__, options) {
-  var vueVersion = 2
-  try {
-    var Vue = require('vue')
-    vueVersion = semver.major(Vue.version)
-  } catch (e) {}
+export default () => new Promise((resolve, reject) => {
+  const webpack = require('webpack');
+  const { log } = require('@blueking/cli-utils');
+  const generateWebpack = require('../webpack/index');
+  // start build
+  const ora = require('ora');
+  const spinner = ora('Building...');
+  spinner.start();
+  // 构造配置
+  const webpackConfig = generateWebpack('production');
+  // 执行构建
+  webpack(webpackConfig, (err: any, stats: any) => {
+    spinner.stop();
 
-  var envOptions = {
-    loose: false,
-    useBuiltIns: 'usage',
-    corejs: {
-      version: 3,
-    },
-    targets: {
-      browsers: [
-        'Chrome >= 46',
-        'Firefox >= 45',
-        'Safari >= 10',
-        'Edge >= 13',
-        'iOS >= 10',
-        'Electron >= 0.36',
-      ],
-    },
-    ...options
-  }
+    if (err) {
+      log.error(err.message || err);
+      process.exit(1);
+    }
 
-  var presets = [
-    [
-      require('@babel/preset-env'),
-      envOptions,
-    ],
-  ]
+    const statsInfo = stats.toString({
+      colors: true,
+      modules: true,
+      children: true,
+      chunks: true,
+      chunkModules: true,
+      errorDetails: true,
+      errors: true,
+    });
 
-  var plugins = [
-    require('@babel/plugin-syntax-dynamic-import'),
-    require('@babel/plugin-transform-modules-commonjs'),
-    require('@babel/plugin-proposal-export-namespace-from'),
-    require('@babel/plugin-proposal-class-properties'),
-    [require('@babel/plugin-transform-runtime'), {
-      regenerator: false,
-      corejs: false,
-      helpers: true,
-      useESModules: false,
-    }],
-  ]
+    if (stats.hasErrors()) {
+      log.error(`Build failed with errors. \n ${statsInfo}`);
+      reject(1);
+    }
 
-  if (vueVersion === 2) {
-    presets.push([require('@vue/babel-preset-jsx'), { compositionAPI: 'auto' }]);
-  } else if (vueVersion === 3) {
-    plugins.push([require('@vue/babel-plugin-jsx')]);
-  }
+    log.info(statsInfo);
 
-  return  {
-    sourceType: 'unambiguous',
-    overrides: [{
-      exclude: [/@babel[/|\\\\]runtime/, /core-js/],
-      presets,
-      plugins
-    }, {
-      include: [/@babel[/|\\\\]runtime/],
-      presets: [
-        [require('@babel/preset-env'), envOptions]
-      ]
-    }]
-  }
-};
+    log.done('Build complete.');
+    resolve(0);
+  });
+});
