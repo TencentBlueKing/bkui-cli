@@ -86,14 +86,20 @@ const modifyDefaultConfig = (context: IContext, localConfig: IOptions) => {
  * 加载 env 文件
  * @param workDir 执行目录
  * @param fileName 文件名称
+ * @param config dotenvExpand 配置
  */
-const loadEnv = (workDir, fileName) => {
+const loadEnv = (workDir, fileName, config = {}) => {
   const filePath = path.resolve(workDir, fileName);
   if (fileName && fs.existsSync(filePath)) {
-    dotenvExpand.expand(dotenv.config({
+    const env = dotenv.config({
       path: filePath,
-    }));
+    });
+    return dotenvExpand.expand({
+      ...config,
+      ...env,
+    });
   }
+  return {};
 };
 
 /**
@@ -106,7 +112,13 @@ export const loadUserConfig = (_: Config, context: IContext) => {
   const localConfigPath = path.resolve(context.workDir, 'bk.config.js');
 
   // 加载 .bk.local.env 文件，方便用户本地开发覆盖，添加到 .gitignore
-  loadEnv(context.workDir, '.bk.local.env');
+  if (process.env.NODE_ENV === 'development') {
+    loadEnv(context.workDir, '.bk.local.env');
+  }
+  // 加载 .bk.stag.env 文件
+  if (process.env.BKPAAS_ENVIRONMENT === 'stag') {
+    loadEnv(context.workDir, '.bk.stag.env');
+  }
   // 加载 .bk.{mode}.env 文件
   loadEnv(context.workDir, `.bk.${context.mode}.env`);
   // 加载 .bk.env 文件
@@ -117,13 +129,17 @@ export const loadUserConfig = (_: Config, context: IContext) => {
     const localConfig = require(localConfigPath);
     // 校验用户配置
     validate(localConfig);
+    // 加载项目自定义 env 文件，因为用户可能会在配置中使用变量，所以需要最后读取这个文件，手动塞到 process.env，让优先级最高
+    const env = loadEnv(context.workDir, localConfig?.customEnv || '', { ignoreProcessEnv: true });
+    Object.keys(env.parsed || {}).forEach((key) => {
+      process.env[key] = env.parsed?.[key];
+    });
+    // 组合用户配置
     if (isFunction(localConfig.configureWebpack)) {
       // 如果是函数，转换为 object
       localConfig.configureWebpack = localConfig.configureWebpack(context);
     }
     context.options = Object.assign({}, context.options, localConfig);
-    // 加载项目自定义 env 文件，因为用户可能会在配置中使用变量，需要提前读取变量文件，所以自定义变量最后读取，优先级最低
-    loadEnv(context.workDir, context.options?.customEnv || '');
     // 修改默认配置
     modifyDefaultConfig(context, localConfig);
   }

@@ -130,8 +130,8 @@ module.exports = {
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/no-boolean-default.md
   'vue/no-boolean-default': 'off',
 
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/no-confusing-v-for-v-if.md
-  'vue/no-confusing-v-for-v-if': 'error',
+  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/no-use-v-if-with-v-for.md
+  'vue/no-use-v-if-with-v-for': 'error',
 
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/no-dupe-keys.md
   // 二级属性名禁止重复

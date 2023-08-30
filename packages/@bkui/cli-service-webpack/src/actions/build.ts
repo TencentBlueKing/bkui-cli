@@ -61,6 +61,11 @@ export default () => new Promise((resolve, reject) => {
     log.info(statsInfo);
 
     log.done('Build complete.');
-    resolve(0);
+
+    if (process.env.BUNDLE_ANALYSIS === '1') {
+      log.info('BundleAnalysis at http://127.0.0.1:8888');
+    } else {
+      resolve(0);
+    }
   });
 });

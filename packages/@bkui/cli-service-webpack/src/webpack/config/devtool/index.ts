@@ -30,6 +30,9 @@ import Config from 'webpack-chain';
 // devtool
 export default (config: Config, { mode }: IContext) => {
   config.when(mode === 'development', () => {
-    config.devtool('source-map');
+    config.set(
+      'devtool',
+      'eval-cheap-module-source-map',
+    );
   });
 };

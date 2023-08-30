@@ -33,7 +33,7 @@ export default (config: Config, context: IContext) => {
     const ESLintPlugin = require('eslint-webpack-plugin');
 
     config
-      .plugin('mini-css-extract-plugin')
+      .plugin('eslint-webpack-plugin')
       .use(ESLintPlugin, [{
         lintDirtyModulesOnly: true,
         threads: true,

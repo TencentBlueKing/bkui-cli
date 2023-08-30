@@ -41,5 +41,7 @@ export default (config: Config, context: IContext) => {
     config
       .plugin('webpack-bundle-analyzer')
       .use(BundleAnalyzerPlugin, [bundleAnalyzerOptions]);
+    // 标识正在进行 BUNDLE_ANALYSIS
+    process.env.BUNDLE_ANALYSIS = '1';
   });
 };

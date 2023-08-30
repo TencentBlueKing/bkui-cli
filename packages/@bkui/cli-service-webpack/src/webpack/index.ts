@@ -48,6 +48,7 @@ module.exports = (mode: Mode): Configuration => {
       open: false,
       runtimeCompiler: true,
       typescript: false,
+      tsconfig: './tsconfig.json',
       forkTsChecker: false,
       bundleAnalysis: false,
       parseNodeModules: false,

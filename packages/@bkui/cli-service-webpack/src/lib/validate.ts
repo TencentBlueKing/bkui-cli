@@ -67,6 +67,7 @@ export const validate = async (options: IOptions) => {
     open: Joi.boolean(),
     runtimeCompiler: Joi.boolean(),
     typescript: Joi.boolean(),
+    tsconfig: Joi.string().allow(''),
     forkTsChecker: Joi.boolean(),
     bundleAnalysis: Joi.boolean(),
     replaceStatic: Joi.alternatives().try(

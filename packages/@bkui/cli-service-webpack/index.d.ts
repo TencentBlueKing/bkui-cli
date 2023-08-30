@@ -35,33 +35,34 @@ export interface ICopy {
 }
 
 export interface IOptions {
-  assetsDir: string;
-  outputDir: string,
-  outputAssetsDirName: string,
-  filenameHashing: boolean;
-  publicPath: string;
-  cache: boolean;
-  resource: { [pageName: string]: IResource };
-  copy: ICopy,
+  assetsDir: string
+  outputDir: string
+  outputAssetsDirName: string
+  filenameHashing: boolean
+  publicPath: string
+  cache: boolean
+  resource: { [pageName: string]: IResource }
+  copy: ICopy
   css?: ICss
-  host: string;
-  port: number;
-  https: boolean | { [key: string]: any };
-  open: boolean;
-  runtimeCompiler: boolean;
-  typescript: boolean;
-  forkTsChecker: boolean;
-  bundleAnalysis: boolean | any;
-  parseNodeModules: boolean;
-  parallel: boolean | number;
-  customEnv: string;
-  replaceStatic: boolean | IReplaceStaticUrlPluginOption;
-  target: 'web' | 'lib';
-  libraryTarget: string;
-  libraryName: string;
-  splitChunk: boolean;
-  splitCss: boolean;
-  clean: boolean;
-  configureWebpack: object;
-  chainWebpack: (config: Config) => Config;
+  host: string
+  port: number
+  https: boolean | { [key: string]: any }
+  open: boolean
+  runtimeCompiler: boolean
+  typescript: boolean
+  tsconfig: string
+  forkTsChecker: boolean
+  bundleAnalysis: boolean | any
+  parseNodeModules: boolean
+  parallel: boolean | number
+  customEnv: string
+  replaceStatic: boolean | IReplaceStaticUrlPluginOption
+  target: 'web' | 'lib'
+  libraryTarget: string
+  libraryName: string
+  splitChunk: boolean
+  splitCss: boolean
+  clean: boolean
+  configureWebpack: object
+  chainWebpack: (config: Config) => Config
 }

@@ -47,7 +47,7 @@ export default (config: Config, context: IContext) => {
       .loader(require.resolve('vue-loader-bk'))
       .options({
         compilerOptions: {
-          whitespace: 'condense',
+          whitespace: 'preserve',
         },
       });
   } else {
@@ -57,6 +57,9 @@ export default (config: Config, context: IContext) => {
       .loader(require.resolve('vue-loader'))
       .options({
         babelParserPlugins: ['jsx', 'classProperties', 'decorators-legacy'],
+        compilerOptions: {
+          whitespace: 'preserve',
+        },
       });
   }
 
