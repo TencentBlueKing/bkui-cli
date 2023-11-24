@@ -50,10 +50,18 @@ export const validate = async (options: IOptions) => {
         html: Joi.object(),
       }),
     ),
-    copy: Joi.object({
-      from: Joi.string(),
-      to: Joi.string(),
-    }),
+    copy: Joi.alternatives().try(
+      Joi.object({
+        from: Joi.string(),
+        to: Joi.string(),
+        globOptions: Joi.object(),
+      }),
+      Joi.array().items(Joi.object({
+        from: Joi.string(),
+        to: Joi.string(),
+        globOptions: Joi.object(),
+      })),
+    ),
     css: Joi.object({
       cssLoaderOptions: Joi.object(),
       preprocessorLoaderOptions: Joi.object(),

@@ -34,11 +34,15 @@ import Config from 'webpack-chain';
 
 import {
   isFunction,
+  isObject,
   getAbsolutePath,
 } from '../../../lib/util';
 import {
   validate,
 } from '../../../lib/validate';
+import type {
+  ICopy,
+} from '../../../../index';
 
 /**
  * 根据用户的配置，修改默认配置
@@ -68,13 +72,17 @@ const modifyDefaultConfig = (context: IContext, localConfig: IOptions) => {
     context.options.publicPath = '/';
   }
   // 用户没有配置 copy 的情况下，copy from assetsDir to outputDir + outputAssetsDirName
-  if (context.options.target === 'web' && !localConfig?.copy?.to && !localConfig?.copy?.from) {
-    context.options.copy.from = context.options.assetsDir;
-    context.options.copy.to = getAbsolutePath(
+  if (context.options.target === 'web' && !localConfig?.copy) {
+    context.options.copy[0].from = context.options.assetsDir;
+    context.options.copy[0].to = getAbsolutePath(
       context.workDir,
       context.options.outputDir,
       context.options.outputAssetsDirName,
     );
+  }
+  // 用户配置object 的copy，转为 array
+  if (isObject(localConfig?.copy)) {
+    context.options.copy = [localConfig?.copy as ICopy];
   }
   // lib 模式下，资源平铺在 outputDir 下
   if (context.options.target === 'lib') {

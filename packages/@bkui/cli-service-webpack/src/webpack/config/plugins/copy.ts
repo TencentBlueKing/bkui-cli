@@ -28,23 +28,25 @@ import { IContext } from 'typings';
 import Config from 'webpack-chain';
 
 import { resolveUserPath } from '../../../lib/util';
+import type { ICopy } from '../../../../index';
 
 // copy-webpack-plugin 配置
 export default (config: Config, context: IContext) => {
   const CopyWebpackPlugin = require('copy-webpack-plugin');
-  const copyOption = context.options.copy;
+  const copyOption = context.options.copy as ICopy[];
 
   config
     .plugin('copy-webpack-plugin')
     .use(CopyWebpackPlugin, [{
-      patterns: [{
-        from: resolveUserPath(context.workDir, copyOption.from),
-        to: resolveUserPath(context.workDir, copyOption.to),
+      patterns: copyOption.map(copy => ({
+        from: resolveUserPath(context.workDir, copy.from),
+        to: resolveUserPath(context.workDir, copy.to),
+        globOptions: copy?.globOptions || {},
         toType: 'dir',
         noErrorOnMissing: true,
         info: {
           minimized: true,
         },
-      }],
+      })),
     }]);
 };

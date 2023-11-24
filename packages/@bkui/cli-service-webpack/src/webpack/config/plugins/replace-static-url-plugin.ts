@@ -50,7 +50,7 @@ class ReplaceStaticUrlPlugin {
         // web & assetsdir 的情况下，需要往上找两级
         return '../../';
       }
-      // web & no assetsdir 的情况下，网上找一层即可
+      // web & no assetsdir 的情况下，往上找一层即可
       return '../';
     };
     return ext === '.css'

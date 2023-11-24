@@ -61,10 +61,10 @@ module.exports = (mode: Mode): Configuration => {
       splitChunk: true,
       splitCss: true,
       clean: true,
-      copy: {
+      copy: [{
         from: './static',
         to: './dist/static',
-      },
+      }],
       resource: {
         main: {
           entry: './src/main',

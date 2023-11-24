@@ -51,6 +51,7 @@ export default (config: Config, { options, mode, workDir }: IContext) => {
         overlay: {
           errors: true,
           warnings: false,
+          runtimeErrors: false,
         },
         progress: true,
         reconnect: true,

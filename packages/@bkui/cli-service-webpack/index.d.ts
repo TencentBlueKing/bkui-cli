@@ -31,7 +31,8 @@ export interface ICss {
 
 export interface ICopy {
   from: string,
-  to: string
+  to: string,
+  globOptions?: any
 }
 
 export interface IOptions {
@@ -42,7 +43,7 @@ export interface IOptions {
   publicPath: string
   cache: boolean
   resource: { [pageName: string]: IResource }
-  copy: ICopy
+  copy: ICopy[] | ICopy
   css?: ICss
   host: string
   port: number
