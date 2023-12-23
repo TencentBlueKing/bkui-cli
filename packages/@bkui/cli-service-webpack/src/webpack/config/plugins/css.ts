@@ -27,13 +27,15 @@
 import { IContext } from 'typings';
 import Config from 'webpack-chain';
 
+import { TARGET_TYPE } from '../../../lib/constant'
+
 // mini-css-extract-plugin 配置
 export default (config: Config, context: IContext) => {
   config.when((context.mode === 'production' && context.options.splitCss), () => {
     const MiniCssExtractPlugin = require('mini-css-extract-plugin');
     const { getAssetPath } = require('../../../lib/util');
 
-    const cssName = context.options.target === 'web'
+    const cssName = context.options.target === TARGET_TYPE.WEB
       ? `css/[name]${context.options.filenameHashing ? '.[contenthash:8]' : ''}.css`
       : '[name].css';
     const fileName = getAssetPath(context.options, cssName);

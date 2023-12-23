@@ -1,6 +1,8 @@
 import Config from 'webpack-chain';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import { EntryObject } from 'webpack';
+import type {
+  EntryObject,
+} from 'webpack';
 
 type ValueOf<T> = T[keyof T];
 
@@ -64,6 +66,7 @@ export interface IOptions {
   splitChunk: boolean
   splitCss: boolean
   clean: boolean
+  lazyCompilation: boolean
   configureWebpack: object
   chainWebpack: (config: Config) => Config
 }

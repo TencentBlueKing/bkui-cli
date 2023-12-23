@@ -24,4 +24,11 @@
 * IN THE SOFTWARE.
 */
 
+// runtime 前缀
 export const RUN_TIME_CHUNK_PERFIX = 'runtime~';
+
+// 构建目标类型
+export const TARGET_TYPE = {
+  WEB: 'web',
+  LIB: 'lib'
+}

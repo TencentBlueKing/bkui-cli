@@ -24,5 +24,5 @@
 * IN THE SOFTWARE.
 */
 module.exports = {
-  extends: ['eslint-config-tencent', 'eslint-config-tencent/ts'],
+  extends: ['./tencent/index.js', './tencent/ts.js'],
 }

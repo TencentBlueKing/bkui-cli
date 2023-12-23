@@ -43,29 +43,29 @@ export const getAssetPath = (options: IOptions, filePath: string) => (
 /**
  * 返回资源绝对路径
  * @param workDir 项目路径
- * @param _path 资源相对路径
+ * @param paths 资源相对路径
  * @returns 绝对路径
  */
-export const getAbsolutePath = (workDir: string, ..._path: string[]) => path.resolve(workDir, ..._path.filter(v => v));
+export const getAbsolutePath = (workDir: string, ...paths: string[]) => path.resolve(workDir, ...paths.filter(v => v));
 
 /**
  * 判断是否是绝对路径
- * @param _path 路径
+ * @param userPath 路径
  * @returns 是否是绝对路径
  */
-export const isAbsolutePath = (_path: string) => path.isAbsolute(_path);
+export const isAbsolutePath = (userPath: string) => path.isAbsolute(userPath);
 
 /**
  * 处理用户输入的路径，如果是绝对路径直接返回，如果是相对路径，返回绝对路径
  * @param workDir 用户目录
- * @param _path 文件路径
+ * @param userPath 文件路径
  * @returns 文件绝对路径
  */
-export const resolveUserPath = (workDir: string, _path: string) => {
-  if (isAbsolutePath(_path)) {
-    return _path;
+export const resolveUserPath = (workDir: string, userPath: string) => {
+  if (isAbsolutePath(userPath)) {
+    return userPath;
   }
-  return getAbsolutePath(workDir, _path);
+  return getAbsolutePath(workDir, userPath);
 };
 
 /**
@@ -78,38 +78,38 @@ export const resolveLocal = (...dirs) => path.join(__dirname, '../../', ...dirs)
 
 /**
  * 判断值是否为对象
- * @param { string | array | object | null | undefined } target 值
+ * @param { unknown } target 值
  * @returns boolean
  */
-export const isObject = (target: any) => Object.prototype.toString.call(target) === '[object Object]';
+export const isObject = (target: unknown) => Object.prototype.toString.call(target) === '[object Object]';
 
 /**
  * 判断值是否为字符串
- * @param { string | array | object | null | undefined } target 值
+ * @param { unknown } target 值
  * @returns boolean
  */
-export const isString = (target: any) => typeof target === 'string';
+export const isString = (target: unknown) => typeof target === 'string';
 
 /**
  * 判断值是否为数组
- * @param { string | array | object | null | undefined } target 值
+ * @param { unknown } target 值
  * @returns boolean
  */
-export const isArray = (target: any) => Array.isArray(target);
+export const isArray = (target: unknown) => Array.isArray(target);
 
 /**
  * 判断值是否为函数
- * @param { string | array | object | null | undefined } target 值
+ * @param { unknown } target 值
  * @returns boolean
  */
-export const isFunction = (target: any) => Object.prototype.toString.call(target) === '[object Function]';
+export const isFunction = (target: unknown) => Object.prototype.toString.call(target) === '[object Function]';
 
 /**
  * 判断值是否为空
- * @param { string | array | object | null | undefined } value 值
+ * @param { unknown } value 值
  * @returns boolean
  */
-export const isEmpty = (value: any) => {
+export const isEmpty = (value: unknown) => {
   if (value === ''
       || value === null
       || value === undefined) {
@@ -118,8 +118,7 @@ export const isEmpty = (value: any) => {
   if (Array.isArray(value) && value.length < 1) {
     return true;
   }
-  if (Object.prototype.toString.call(value) === '[object Object]'
-      && Object.keys(value).length < 1) {
+  if (isObject(value) && Object.keys(value).length < 1) {
     return true;
   }
   return false;
@@ -138,4 +137,28 @@ export const getVueVersion = () => {
   }
   const vueVersion = vue ? semver.major(vue.version) : 2;
   return vueVersion;
+};
+
+/**
+ * deep merge
+ * @param target 目标对象
+ * @param source 源对象
+ * @returns 深度合并对象
+ */
+export const deepMerge = <T extends Object, U extends Object>(target: T, source: U): T & U => {
+  const result = { ...target };
+
+  for (const [key, value] of Object.entries(source)) {
+    if (value && typeof value === 'object' && !Array.isArray(value)) {
+      if (target[key] && typeof target[key] === 'object' && !Array.isArray(target[key])) {
+        result[key] = deepMerge(target[key], value);
+      } else {
+        result[key] = value;
+      }
+    } else {
+      result[key] = value;
+    }
+  }
+
+  return result as  T & U;
 };

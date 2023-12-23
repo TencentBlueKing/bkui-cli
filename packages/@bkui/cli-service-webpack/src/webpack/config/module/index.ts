@@ -29,7 +29,7 @@ import Config from 'webpack-chain';
 
 import { warmupWorker } from '../../../lib/use-loader';
 import loadBase from './base';
-import loadBabel from './babel';
+import loadJsTs from './js-ts';
 import loadVue from './vue';
 import loadCss from './css';
 import loadAssets from './assets';
@@ -38,7 +38,7 @@ import loadAssets from './assets';
 export default (config: Config, context: IContext) => {
   warmupWorker(config, context);
   loadBase(config, context);
-  loadBabel(config, context);
+  loadJsTs(config, context);
   loadVue(config, context);
   loadCss(config, context);
   loadAssets(config, context);

@@ -25,51 +25,97 @@
 */
 
 import { IContext } from 'typings';
-import { Configuration } from 'webpack';
 import Config from 'webpack-chain';
 
 import {
-  loadUserConfig,
-  applyUserConfig,
-} from './user/index';
-import loadMode from './mode/index';
-import loadEntry from './entry/index';
-import loadExperiments from './experiments/index';
-import loadModule from './module/index';
-import loadOptimization from './optimization/index';
-import loadOutput from './output/index';
-import loadPlugins from './plugins/index';
-import loadResolve from './resolve/index';
-import loadDevServer from './dev-server/index';
-import loadDevtool from './devtool/index';
-import loadCache from './cache/index';
-import loadStats from './stats/index';
+  loaderChain,
+  excludeNodeModules,
+  genThreadLoader,
+  genEsbuildLoader,
+  genBabelLoader,
+  genTsLoader,
+} from '../../../lib/use-loader';
+import {
+  getAbsolutePath,
+} from '../../../lib/util';
 
-/**
- * 生成 webpack 的配置
- */
-export default (context: IContext): Configuration => {
-  const config = new Config();
+// 处理 js ts tsx
+export default (config: Config, context: IContext) => {
+  const jsRule = config.module
+    .rule('js')
+    .test(/\.m?js$/);
+  const tsRule = config.module
+    .rule('ts')
+    .test(/\.m?ts$/);
+  const jsxRule = config.module
+    .rule('jsx')
+    .test(/\.m?jsx$/);
+  const tsxRule = config.module
+    .rule('tsx')
+    .test(/\.m?tsx$/);
 
-  // load user config
-  loadUserConfig(config, context);
+  const commonLoaders: any[] = [
+    {
+      loaderFn: genThreadLoader,
+      options: context.options,
+    },
+  ];
 
-  // load default config
-  loadMode(config, context);
-  loadEntry(config, context);
-  loadExperiments(config, context);
-  loadModule(config, context);
-  loadOptimization(config, context);
-  loadOutput(config, context);
-  loadPlugins(config, context);
-  loadResolve(config, context);
-  loadDevServer(config, context);
-  loadDevtool(config, context);
-  loadCache(config, context);
-  loadStats(config, context);
+  // 是否解析 node_module
+  if (!context.options.parseNodeModules) {
+    commonLoaders.unshift(excludeNodeModules);
+  }
 
-  // apply user config
-  const finalConfig = applyUserConfig(config, context);
+  // js loader
+  loaderChain(
+    jsRule,
+    [
+      ...commonLoaders,
+      {
+        loaderFn: genEsbuildLoader,
+        options: {
+          loader: 'js',
+        },
+      },
+    ],
+  );
 
-  return finalConfig.toConfig();
+  // jsx loader
+  loaderChain(
+    jsxRule,
+    [
+      ...commonLoaders,
+      genBabelLoader,
+    ],
+  );
+
+  // ts loader
+  loaderChain(
+    tsRule,
+    [
+      ...commonLoaders,
+      {
+        loaderFn: genEsbuildLoader,
+        options: {
+          loader: 'ts',
+          tsconfig: getAbsolutePath(context.workDir, context.options.tsconfig),
+        },
+      },
+    ],
+  );
+
+  // tsx loader
+  loaderChain(
+    tsxRule,
+    [
+      ...commonLoaders,
+      genBabelLoader,
+      {
+        loaderFn: genTsLoader,
+        options: {
+          appendTsxSuffixTo: ['\\.vue$'],
+        },
+      },
+    ],
+  );
 };

@@ -61,6 +61,7 @@ module.exports = (mode: Mode): Configuration => {
       splitChunk: true,
       splitCss: true,
       clean: true,
+      lazyCompilation: true,
       copy: [{
         from: './static',
         to: './dist/static',

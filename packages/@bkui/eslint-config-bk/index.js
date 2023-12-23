@@ -24,5 +24,5 @@
 * IN THE SOFTWARE.
 */
 module.exports = {
-  extends: ['eslint-config-tencent'],
+  extends: ['./tencent/index.js'],
 };

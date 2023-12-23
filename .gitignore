@@ -9,3 +9,6 @@ webpack_cache
 .idea
 build.yml
 */dist/
+
+
+pre-*-bkcodeai

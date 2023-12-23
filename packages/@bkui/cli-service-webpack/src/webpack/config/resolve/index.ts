@@ -27,6 +27,7 @@
 import Config from 'webpack-chain';
 import { IContext } from 'typings';
 import { getAbsolutePath, getVueVersion, resolveLocal } from '../../../lib/util';
+import { TARGET_TYPE } from '../../../lib/constant'
 
 export default (config: Config, context: IContext) => {
   const vueVersion = getVueVersion();
@@ -51,7 +52,7 @@ export default (config: Config, context: IContext) => {
       );
   }
 
-  if (context.options.target === 'lib') {
+  if (context.options.target === TARGET_TYPE.LIB) {
     // lib 仅支持单 entry
     const entryVals = Object.values(context.options.resource);
     const entryVal = entryVals[0].entry;

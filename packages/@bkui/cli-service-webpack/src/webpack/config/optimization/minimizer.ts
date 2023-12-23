@@ -29,26 +29,13 @@ import Config from 'webpack-chain';
 
 export default (config: Config, context: IContext) => {
   config.when((context.mode === 'production'), () => {
-    if (context.options.splitCss) {
-      // 压缩 CSS
-      config.optimization
-        .minimizer('css')
-        .use(require('css-minimizer-webpack-plugin'));
-    }
-
     // 使用 esbuild 压缩 js
-    const terserPlugin = require('terser-webpack-plugin');
+    const { EsbuildPlugin } = require('esbuild-loader');
     config.optimization
       .minimizer('js')
-      .use(terserPlugin, [{
-        minify: terserPlugin.esbuildMinify,
-        terserOptions: {
-          minify: true,
-          minifyWhitespace: true,
-          minifyIdentifiers: true,
-          minifySyntax: true,
-        },
-        parallel: context.options.parallel,
+      .use(EsbuildPlugin, [{
+        target: 'es2015',
+        css: context.options.splitCss,
       }]);
   });
 };

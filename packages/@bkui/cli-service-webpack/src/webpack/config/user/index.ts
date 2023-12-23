@@ -43,6 +43,9 @@ import {
 import type {
   ICopy,
 } from '../../../../index';
+import {
+  TARGET_TYPE
+} from '../../../lib/constant'
 
 /**
  * 根据用户的配置，修改默认配置
@@ -54,7 +57,7 @@ const modifyDefaultConfig = (context: IContext, localConfig: IOptions) => {
   if (!!context.options.replaceStatic && context.mode === 'production') {
     // 设置为 true，默认设置成 {{ BK_STATIC_URL }}
     if (context.options.replaceStatic === true) {
-      (context.options.replaceStatic as any) = {
+      context.options.replaceStatic = {
         key: '{{ BK_STATIC_URL }}',
       };
     }
@@ -72,7 +75,7 @@ const modifyDefaultConfig = (context: IContext, localConfig: IOptions) => {
     context.options.publicPath = '/';
   }
   // 用户没有配置 copy 的情况下，copy from assetsDir to outputDir + outputAssetsDirName
-  if (context.options.target === 'web' && !localConfig?.copy) {
+  if (context.options.target === TARGET_TYPE.WEB && !localConfig?.copy) {
     context.options.copy[0].from = context.options.assetsDir;
     context.options.copy[0].to = getAbsolutePath(
       context.workDir,
@@ -85,7 +88,7 @@ const modifyDefaultConfig = (context: IContext, localConfig: IOptions) => {
     context.options.copy = [localConfig?.copy as ICopy];
   }
   // lib 模式下，资源平铺在 outputDir 下
-  if (context.options.target === 'lib') {
+  if (context.options.target === TARGET_TYPE.LIB) {
     context.options.outputAssetsDirName = '';
   }
 };
@@ -96,7 +99,7 @@ const modifyDefaultConfig = (context: IContext, localConfig: IOptions) => {
  * @param fileName 文件名称
  * @param config dotenvExpand 配置
  */
-const loadEnv = (workDir, fileName, config = {}) => {
+const loadEnv = (workDir: string, fileName: string, config = {}) => {
   const filePath = path.resolve(workDir, fileName);
   if (fileName && fs.existsSync(filePath)) {
     const env = dotenv.config({
@@ -138,7 +141,7 @@ export const loadUserConfig = (_: Config, context: IContext) => {
     // 校验用户配置
     validate(localConfig);
     // 加载项目自定义 env 文件，因为用户可能会在配置中使用变量，所以需要最后读取这个文件，手动塞到 process.env，让优先级最高
-    const env = loadEnv(context.workDir, localConfig?.customEnv || '', { ignoreProcessEnv: true });
+    const env = loadEnv(context.workDir, localConfig.customEnv || '', { ignoreProcessEnv: true });
     Object.keys(env.parsed || {}).forEach((key) => {
       process.env[key] = env.parsed?.[key];
     });

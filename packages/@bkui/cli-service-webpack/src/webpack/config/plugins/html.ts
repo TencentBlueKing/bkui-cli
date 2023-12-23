@@ -28,10 +28,11 @@ import { IContext } from 'typings';
 import Config from 'webpack-chain';
 
 import { isEmpty } from '../../../lib/util';
+import { TARGET_TYPE } from '../../../lib/constant'
 
 // html-webpack-plugin 配置
 export default (config: Config, context: IContext) => {
-  config.when((context.options.target === 'web'), () => {
+  config.when((context.options.target === TARGET_TYPE.WEB), () => {
     const HtmlWebpackPlugin = require('html-webpack-plugin');
     const { resource } = context.options;
     Object

@@ -47,8 +47,9 @@ module.exports = {
       parseNodeModules: true,
       replaceStatic: false,
       customEnv: '',
-      target: 'web';
-      libraryTarget: 'umd';
+      target: 'web',
+      libraryTarget: 'umd',
+      lazyCompilation: true,
       copy: {
         from: './static',
         to: './dist/static',

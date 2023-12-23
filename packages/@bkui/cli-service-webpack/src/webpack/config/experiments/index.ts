@@ -26,71 +26,34 @@
 
 import { IContext } from 'typings';
 import Config from 'webpack-chain';
+import type {
+  Configuration,
+} from 'webpack';
 
-import {
-  loaderChain,
-  excludeNodeModules,
-  genThreadLoader,
-  genBabelLoader,
-  genTsLoader,
-} from '../../../lib/use-loader';
-
-// 处理 js ts tsx
+// experiments
 export default (config: Config, context: IContext) => {
-  const jsRule = config.module
-    .rule('js')
-    .test(/\.m?jsx?$/);
-  const tsRule = config.module
-    .rule('ts')
-    .test(/\.m?ts$/);
-  const tsxRule = config.module
-    .rule('tsx')
-    .test(/\.m?tsx$/);
+  const experiments: Configuration['experiments'] = {}
 
-  const commonLoaders = [
-    {
-      loaderFn: genThreadLoader,
-      options: context.options,
-    },
-    genBabelLoader,
-  ];
-
-  // 是否解析 node_module
-  if (!context.options.parseNodeModules) {
-    commonLoaders.unshift(excludeNodeModules);
+  // lazyCompilation
+  if (context.options.lazyCompilation && context.mode === 'development') {
+    experiments.lazyCompilation = {
+      entries: true,
+      imports: true,
+      backend: {
+        listen: {
+          host: context.options.host,
+        },
+      }
+    }
   }
 
-  // js loader
-  loaderChain(
-    jsRule,
-    commonLoaders,
-  );
+  // 构建esm
+  if (context.options.libraryTarget === 'module') {
+    experiments.outputModule = true
+  }
 
-  // ts loader
-  loaderChain(
-    tsRule,
-    [
-      ...commonLoaders,
-      {
-        loaderFn: genTsLoader,
-        options: {
-          appendTsSuffixTo: ['\\.vue$'],
-        },
-      },
-    ],
-  );
-
-  // tsx loader
-  loaderChain(
-    tsxRule,
-    [
-      ...commonLoaders,
-      {
-        loaderFn: genTsLoader,
-        options: {
-          appendTsxSuffixTo: ['\\.vue$'],
-        },
-      },
-    ],
+  config.set(
+    'experiments',
+    experiments,
   );
 };

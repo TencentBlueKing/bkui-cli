@@ -30,13 +30,16 @@ import {
   isArray,
   getAbsolutePath,
 } from '../../../lib/util';
+import {
+  TARGET_TYPE
+} from '../../../lib/constant'
 
 export default (config: Config, context: IContext) => {
   const { resource } = context.options;
 
   // 构建 web
   // 可以是多 entry，每个 entry 可以配置多个路径
-  if (context.options.target === 'web') {
+  if (context.options.target === TARGET_TYPE.WEB) {
     // 可以是多 entry
     Object
       .keys(resource)
@@ -56,7 +59,7 @@ export default (config: Config, context: IContext) => {
 
   // 构建 lib
   // 仅支持单 entry
-  if (context.options.target === 'lib') {
+  if (context.options.target === TARGET_TYPE.LIB) {
     const entryKey = Object.keys(context.options.resource)[0];
     const libEntry = require.resolve('../../../lib/lib-entry.js');
 

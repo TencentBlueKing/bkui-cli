@@ -35,10 +35,16 @@ interface IThreadLoaderOptions {
   poolParallelJobs: number;
   workers?: number
 }
+
+type genLoaderFunction = (rule: Config.Rule, options?: any) => Config.Rule<Config.Module>;
+
+export type ChainLoader = genLoaderFunction & { loaderFn: genLoaderFunction, options: any };
+
 // loader路径
 const threadLoaderPath = require.resolve('thread-loader');
 const babelLoaderPath = require.resolve('babel-loader');
 const tsLoaderPath = require.resolve('ts-loader');
+const esbuildLoaderPath = require.resolve('esbuild-loader');
 
 const vueVersion = getVueVersion();
 
@@ -54,7 +60,11 @@ const tsLoaderOptions = {
   happyPackMode: true,
 };
 
-// 生成 thread-loade 的 options
+const esbuildLoaderOptions = {
+  target: 'es2015',
+};
+
+// 生成 thread-loader 的 options
 const genThreadLoaderOptions = (parallel: boolean | number) => {
   const threadLoaderOptions: IThreadLoaderOptions = {
     workerParallelJobs: 50,
@@ -77,6 +87,7 @@ export const warmupWorker = (__: Config, context: IContext) => {
       vueVersion === 2 ? 'vue-loader-bk' : 'vue-loader',
       'babel-loader',
       'ts-loader',
+      'esbuild-loader',
     ],
   );
 };
@@ -118,6 +129,20 @@ export const genTsLoader = (rule: Config.Rule, options: any) => rule
   .end();
 
 /**
+ * 生成 esbuild-loader 配置
+ * @param rule 配置
+ * @returns 配置
+ */
+export const genEsbuildLoader = (rule: Config.Rule, options: any) => rule
+  .use('esbuild-loader')
+  .loader(esbuildLoaderPath)
+  .options({
+    ...esbuildLoaderOptions,
+    ...options,
+  })
+  .end();
+
+/**
  * 排除 node_modules
  */
 export const excludeNodeModules = (rule: Config.Rule) => rule.exclude
@@ -129,7 +154,7 @@ export const excludeNodeModules = (rule: Config.Rule) => rule.exclude
  * @param rule config rule
  * @param loaders 构造 loader 函数
  */
-export const loaderChain = (rule: Config.Rule, loaders: any[]) => {
+export const loaderChain = (rule: Config.Rule, loaders: ChainLoader[]) => {
   let finalRule = rule;
   loaders.forEach((loader) => {
     if (isFunction(loader)) {

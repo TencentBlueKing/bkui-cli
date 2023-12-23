@@ -35,7 +35,7 @@ class ReplaceStaticUrlPlugin {
   outputAssetsDirName: string;
   target: string;
 
-  constructor(opts, outputAssetsDirName, target) {
+  constructor(opts: IReplaceStaticUrlPluginOption, outputAssetsDirName: string, target: string) {
     this.opts = opts;
     this.outputAssetsDirName = outputAssetsDirName;
     this.target = target;
@@ -103,7 +103,11 @@ export default (config: Config, context: IContext) => {
       .plugin('replace-static-url-plugin')
       .use(
         ReplaceStaticUrlPlugin,
-        [context.options.replaceStatic, context.options.outputAssetsDirName, context.options.target],
+        [
+          context.options.replaceStatic as IReplaceStaticUrlPluginOption,
+          context.options.outputAssetsDirName,
+          context.options.target
+        ],
       );
   });
 };

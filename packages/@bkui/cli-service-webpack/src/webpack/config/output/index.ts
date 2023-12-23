@@ -28,6 +28,7 @@ import { IContext } from 'typings';
 import Config from 'webpack-chain';
 
 import { getAbsolutePath, getAssetPath } from '../../../lib/util';
+import { TARGET_TYPE } from '../../../lib/constant'
 
 export default (config: Config, context: IContext) => {
   // 公共数据
@@ -35,7 +36,7 @@ export default (config: Config, context: IContext) => {
   const globalObject = '(typeof self !== \'undefined\' ? self : this)';
 
   // 构建 web 应用
-  if (context.options.target === 'web') {
+  if (context.options.target === TARGET_TYPE.WEB) {
     config.output
       .path(path)
       .filename(getAssetPath(context.options, `js/[name]${context.options.filenameHashing && context.mode === 'production'  ? '.[contenthash:8]' : ''}.js`))
@@ -47,7 +48,7 @@ export default (config: Config, context: IContext) => {
   // 构建库
   // 目前只支持单 entry
   // publicPath 根据加载的 script 动态生成
-  if (context.options.target === 'lib') {
+  if (context.options.target === TARGET_TYPE.LIB) {
     config.output
       .path(path)
       .filename(getAssetPath(context.options, '[name].js'))
@@ -57,6 +58,9 @@ export default (config: Config, context: IContext) => {
         name: context.options.libraryName,
         type: context.options.libraryTarget,
       })
-      .set('clean', context.options.clean);
+      .set('clean', context.options.clean)
+      .set('environment', {
+        module: context.options.libraryTarget === 'module'
+      })
   }
 };
