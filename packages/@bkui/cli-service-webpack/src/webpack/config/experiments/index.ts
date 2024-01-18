@@ -41,7 +41,7 @@ export default (config: Config, context: IContext) => {
       imports: true,
       backend: {
         listen: {
-          host: context.options.host,
+          host: context.options.lazyCompilationHost,
         },
       }
     }

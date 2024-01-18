@@ -98,6 +98,7 @@ export const validate = async (options: IOptions) => {
     clean: Joi.boolean().allow(''),
     parseNodeModules: Joi.boolean().allow(''),
     lazyCompilation: Joi.boolean().allow(''),
+    lazyCompilationHost: Joi.string().allow(''),
     configureWebpack: Joi.alternatives().try(
       Joi.object(),
       Joi.func(),
