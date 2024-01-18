@@ -67,6 +67,7 @@ export interface IOptions {
   splitCss: boolean
   clean: boolean
   lazyCompilation: boolean
+  lazyCompilationHost: string
   configureWebpack: object
   chainWebpack: (config: Config) => Config
 }

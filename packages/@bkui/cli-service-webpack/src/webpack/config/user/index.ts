@@ -137,6 +137,7 @@ export const loadUserConfig = (_: Config, context: IContext) => {
 
   // 加载用户配置
   if (fs.existsSync(localConfigPath)) {
+    delete require.cache[require.resolve(localConfigPath)];
     const localConfig = require(localConfigPath);
     // 校验用户配置
     validate(localConfig);

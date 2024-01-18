@@ -62,6 +62,7 @@ module.exports = (mode: Mode): Configuration => {
       splitCss: true,
       clean: true,
       lazyCompilation: true,
+      lazyCompilationHost: 'localhost',
       copy: [{
         from: './static',
         to: './dist/static',
