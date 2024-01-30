@@ -1,6 +1,6 @@
 {
   "name": "@blueking/cli-service-webpack",
-  "version": "0.0.1-beta.2",
+  "version": "0.0.1-beta.3",
   "description": "bk-cli-service-webpack",
   "main": "./dist/index.js",
   "typings": "./index.d.ts",
