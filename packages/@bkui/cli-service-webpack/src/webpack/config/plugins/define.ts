@@ -24,7 +24,7 @@
 * IN THE SOFTWARE.
 */
 
-import { IContext } from 'typings';
+import type { IContext } from 'typings';
 import Config from 'webpack-chain';
 
 interface IEnv {
@@ -35,11 +35,12 @@ interface IEnv {
 export default (config: Config, context: IContext) => {
   const webpack = require('webpack');
   const env: IEnv = {};
+  const envPrefix = context.options.envPrefix || 'BK_'
 
   // 构建 env
   Object.keys(process.env).forEach((key) => {
     // 需要过滤出用户定义的数据和NODE_ENV
-    if (key === 'NODE_ENV' || /^BK_/.test(key)) {
+    if (key === 'NODE_ENV' || key.startsWith(envPrefix)) {
       env[key] = JSON.stringify(process.env[key]);
     }
   });

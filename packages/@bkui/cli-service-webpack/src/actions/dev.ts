@@ -23,14 +23,15 @@
 * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
+import type { IOptions } from 'typings';
 
-export default () => {
+export default (options?: IOptions) => {
   // 引入依赖
   const webpack = require('webpack');
   const WebpackDevServer = require('webpack-dev-server');
   const generateWebpack = require('../webpack/index');
   // 构造配置
-  const webpackConfig = generateWebpack('development');
+  const webpackConfig = generateWebpack('development', options);
   // 启动服务
   const compiler = webpack(webpackConfig);
   const server = new WebpackDevServer(

@@ -23,7 +23,7 @@
 * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
-import { IContext } from 'typings';
+import type { IContext } from 'typings';
 import Config from 'webpack-chain';
 import { warmup } from 'thread-loader';
 import { isFunction, getVueVersion } from './util';

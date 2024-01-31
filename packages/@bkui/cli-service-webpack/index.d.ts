@@ -68,6 +68,7 @@ export interface IOptions {
   clean: boolean
   lazyCompilation: boolean
   lazyCompilationHost: string
+  envPrefix: string
   configureWebpack: object
   chainWebpack: (config: Config) => Config
 }

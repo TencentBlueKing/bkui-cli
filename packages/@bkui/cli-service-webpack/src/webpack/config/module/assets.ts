@@ -24,7 +24,7 @@
 * IN THE SOFTWARE.
 */
 
-import { IContext } from 'typings';
+import type { IContext } from 'typings';
 import Config from 'webpack-chain';
 import { getAssetPath } from '../../../lib/util';
 
