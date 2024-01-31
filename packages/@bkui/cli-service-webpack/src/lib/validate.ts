@@ -23,7 +23,7 @@
 * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
-import { IOptions } from 'typings';
+import type { IOptions } from 'typings';
 
 /**
  * 对用户配置的参数进行校验
@@ -99,6 +99,7 @@ export const validate = async (options: IOptions) => {
     parseNodeModules: Joi.boolean().allow(''),
     lazyCompilation: Joi.boolean().allow(''),
     lazyCompilationHost: Joi.string().allow(''),
+    envPrefix: Joi.string().allow(''),
     configureWebpack: Joi.alternatives().try(
       Joi.object(),
       Joi.func(),

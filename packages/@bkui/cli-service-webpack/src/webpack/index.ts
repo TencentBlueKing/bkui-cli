@@ -25,11 +25,11 @@
 */
 
 import fs from 'fs';
-import { IContext, Mode } from 'typings';
-import { Configuration } from 'webpack';
+import type { IContext, IOptions, Mode } from 'typings';
+import type { Configuration } from 'webpack';
 import loadConfig from './config/index';
 
-module.exports = (mode: Mode): Configuration => {
+module.exports = (mode: Mode, options?: IOptions): Configuration => {
   process.env.NODE_ENV = mode;
 
   const context: IContext = {
@@ -61,8 +61,9 @@ module.exports = (mode: Mode): Configuration => {
       splitChunk: true,
       splitCss: true,
       clean: true,
-      lazyCompilation: true,
+      lazyCompilation: false,
       lazyCompilationHost: 'localhost',
+      envPrefix: 'BK_',
       copy: [{
         from: './static',
         to: './dist/static',
@@ -81,5 +82,5 @@ module.exports = (mode: Mode): Configuration => {
     },
   };
 
-  return loadConfig(context);
+  return loadConfig(context, options);
 };

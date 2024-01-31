@@ -29,8 +29,9 @@ import fs from 'fs';
 import dotenv from 'dotenv';
 import dotenvExpand from 'dotenv-expand';
 
-import { IContext, IOptions, IReplaceStaticUrlPluginOption } from 'typings';
+import type { IContext, IOptions, IReplaceStaticUrlPluginOption } from 'typings';
 import Config from 'webpack-chain';
+import { merge } from 'webpack-merge'
 
 import {
   isFunction,
@@ -118,7 +119,7 @@ const loadEnv = (workDir: string, fileName: string, config = {}) => {
  * @param _ webpack 配置
  * @param context 上下文
  */
-export const loadUserConfig = (_: Config, context: IContext) => {
+export const loadUserConfig = (_: Config, context: IContext, options?: IOptions) => {
   // 用户配置地址
   const localConfigPath = path.resolve(context.workDir, 'bk.config.js');
 
@@ -139,6 +140,7 @@ export const loadUserConfig = (_: Config, context: IContext) => {
   if (fs.existsSync(localConfigPath)) {
     delete require.cache[require.resolve(localConfigPath)];
     const localConfig = require(localConfigPath);
+    Object.assign(localConfig, options)
     // 校验用户配置
     validate(localConfig);
     // 加载项目自定义 env 文件，因为用户可能会在配置中使用变量，所以需要最后读取这个文件，手动塞到 process.env，让优先级最高
@@ -164,12 +166,11 @@ export const loadUserConfig = (_: Config, context: IContext) => {
  * @returns webpack 配置
  */
 export const applyUserConfig = (config: Config, context: IContext) => {
-  config.merge(context.options.configureWebpack);
   const finallyConfig = context.options.chainWebpack(config);
   if (!(finallyConfig instanceof Config)) {
     const { log } = require('@blueking/cli-utils');
     log.error('\nbk.config.js 文件配置有误：\n    chainWebpack 方法需要返回一个 webpack-chain 对象，请修改后重试\n');
     process.exit(0);
   }
-  return finallyConfig;
+  return merge(config.toConfig(), context.options.configureWebpack);
 };

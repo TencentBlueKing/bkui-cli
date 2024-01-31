@@ -25,7 +25,7 @@
 */
 
 import Config from 'webpack-chain';
-import { IContext } from 'typings';
+import type { IContext } from 'typings';
 import { getAbsolutePath, getVueVersion, resolveLocal } from '../../../lib/util';
 import { TARGET_TYPE } from '../../../lib/constant'
 

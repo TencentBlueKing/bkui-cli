@@ -25,7 +25,7 @@
 */
 
 import Config from 'webpack-chain';
-import { IContext } from 'typings';
+import type { IContext } from 'typings';
 
 // 设置错误信息
 export default (config: Config, __: IContext) => {

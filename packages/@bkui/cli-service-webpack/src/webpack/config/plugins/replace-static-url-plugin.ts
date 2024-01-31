@@ -24,7 +24,7 @@
 * IN THE SOFTWARE.
 */
 
-import { IContext, IReplaceStaticUrlPluginOption } from 'typings';
+import type { IContext, IReplaceStaticUrlPluginOption } from 'typings';
 import Config from 'webpack-chain';
 import { extname } from 'path';
 import { sources } from 'webpack';

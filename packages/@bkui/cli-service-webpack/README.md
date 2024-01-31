@@ -49,7 +49,9 @@ module.exports = {
       customEnv: '',
       target: 'web',
       libraryTarget: 'umd',
-      lazyCompilation: true,
+      lazyCompilation: false,
+      lazyCompilationHost: 'localhost',
+      envPrefix: 'BK_',
       copy: {
         from: './static',
         to: './dist/static',
@@ -63,7 +65,7 @@ module.exports = {
           },
         },
       },
-      configureWebpack: {}, // 此处写 webpack 配置, module 和 plugin 不生效
+      configureWebpack: {}, // 此处写 webpack 配置, 优先级高于 chainWebpack
       chainWebpack: config => config, // 此处使用 webpack-chain 动态修改配置
     }
 }

@@ -24,8 +24,8 @@
 * IN THE SOFTWARE.
 */
 
-import { IContext } from 'typings';
-import { Configuration } from 'webpack';
+import type { IContext, IOptions } from 'typings';
+import type { Configuration } from 'webpack';
 import Config from 'webpack-chain';
 
 import {
@@ -48,11 +48,11 @@ import loadStats from './stats/index';
 /**
  * 生成 webpack 的配置
  */
-export default (context: IContext): Configuration => {
+export default (context: IContext, options?: IOptions): Configuration => {
   const config = new Config();
 
   // load user config
-  loadUserConfig(config, context);
+  loadUserConfig(config, context, options);
 
   // load default config
   loadMode(config, context);
@@ -71,5 +71,5 @@ export default (context: IContext): Configuration => {
   // apply user config
   const finalConfig = applyUserConfig(config, context);
 
-  return finalConfig.toConfig();
+  return finalConfig;
 };

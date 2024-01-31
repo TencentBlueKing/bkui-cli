@@ -23,8 +23,9 @@
 * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
+import type { IOptions } from 'typings';
 
-export default () => new Promise((resolve, reject) => {
+export default (options?: IOptions) => new Promise((resolve, reject) => {
   const webpack = require('webpack');
   const { log } = require('@blueking/cli-utils');
   const generateWebpack = require('../webpack/index');
@@ -33,7 +34,7 @@ export default () => new Promise((resolve, reject) => {
   const spinner = ora('Building...');
   spinner.start();
   // 构造配置
-  const webpackConfig = generateWebpack('production');
+  const webpackConfig = generateWebpack('production', options);
   // 执行构建
   webpack(webpackConfig, (err: any, stats: any) => {
     spinner.stop();
