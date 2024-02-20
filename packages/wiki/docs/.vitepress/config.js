@@ -1,57 +1,27 @@
-// vitepress/config.js
-// import baseConfig from '@vue/theme/config'
-// import type { Config as ThemeConfig } from '@vue/theme'
-
-import nav from './nav'
-import sidebar from './sidebar'
-
 module.exports = {
-    title: "蓝鲸前端开发脚手架",// 网站标题 顶部左侧标题
-    description: '蓝鲸前端开发脚手架', //网站描述
-    base: '/', //  部署时的路径 默认 /  可以使用二级地址 /base/
-    // lang: 'en-US', //语言
-    // 网页头部配置，引入需要图标，css，js
-    head: [
-        [
-            "meta",
-            {
-                name: "keywords",
-                content: "blueking/cli cli 蓝鲸脚手架"
-            },
-        ],
-        [
-            "meta",
-            {
-                name: "description",
-                content: "蓝鲸前端开发脚手架 @blueking/cli，它是为了提升研发人员效能的脚手架工具，包含了创建项目、服务项目开发和构建、简化开发人员配置和全局服务等功能。"
-            },
-        ],
-        // 改变title的图标
-        [
-            'link',
-            {
-                rel: 'icon',
-                href: '/img/linktolink.png',//图片放在public文件夹下
-            },
-        ],
-    ],
-    // 主题配置
+    title: "蓝鲸前端开发脚手架",
+    description: '蓝鲸前端开发脚手架',
+    base: '/',
     themeConfig: {
-        // 暂时没有公开地址，先去掉搜索
-        /*search: true,
-        algolia: {
-            apiKey: '',
-            indexName: 'bk-cli'
-        },*/
-        // 保存解析 Markdown 的元数据
-        // pages: await getPages(),
-        repo: 'https://github.com/TencentBlueKing/bkui-cli', // 你的 github 仓库地址，网页的右上角会跳转
-        // logo: '/images/logo.png', //左侧标题logo
-        //   头部导航
-        nav,
-        //   侧边导航
-        sidebar,
+        logo: '/images/svg/logo.svg',
+        nav: [
+            { text: '首页', link: '/' },
+            { text: '指引', link: '/markdown/guide', },
+            { text: '构建工具', link: '/markdown/cli-service', },
+            { text: '配置', link: '/markdown/config', },
+            {
+                text: 'GitHub',
+                link: 'https://github.com/TencentBlueKing/bkui-cli',
+                target: '_blank'
+            }
+        ],
+        search: {
+            provider: 'local'
+        },
     },
+    head: [
+        ['link', { rel: 'icon', href: '/images/favicon.png' }],
+    ], 
     footer: {
         license: {
             text: 'MIT License',

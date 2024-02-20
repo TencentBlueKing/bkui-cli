@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 /*
 * Tencent is pleased to support the open source community by making
 * 蓝鲸智云PaaS平台社区版 (BlueKing PaaS Community Edition) available.
@@ -25,52 +23,27 @@
 * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
-const path = require('node:path')
-
-const minimist = require('minimist')
+const fs = require('node:fs')
+const chalk = require('chalk')
 const ora = require('ora')
-const {
-  log,
-} = require('@blueking/cli-utils')
-const handleOverWrite = require('../util/over-write')
-const {
-  installPackage,
-  modifyPackage,
-} = require('../util/module-helper')
+const ask = require('./ask')
 
-const argv = minimist(process.argv.slice(2), { string: ['_'] })
-const cwd = process.cwd()
+module.exports = async function (targetDir) {
+  if (fs.existsSync(targetDir)) {
+    const { isOverWrite } = await ask([
+      {
+        name: 'isOverWrite',
+        type: 'confirm',
+        message: `Target directory ${chalk.cyan(targetDir)} already exists. Continue will overwrite the folder`,
+      },
+    ]);
 
-const init = async () => {
-  try {
-    const argProjectName = argv._[0] || 'bkui'
-    const argTemplate = argv._[1]
-    const projectPath = path.join(cwd, argProjectName)
-
-    if (!argTemplate) {
-      throw new Error('Please select the template first using the format --template')
+    if (isOverWrite) {
+      const spinner = ora(`Removing target directory (${targetDir})`).start();
+      fs.rmSync(targetDir, { recursive: true, force: true });
+      spinner.stop();
+    } else {
+      process.exit(1);
     }
-
-    await handleOverWrite(projectPath)
-
-    const spinner = ora(`Scaffolding project in ${projectPath}...`).start();
-    await installPackage(argTemplate, projectPath)
-    await modifyPackage(argProjectName, projectPath)
-    spinner.stop();
-
-    log.clear();
-    log.done(`
-
-      Successfully initialized the project!
-      Please execute the following command:
-
-        cd ${argProjectName}
-        npm install
-        npm run dev
-    `);
-  } catch (error) {
-    log.error(error.message || error)
   }
-}
-
-init()
+};

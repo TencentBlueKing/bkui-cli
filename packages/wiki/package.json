@@ -5,15 +5,15 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "vitepress dev docs --open",
+    "dev": "vitepress dev docs --port 5000",
     "build": "vitepress build docs",
-    "serve": "vitepress serve docs"
+    "serve": "vitepress serve docs --port 5000"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "vitepress": "^0.22.3"
+    "vitepress": "^1.0.0-rc.44"
   },
   "dependencies": {
     "@vue/theme": "^1.0.1"
