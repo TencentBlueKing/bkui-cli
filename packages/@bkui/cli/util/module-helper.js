@@ -24,100 +24,51 @@
 * IN THE SOFTWARE.
 */
 const execa = require('execa');
-const path = require('path');
-const fs = require('fs');
-const ejs = require('ejs');
-const { log } = require('@blueking/cli-utils');
+const path = require('node:path');
+const fs = require('node:fs')
+const tar = require('tar')
 
-function getPackageName(packageName) {
-  const index = packageName.lastIndexOf('@');
-  let name = packageName;
-  if (index > 0) name = packageName.slice(0, index);
-  return name;
+// 下载模板
+const installPackage = async (packageName, projectPath) => {
+  const { stdout } = await execa('npm', ['pack', packageName])
+  const tarballFilename = stdout.trim();
+  fs.mkdirSync(projectPath)
+  await tar.x({
+    file: tarballFilename,
+    C: projectPath,
+    strip: 1
+  })
+  fs.unlinkSync(tarballFilename)
 }
 
-class ModuleHelper {
-  constructor() {
-    const execaRes = execa.sync('npm', ['root', '-g']);
-    this.nodeGlobalPath = execaRes.stdout;
-  }
-
-  async installPackage(args = [], options = {}) {
-    return await execa('npm', ['install', ...args, '--legacy-peer-deps'], { stdout: process.stdout, stderr: process.stderr, ...options });
-  }
-
-  async uninstallPackage(pkg, args = [], options = {}) {
-    return await execa('npm', ['uninstall', pkg, ...args], { stdout: process.stdout, stderr: process.stderr, ...options });
-  }
-
-  // build render tree
-  async renderModuleTree(sourcePath, options) {
-    try {
-      function load(curPath, tree = {}, treeKey) {
-        if (/node_modules$/.test(curPath)) return;
-        const stat = fs.statSync(curPath);
-        if (stat.isDirectory()) {
-          let subTree = tree;
-          if (treeKey) {
-            tree[treeKey] = {};
-            subTree = tree[treeKey];
-          }
-          const dirs = fs.readdirSync(curPath);
-          dirs.forEach((dir) => {
-            const dirPath = path.resolve(curPath, dir);
-            load(dirPath, subTree, dir);
-          });
-        } else {
-          let originContent = fs.readFileSync(curPath, 'utf8');
-          if (!excludeReg.test(treeKey)) originContent = ejs.render(originContent, options, { delimiter: '$' });
-          tree[treeKey] = originContent;
-        }
-        return tree;
-      }
-
-      const excludeFileExt = ['bmp', 'gif', 'jpg', 'png', 'jpeg', 'psd', 'svg', 'webp', 'flv', 'avi', 'mov', 'mp4', 'wmv', 'mp3', 'wma', 'rm', 'wav', 'mid'];
-      const excludeReg = new RegExp(`(${excludeFileExt.join('|')})$`);
-      const modulePath = path.resolve(this.nodeGlobalPath, sourcePath, 'template');
-      const moduleTree = load(modulePath);
-      return moduleTree;
-    } catch (error) {
-      log.error(`
-          Error when renderModuleTree:
-          ${error.message || error}
-      `);
-      process.exit(1);
-    }
-  }
-
-  loadModule(pkg) {
-    try {
-      const name = getPackageName(pkg);
-      const modulePath = path.resolve(this.nodeGlobalPath, name);
-      const isExists = fs.existsSync(modulePath);
-      if (isExists) return require(modulePath);
-    } catch (error) {
-      log.error(`
-          Error when load template config:
-          ${error.message || error}
-      `);
-      process.exit(1);
-    }
-  }
-
-  async loadModuleInfo(pkg) {
-    const name = getPackageName(pkg);
-    const isExists = this.existsModule(name);
-    if (!isExists) await this.installPackage([name, '-g']);
-
-    const modulePath = path.resolve(this.nodeGlobalPath, name, 'package.json');
-    const packageInfo = require(modulePath);
-    return packageInfo;
-  }
-
-  existsModule(pkg) {
-    const modulePath = path.resolve(this.nodeGlobalPath, pkg);
-    return fs.existsSync(modulePath);
-  }
+// 修改模板内容
+const modifyPackage = async (projectName, projectPath) => {
+  const pkgPath = path.join(projectPath, 'package.json')
+  const pkg = JSON.parse(
+    fs.readFileSync(pkgPath, 'utf-8'),
+  )
+  pkg.name = projectName
+  fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n')
+  // add .gitignore
+  const gitignorePath = path.join(projectPath, '.gitignore')
+  const gitignoreList = [
+    'node_modules',
+    '.DS_Store',
+    'package-lock.json',
+    'yarn.lock',
+    '.vscode',
+    '.npmrc',
+    'webpack_cache',
+    '.codecc',
+    '.idea',
+    'build.yml',
+    '*/dist/',
+    'pre-*-bkcodeai'
+  ];
+  fs.writeFileSync(gitignorePath, gitignoreList.join('\n') + '\n')
 }
 
-module.exports = new ModuleHelper();
+module.exports = {
+  installPackage,
+  modifyPackage
+}

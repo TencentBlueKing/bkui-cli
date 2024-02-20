@@ -1,17 +1,41 @@
 ---
-home: true
-heroAlt: Logo image
-heroText: BK-CLI
-tagline: 蓝鲸前端开发脚手架 2.0
-actionText: 安装与使用
-actionLink: /intro/install-and-usage.html
-features:
+layout: home
 
-- title: 方便用户快速配置
-  details: 提供了 Babel 的配置包，方便用户快速配置 Babel。 提供了 Eslint 的配置包，方便用户快速配置 Eslint。提供了 Stylelint 的配置包，方便用户快速配置 Stylelint
-- title: 方便用户快速配置
-  details: 良好指引，帮助开发者从零开始开发项目。提供了丰富的模板系统，提供了三套系统模板，也支持开发自定义模板、
-- title:  webpack4/5
-  details: 提供了 webpack4 和 webpack5 插件，内置webapck相关配置，帮助开发者更方便的使用webpack
-  footer: Copyright © 2012-2022 Tencent BlueKing. All Rights Reserved. 蓝鲸智云 版权所有
+title: 蓝鲸前端开发脚手架
+titleTemplate: 蓝鲸前端开发脚手架
+
+hero:
+  name: BKUI-CLI
+  text: 蓝鲸前端开发脚手架
+  tagline: 优雅、高效的蓝鲸前端开发工具箱，全力打造无与伦比的开发体验。
+  image:
+    src: /images/svg/logo.svg
+    alt: BKUI-CLI
+  actions:
+    - theme: brand
+      text: 开始
+      link: /markdown/guide
+    - theme: alt
+      text: GitHub
+      link: https://github.com/TencentBlueKing/bkui-cli
+
+features:
+  - icon: 💡
+    title: 开发框架
+    details: 基于脚手架和蓝鲸体系，沉淀出内外版的前端和全栈开发框架
+  - icon: ⚡️
+    title: 构建工具
+    details: 基于前端构建领域的最新技术方案，沉淀出一套构建工具
+  - icon: 🔑
+    title: 持续更新
+    details: 脚手架工具会基于前端技术发展快速更新
+  - icon: 🛠️
+    title: 集成 Eslint
+    details: 集成公司和蓝鲸代码规范，提供 Eslint 工具
+  - icon: 📦
+    title: 集成 Babel
+    details: 基于项目最佳实践，提供 Babel 预设
+  - icon: 🔩
+    title: 集成 Stylelint
+    details: 集成公司和蓝鲸css规范，提供 Stylelint 工具
 ---

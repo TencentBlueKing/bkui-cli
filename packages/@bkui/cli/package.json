@@ -1,23 +1,20 @@
 {
-  "name": "@blueking/cli",
-  "version": "2.0.4",
+  "name": "create-bkui",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "bin": {
-    "bkui": "bin/index.js"
+    "create-bkui": "bin/index.js"
   },
   "author": "bkfe",
   "license": "ISC",
   "dependencies": {
     "@blueking/cli-utils": "^2.0.0",
-    "axios": "^0.21.0",
     "chalk": "^4.1.0",
-    "commander": "^6.0.0",
-    "ejs": "^3.1.5",
     "execa": "^4.1.0",
-    "fs-extra": "^10.0.0",
     "inquirer": "^7.3.3",
+    "minimist": "^1.2.8",
     "ora": "^5.4.0",
-    "validate-npm-package-name": "^3.0.0"
+    "tar": "^6.2.0"
   }
 }

@@ -1,9 +1,0 @@
-{
-  "name": "@blueking/bkui-template-vue3-v3",
-  "version": "0.0.1-beta02",
-  "description": "bkui-template-vue3-v3",
-  "main": "bkui.config.js",
-  "keywords": ["bkui-cli", "template-vue3-v3"],
-  "author": "bkfe",
-  "license": "MIT"
-}
