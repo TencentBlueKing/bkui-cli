@@ -1,6 +1,6 @@
 {
   "name": "open-vue3-ts",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "scripts": {
     "dev": "bk-cli-service-webpack dev",
@@ -9,7 +9,6 @@
     "lint:style": "stylelint **/*.{html,vue,css,sass,scss,less} --fix"
   },
   "keywords": [
-    "bk-ci",
     "vue3",
     "webpack-5"
   ],
