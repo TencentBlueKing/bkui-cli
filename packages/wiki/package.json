@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "vitepress dev docs --port 5000",
     "build": "vitepress build docs",
-    "serve": "vitepress serve docs --port 5000"
+    "server": "vitepress serve docs --port 5000"
   },
   "keywords": [],
   "author": "",
@@ -17,5 +17,8 @@
   },
   "dependencies": {
     "@vue/theme": "^1.0.1"
+  },
+  "engines": {
+    "node": ">= 16.16.0"
   }
 }
