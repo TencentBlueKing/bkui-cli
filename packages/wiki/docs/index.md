@@ -9,7 +9,7 @@ hero:
   text: 蓝鲸前端开发脚手架
   tagline: 优雅、高效的蓝鲸前端开发工具箱，全力打造无与伦比的开发体验。
   image:
-    src: /images/svg/logo.svg
+    src: /svg/logo.svg
     alt: BKUI-CLI
   actions:
     - theme: brand
