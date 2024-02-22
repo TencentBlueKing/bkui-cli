@@ -38,6 +38,8 @@ module.exports = {
 - ts: @blueking/eslint-config-bk/ts
 - ts + vue: @blueking/eslint-config-bk/tsvue
 - js + vue: @blueking/eslint-config-bk/vue
+- ts + vue3: @blueking/eslint-config-bk/tsvue3
+- js + vue3: @blueking/eslint-config-bk/vue3
 
 ## Stylelint 配置
 
