@@ -33,7 +33,9 @@ export default (config: Config, context: IContext) => {
       // 压缩 CSS
       config.optimization
         .minimizer('css')
-        .use(require('css-minimizer-webpack-plugin'));
+        .use(require('css-minimizer-webpack-plugin'), [{
+          parallel: context.options.parallel,
+        }]);
     }
 
     // 使用 esbuild 压缩 js
