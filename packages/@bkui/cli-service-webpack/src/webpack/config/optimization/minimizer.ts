@@ -24,18 +24,33 @@
 * IN THE SOFTWARE.
 */
 
-import type { IContext } from 'typings';
+import { IContext } from 'typings';
 import Config from 'webpack-chain';
 
 export default (config: Config, context: IContext) => {
   config.when((context.mode === 'production'), () => {
+    if (context.options.splitCss) {
+      // 压缩 CSS
+      config.optimization
+        .minimizer('css')
+        .use(require('css-minimizer-webpack-plugin'), [{
+          parallel: context.options.parallel,
+        }]);
+    }
+
     // 使用 esbuild 压缩 js
-    const { EsbuildPlugin } = require('esbuild-loader');
+    const terserPlugin = require('terser-webpack-plugin');
     config.optimization
       .minimizer('js')
-      .use(EsbuildPlugin, [{
-        target: 'es2015',
-        css: context.options.splitCss,
+      .use(terserPlugin, [{
+        minify: terserPlugin.esbuildMinify,
+        terserOptions: {
+          minify: true,
+          minifyWhitespace: true,
+          minifyIdentifiers: true,
+          minifySyntax: true,
+        },
+        parallel: context.options.parallel,
       }]);
   });
 };
