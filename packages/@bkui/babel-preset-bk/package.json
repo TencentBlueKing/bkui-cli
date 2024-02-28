@@ -1,6 +1,6 @@
 {
   "name": "@blueking/babel-preset-bk",
-  "version": "2.1.0-beta.10",
+  "version": "2.1.0-beta.11",
   "description": "",
   "main": "index.js",
   "author": "bkfe",
@@ -18,8 +18,8 @@
     "@vue/babel-helper-vue-jsx-merge-props": "^1.4.0",
     "@vue/babel-plugin-jsx": "^1.1.1",
     "@vue/babel-preset-jsx": "^1.4.0",
-    "core-js": "^3.25.3",
-    "core-js-compat": "^3.25.3",
+    "core-js": "^3.36.0",
+    "core-js-compat": "^3.36.0",
     "semver": "^7.3.7"
   }
 }
