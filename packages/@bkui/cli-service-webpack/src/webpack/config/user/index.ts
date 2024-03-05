@@ -31,7 +31,7 @@ import dotenvExpand from 'dotenv-expand';
 
 import type { IContext, IOptions, IReplaceStaticUrlPluginOption } from 'typings';
 import Config from 'webpack-chain';
-import { merge } from 'webpack-merge'
+import { merge } from 'webpack-merge';
 
 import {
   isFunction,
@@ -45,8 +45,8 @@ import type {
   ICopy,
 } from '../../../../index';
 import {
-  TARGET_TYPE
-} from '../../../lib/constant'
+  TARGET_TYPE,
+} from '../../../lib/constant';
 
 /**
  * 根据用户的配置，修改默认配置
@@ -140,7 +140,7 @@ export const loadUserConfig = (_: Config, context: IContext, options?: IOptions)
   if (fs.existsSync(localConfigPath)) {
     delete require.cache[require.resolve(localConfigPath)];
     const localConfig = require(localConfigPath);
-    Object.assign(localConfig, options)
+    Object.assign(localConfig, options);
     // 校验用户配置
     validate(localConfig);
     // 加载项目自定义 env 文件，因为用户可能会在配置中使用变量，所以需要最后读取这个文件，手动塞到 process.env，让优先级最高
@@ -172,5 +172,5 @@ export const applyUserConfig = (config: Config, context: IContext) => {
     log.error('\nbk.config.js 文件配置有误：\n    chainWebpack 方法需要返回一个 webpack-chain 对象，请修改后重试\n');
     process.exit(0);
   }
-  return merge(config.toConfig(), context.options.configureWebpack);
+  return merge(config.toConfig(), context.options.configureWebpack || {});
 };
