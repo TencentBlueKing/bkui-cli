@@ -27,7 +27,7 @@
 import Config from 'webpack-chain';
 import type { IContext } from 'typings';
 import { getAbsolutePath, getVueVersion, resolveLocal } from '../../../lib/util';
-import { TARGET_TYPE } from '../../../lib/constant'
+import { TARGET_TYPE } from '../../../lib/constant';
 
 export default (config: Config, context: IContext) => {
   const vueVersion = getVueVersion();
@@ -49,6 +49,13 @@ export default (config: Config, context: IContext) => {
         context.options.runtimeCompiler
           ? 'vue/dist/vue.esm-bundler.js'
           : 'vue/dist/vue.runtime.esm-bundler.js',
+      );
+
+    config.resolve
+      .alias
+      .set(
+        'vue-router',
+        'vue-router/dist/vue-router.mjs',
       );
   }
 
