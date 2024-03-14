@@ -44,11 +44,11 @@ const cwd = process.cwd()
 const init = async () => {
   try {
     const argProjectName = argv._[0] || 'bkui'
-    const argTemplate = argv._[1]
+    const argTemplate = argv.template || argv.t || argv._[1]
     const projectPath = path.join(cwd, argProjectName)
 
     if (!argTemplate) {
-      throw new Error('Please select the template first using the format --template')
+      throw new Error('Please select the template first using the format --template or -t')
     }
 
     await handleOverWrite(projectPath)
