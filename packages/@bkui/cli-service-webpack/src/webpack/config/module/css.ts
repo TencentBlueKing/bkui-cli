@@ -104,16 +104,16 @@ export default (config: Config, context: IContext) => {
 
   loadCssRule('css', /\.css$/);
   loadCssRule('postcss', /\.p(ost)?css$/);
-  loadCssRule('stylus', /\.styl(us)?$/, 'stylus-loader', { ...cssOptions?.preprocessorLoaderOptions });
-  loadCssRule('less', /\.less$/, 'less-loader', { ...cssOptions?.preprocessorLoaderOptions });
-  loadCssRule('scss', /\.scss$/, 'sass-loader', { ...cssOptions?.preprocessorLoaderOptions });
+  loadCssRule('stylus', /\.styl(us)?$/, 'stylus-loader', { ...cssOptions?.stylusLoaderOptions });
+  loadCssRule('less', /\.less$/, 'less-loader', { ...cssOptions?.lessLoaderOptions });
+  loadCssRule('scss', /\.scss$/, 'sass-loader', { ...cssOptions?.scssLoaderOptions });
   loadCssRule('sass', /\.sass$/, 'sass-loader', Object.assign(
     {},
-    cssOptions?.preprocessorLoaderOptions,
+    cssOptions?.sassLoaderOptions,
     {
       sassOptions: Object.assign(
         {},
-        cssOptions?.preprocessorLoaderOptions?.sassOptions,
+        cssOptions?.sassLoaderOptions?.sassOptions,
         {
           indentedSyntax: true, // 缩进语法
         },

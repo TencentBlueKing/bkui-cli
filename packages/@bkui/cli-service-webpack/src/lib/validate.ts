@@ -64,7 +64,10 @@ export const validate = async (options: IOptions) => {
     ),
     css: Joi.object({
       cssLoaderOptions: Joi.object(),
-      preprocessorLoaderOptions: Joi.object(),
+      stylusLoaderOptions: Joi.object(),
+      lessLoaderOptions: Joi.object(),
+      scssLoaderOptions: Joi.object(),
+      sassLoaderOptions: Joi.object(),
     }),
     host: Joi.string(),
     port: Joi.number(),

@@ -27,8 +27,11 @@ export interface IResource {
 }
 
 export interface ICss {
-  cssLoaderOptions: any,
-  preprocessorLoaderOptions: any
+  cssLoaderOptions: any;
+  stylusLoaderOptions: any;
+  lessLoaderOptions: any;
+  scssLoaderOptions: any;
+  sassLoaderOptions: any;
 }
 
 export interface ICopy {
