@@ -28,7 +28,7 @@ import type { IContext } from 'typings';
 import Config from 'webpack-chain';
 
 import { getAbsolutePath, getAssetPath } from '../../../lib/util';
-import { TARGET_TYPE } from '../../../lib/constant'
+import { TARGET_TYPE } from '../../../lib/constant';
 
 export default (config: Config, context: IContext) => {
   // 公共数据
@@ -60,7 +60,7 @@ export default (config: Config, context: IContext) => {
       })
       .set('clean', context.options.clean)
       .set('environment', {
-        module: context.options.libraryTarget === 'module'
-      })
+        module: context.options.libraryTarget === 'module',
+      });
   }
 };
