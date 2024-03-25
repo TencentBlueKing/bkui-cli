@@ -32,7 +32,7 @@ export default (config: Config, { mode }: IContext) => {
   config.when(mode === 'development', () => {
     config.set(
       'devtool',
-      'eval-cheap-module-source-map',
+      'eval-source-map',
     );
   });
 };

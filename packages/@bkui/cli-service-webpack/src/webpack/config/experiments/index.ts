@@ -32,7 +32,7 @@ import type {
 
 // experiments
 export default (config: Config, context: IContext) => {
-  const experiments: Configuration['experiments'] = {}
+  const experiments: Configuration['experiments'] = {};
 
   // lazyCompilation
   if (context.options.lazyCompilation && context.mode === 'development') {
@@ -43,13 +43,13 @@ export default (config: Config, context: IContext) => {
         listen: {
           host: context.options.lazyCompilationHost,
         },
-      }
-    }
+      },
+    };
   }
 
   // 构建esm
   if (context.options.libraryTarget === 'module') {
-    experiments.outputModule = true
+    experiments.outputModule = true;
   }
 
   config.set(
