@@ -27,7 +27,7 @@
 import type { IContext } from 'typings';
 import Config from 'webpack-chain';
 
-import { TARGET_TYPE } from '../../../lib/constant'
+import { TARGET_TYPE } from '../../../lib/constant';
 
 // mini-css-extract-plugin 配置
 export default (config: Config, context: IContext) => {

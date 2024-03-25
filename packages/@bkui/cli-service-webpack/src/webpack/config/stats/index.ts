@@ -29,7 +29,5 @@ import type { IContext } from 'typings';
 
 // 设置错误信息
 export default (config: Config, __: IContext) => {
-  config.stats({
-    errorDetails: true,
-  });
+  config.stats('normal');
 };
