@@ -4,6 +4,9 @@
 ```bash
 # 企业版
 npm create bkui my-project --template open-vue3-ts
+
+# 业务组件 & lesscode自定义组件
+npm create bkui my-project --template lesscode-component
 ```
 
 ## 本地开发与生产构建
