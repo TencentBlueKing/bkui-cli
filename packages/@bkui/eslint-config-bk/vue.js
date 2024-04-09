@@ -31,6 +31,12 @@ module.exports = {
   parserOptions: {
     parser: '@babel/eslint-parser',
     sourceType: 'module',
+    ecmaVersion: 2019,
+    ecmaFeatures: {
+      globalReturn: false,
+      impliedStrict: false,
+      jsx: true,
+    },
   },
   extends: ['plugin:vue/recommended', './index.js'],
   plugins: ['vue'],

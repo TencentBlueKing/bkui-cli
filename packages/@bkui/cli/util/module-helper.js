@@ -50,22 +50,17 @@ const modifyPackage = async (projectName, projectPath) => {
   pkg.name = projectName
   fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n')
   // add .gitignore
-  const gitignorePath = path.join(projectPath, '.gitignore')
-  const gitignoreList = [
-    'node_modules',
-    '.DS_Store',
-    'package-lock.json',
-    'yarn.lock',
-    '.vscode',
-    '.npmrc',
-    'webpack_cache',
-    '.codecc',
-    '.idea',
-    'build.yml',
-    '*/dist/',
-    'pre-*-bkcodeai'
-  ];
-  fs.writeFileSync(gitignorePath, gitignoreList.join('\n') + '\n')
+  const gitignorePath = path.join(projectPath, 'gitignore')
+  const dotGitignorePath = path.join(projectPath, '.gitignore')
+  if (fs.existsSync(gitignorePath)) {
+    fs.renameSync(gitignorePath, dotGitignorePath)
+  }
+  // add .npmignore
+  const npmignorePath = path.join(projectPath, 'npmignore')
+  const dotNpmignorePath = path.join(projectPath, '.npmignore')
+  if (fs.existsSync(npmignorePath)) {
+    fs.renameSync(npmignorePath, dotNpmignorePath)
+  }
 }
 
 module.exports = {
