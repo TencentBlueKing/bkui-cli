@@ -27,17 +27,6 @@ const rules = require('./vue3.rule');
 
 module.exports = {
   root: true,
-  parser: 'vue-eslint-parser',
-  parserOptions: {
-    parser: '@typescript-eslint/parser',
-    sourceType: 'module',
-    ecmaVersion: 2019,
-    ecmaFeatures: {
-      globalReturn: false,
-      impliedStrict: false,
-      jsx: true,
-    },
-  },
   extends: ['plugin:vue/vue3-recommended', '@vue/typescript', './vue3.js', './ts.js'],
   plugins: ['vue'],
   rules,

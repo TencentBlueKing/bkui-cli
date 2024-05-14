@@ -44,7 +44,7 @@ module.exports = (mode: Mode, options?: IOptions): Configuration => {
       port: 8080,
       filenameHashing: true,
       cache: true,
-      https: false,
+      server: 'http',
       open: false,
       runtimeCompiler: true,
       typescript: false,

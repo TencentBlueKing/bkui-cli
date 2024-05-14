@@ -1,6 +1,6 @@
 {
   "name": "@blueking/eslint-config-bk",
-  "version": "2.1.0-beta.21",
+  "version": "2.1.0",
   "main": "index.js",
   "dependencies": {
     "@babel/eslint-parser": "^7.23.10",

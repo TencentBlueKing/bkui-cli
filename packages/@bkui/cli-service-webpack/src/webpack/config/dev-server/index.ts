@@ -35,7 +35,6 @@ export default (config: Config, { options, mode, workDir }: IContext) => {
     config.devServer
       .host(options.host)
       .port(options.port)
-      .https(options.https)
       .open(options.open)
       .hot(true)
       .compress(true)
@@ -55,6 +54,7 @@ export default (config: Config, { options, mode, workDir }: IContext) => {
         },
         progress: true,
         reconnect: true,
-      });
+      })
+      .set('server', options.server);
   });
 };
