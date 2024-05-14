@@ -24,6 +24,12 @@
 * IN THE SOFTWARE.
 */
 module.exports = {
+  'vue/define-macros-order': [
+    "error", {
+      "order": ["defineOptions", "defineModel", "defineProps", "defineEmits", "defineSlots"],
+      "defineExposeLast": true
+    }
+  ],
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/array-bracket-spacing.md
   'vue/array-bracket-spacing': ['error', 'never'],
 

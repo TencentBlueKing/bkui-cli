@@ -3,6 +3,9 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import type {
   EntryObject,
 } from 'webpack';
+import type {
+  ServerConfiguration,
+} from 'webpack-dev-server';
 
 type ValueOf<T> = T[keyof T];
 
@@ -52,7 +55,7 @@ export interface IOptions {
   css?: ICss
   host: string
   port: number
-  https: boolean | { [key: string]: any }
+  server?: string | ServerConfiguration
   open: boolean
   runtimeCompiler: boolean
   typescript: boolean
