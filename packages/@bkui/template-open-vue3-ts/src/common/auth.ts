@@ -4,6 +4,7 @@ interface ILoginData {
 // 获取登录地址
 const getLoginUrl = (url: string, cUrl: string) => {
   const loginUrl = new URL(url);
+  loginUrl.searchParams.append('is_from_logout', '1');
   loginUrl.searchParams.append('c_url', cUrl);
   return loginUrl.href;
 };
