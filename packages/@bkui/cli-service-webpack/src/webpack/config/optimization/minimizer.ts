@@ -40,6 +40,7 @@ export default (config: Config, context: IContext) => {
         var: 'iife',
         umd: 'cjs',
         module: 'esm',
+        window: 'iife',
       };
       format = formatMap[context.options.libraryTarget];
     }
