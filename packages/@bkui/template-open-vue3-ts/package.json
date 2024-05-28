@@ -16,7 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "art-template": "^4.13.2",
-    "bkui-vue": "1.0.3-beta.25",
+    "bkui-vue": "1.0.3-beta.69",
     "connect-history-api-fallback": "^2.0.0",
     "cookie-parser": "^1.4.5",
     "dayjs": "^1.11.2",
@@ -29,10 +29,11 @@
   },
   "devDependencies": {
     "@blueking/babel-preset-bk": "^2.1.0-beta.10",
-    "@blueking/cli-service-webpack": "^0.0.1-beta.11",
+    "@blueking/cli-service-webpack": "0.0.3-beta.2",
     "@blueking/eslint-config-bk": "2.1.0-beta.18",
     "@blueking/stylelint-config-bk": "^2.1.0-beta.10",
     "enhanced-resolve": "^5.10.0",
+    "less": "^4.2.0",
     "postcss": "~8.4.16",
     "postcss-import": "^15.0.0",
     "postcss-mixins": "^9.0.4",
