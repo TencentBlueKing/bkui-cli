@@ -18,13 +18,13 @@ const getLoginUrl = (url: string, cUrl: string, isFromLogout: boolean) => {
 
 // 跳转到登录页
 export const login = (data: ILoginData = {}) => {
-  location.href = data.loginUrl || getLoginUrl(process.env.BK_LOGIN_URL, location.origin, false);
+  location.href = data.loginUrl || getLoginUrl(window.BK_LOGIN_URL, location.origin, false);
 };
 
 // 打开登录弹框
 export const loginModal = () => {
   const loginUrl = getLoginUrl(
-    `${process.env.BK_LOGIN_UR}/plain`,
+    `${window.BK_LOGIN_URL}/plain`,
     `${location.origin + window.SITE_URL}/static/login_success.html`,
     false
   )
@@ -33,5 +33,5 @@ export const loginModal = () => {
 
 // 退出登录
 export const logout = () => {
-  location.href = getLoginUrl(process.env.BK_LOGIN_URL, location.origin, true);
+  location.href = getLoginUrl(window.BK_LOGIN_URL, location.origin, true);
 };

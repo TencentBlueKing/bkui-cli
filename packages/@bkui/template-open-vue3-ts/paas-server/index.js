@@ -37,7 +37,7 @@ const GLOBAL_VAR = {
   // APP CODE
   BKPAAS_APP_ID: process.env.BKPAAS_APP_ID || '',
   BKPAAS_APP_SECRET: process.env.BKPAAS_APP_SECRET || '',
-  BK_LOGIN_URL: process.env.BK_LOGIN_URL || '',
+  BK_LOGIN_URL: process.env.BKPAAS_LOGIN_URL || '',
 };
 
 

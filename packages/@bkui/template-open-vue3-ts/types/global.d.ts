@@ -1,3 +1,4 @@
 declare interface Window {
-  SITE_URL: string
+  SITE_URL: string;
+  BK_LOGIN_URL: string
 }
