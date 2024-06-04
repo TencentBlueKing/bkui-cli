@@ -9,7 +9,8 @@
   ],
   "scripts": {
     "lint": "eslint --fix --ext .js,.vue,.ts packages",
-    "lint-without-fix": "eslint packages"
+    "lint-without-fix": "eslint packages",
+    "clean": "lerna clean"
   },
   "devDependencies": {
     "@blueking/eslint-config-bk": "2.1.0-beta.18",
