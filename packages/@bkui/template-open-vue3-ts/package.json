@@ -1,6 +1,6 @@
 {
   "name": "open-vue3-ts",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "scripts": {
     "dev": "bk-cli-service-webpack dev",
