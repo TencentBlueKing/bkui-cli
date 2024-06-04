@@ -1,6 +1,6 @@
 {
   "name": "open-vue3-ts",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "scripts": {
     "dev": "bk-cli-service-webpack dev",
@@ -47,7 +47,6 @@
     "typescript": "^4.8.4"
   },
   "engines": {
-    "node": ">= 16.16.0",
-    "npm": ">= 6.4.1 <7"
+    "node": ">= 16.16.0"
   }
 }
