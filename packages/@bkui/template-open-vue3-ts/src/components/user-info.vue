@@ -28,17 +28,15 @@ const userInfo = ref(user.user);
 </template>
 
 <style lang="postcss" scoped>
-.user-home {
-    z-index: 1000;
-    font-size: 14px;
-    .user-name {
-      cursor: pointer;
-    }
-    .logout {
-      display: inline-block;
-      text-align: center;
-      width: 50px;
-      cursor: pointer;
-    }
+.user-name {
+  cursor: pointer;
+  font-size: 14px;
+}
+.logout {
+  display: inline-block;
+  text-align: center;
+  width: 50px;
+  cursor: pointer;
+  font-size: 14px;
 }
 </style>
