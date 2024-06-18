@@ -28,7 +28,6 @@ import type { IContext, IReplaceStaticUrlPluginOption } from 'typings';
 import Config from 'webpack-chain';
 import { extname } from 'path';
 import { sources } from 'webpack';
-import { RUN_TIME_CHUNK_PERFIX } from '../../../lib/constant';
 
 class ReplaceStaticUrlPlugin {
   opts: IReplaceStaticUrlPluginOption;
@@ -77,8 +76,8 @@ class ReplaceStaticUrlPlugin {
             const asset = compilation.getAsset(filePath);
             const contents = asset.source.source();
             const ext = extname(filePath);
-            // 只处理 css 和 runtime js 文件
-            if (ext !== '.css' && !(ext === '.js' && filePath.includes(RUN_TIME_CHUNK_PERFIX))) {
+            // 只处理 css 和 js 文件
+            if (ext !== '.css' && ext !== '.js') {
               return;
             }
             // 自定义过滤
@@ -106,7 +105,7 @@ export default (config: Config, context: IContext) => {
         [
           context.options.replaceStatic as IReplaceStaticUrlPluginOption,
           context.options.outputAssetsDirName,
-          context.options.target
+          context.options.target,
         ],
       );
   });
