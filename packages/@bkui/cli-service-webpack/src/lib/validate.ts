@@ -71,8 +71,8 @@ export const validate = async (options: IOptions) => {
     }),
     host: Joi.string(),
     port: Joi.number(),
-    https: Joi.alternatives().try(
-      Joi.boolean(),
+    server: Joi.alternatives().try(
+      Joi.string(),
       Joi.object(),
     ),
     open: Joi.boolean(),
