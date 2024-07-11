@@ -24,32 +24,33 @@
 * IN THE SOFTWARE.
 */
 
-import type { IContext } from 'typings';
+import { IContext } from 'typings';
 import Config from 'webpack-chain';
-import { TARGET_TYPE } from '../../../lib/constant';
 
 export default (config: Config, context: IContext) => {
   config.when((context.mode === 'production'), () => {
-    // 使用 esbuild 压缩 js
-    const { EsbuildPlugin } = require('esbuild-loader');
-    // 构建web的format
-    let format = 'iife';
-    // 构建lib的format
-    if (context.options.target === TARGET_TYPE.LIB) {
-      const formatMap = {
-        var: 'iife',
-        umd: 'cjs',
-        module: 'esm',
-        window: 'iife',
-      };
-      format = formatMap[context.options.libraryTarget];
+    if (context.options.splitCss) {
+      // 压缩 CSS
+      config.optimization
+        .minimizer('css')
+        .use(require('css-minimizer-webpack-plugin'), [{
+          parallel: context.options.parallel,
+        }]);
     }
+
+    // 使用 terser-webpack-plugin 压缩 js
+    const terserPlugin = require('terser-webpack-plugin');
     config.optimization
       .minimizer('js')
-      .use(EsbuildPlugin, [{
-        target: 'es2015',
-        css: true,
-        format,
+      .use(terserPlugin, [{
+        minify: terserPlugin.esbuildMinify,
+        terserOptions: {
+          minify: true,
+          minifyWhitespace: true,
+          minifyIdentifiers: true,
+          minifySyntax: true,
+        },
+        parallel: context.options.parallel,
       }]);
   });
 };
