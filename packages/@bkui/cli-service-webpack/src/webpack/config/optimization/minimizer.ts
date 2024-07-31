@@ -43,12 +43,10 @@ export default (config: Config, context: IContext) => {
     config.optimization
       .minimizer('js')
       .use(terserPlugin, [{
-        minify: terserPlugin.esbuildMinify,
+        minify: terserPlugin.swcMinify,
         terserOptions: {
-          minify: true,
-          minifyWhitespace: true,
-          minifyIdentifiers: true,
-          minifySyntax: true,
+          compress: true,
+          mangle: true,
         },
         parallel: context.options.parallel,
       }]);
