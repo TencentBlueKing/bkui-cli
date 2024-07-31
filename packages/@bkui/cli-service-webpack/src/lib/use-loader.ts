@@ -61,7 +61,7 @@ const tsLoaderOptions = {
 };
 
 const swcLoaderJscOptions = {
-  target: 'es5',
+  target: 'es2015',
 };
 
 // 生成 thread-loader 的 options
