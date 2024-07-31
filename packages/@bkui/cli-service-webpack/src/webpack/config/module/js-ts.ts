@@ -31,13 +31,10 @@ import {
   loaderChain,
   excludeNodeModules,
   genThreadLoader,
-  genEsbuildLoader,
+  genSwcLoader,
   genBabelLoader,
   genTsLoader,
 } from '../../../lib/use-loader';
-import {
-  getAbsolutePath,
-} from '../../../lib/util';
 
 // 处理 js ts tsx
 export default (config: Config, context: IContext) => {
@@ -72,10 +69,7 @@ export default (config: Config, context: IContext) => {
     [
       ...commonLoaders,
       {
-        loaderFn: genEsbuildLoader,
-        options: {
-          loader: 'js',
-        },
+        loaderFn: genSwcLoader,
       },
     ],
   );
@@ -95,10 +89,11 @@ export default (config: Config, context: IContext) => {
     [
       ...commonLoaders,
       {
-        loaderFn: genEsbuildLoader,
+        loaderFn: genSwcLoader,
         options: {
-          loader: 'ts',
-          tsconfig: getAbsolutePath(context.workDir, context.options.tsconfig),
+          parser: {
+            syntax: 'typescript',
+          },
         },
       },
     ],

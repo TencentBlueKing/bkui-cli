@@ -44,7 +44,7 @@ export type ChainLoader = genLoaderFunction & { loaderFn: genLoaderFunction, opt
 const threadLoaderPath = require.resolve('thread-loader');
 const babelLoaderPath = require.resolve('babel-loader');
 const tsLoaderPath = require.resolve('ts-loader');
-const esbuildLoaderPath = require.resolve('esbuild-loader');
+const swcLoaderPath = require.resolve('swc-loader');
 
 const vueVersion = getVueVersion();
 
@@ -60,8 +60,8 @@ const tsLoaderOptions = {
   happyPackMode: true,
 };
 
-const esbuildLoaderOptions = {
-  target: 'es2015',
+const swcLoaderJscOptions = {
+  target: 'es5',
 };
 
 // 生成 thread-loader 的 options
@@ -87,7 +87,7 @@ export const warmupWorker = (__: Config, context: IContext) => {
       vueVersion === 2 ? 'vue-loader-bk' : 'vue-loader',
       'babel-loader',
       'ts-loader',
-      'esbuild-loader',
+      'swc-loader',
     ],
   );
 };
@@ -129,16 +129,19 @@ export const genTsLoader = (rule: Config.Rule, options: any) => rule
   .end();
 
 /**
- * 生成 esbuild-loader 配置
+ * 生成 swc-loader 配置
  * @param rule 配置
+ * @param options 配置
  * @returns 配置
  */
-export const genEsbuildLoader = (rule: Config.Rule, options: any) => rule
-  .use('esbuild-loader')
-  .loader(esbuildLoaderPath)
+export const genSwcLoader = (rule: Config.Rule, options: any) => rule
+  .use('swc-loader')
+  .loader(swcLoaderPath)
   .options({
-    ...esbuildLoaderOptions,
-    ...options,
+    jsc: {
+      ...swcLoaderJscOptions,
+      ...options,
+    },
   })
   .end();
 
