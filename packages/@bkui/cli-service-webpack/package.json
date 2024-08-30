@@ -1,6 +1,6 @@
 {
   "name": "@blueking/cli-service-webpack",
-  "version": "0.0.5-beta.4",
+  "version": "0.0.5-beta.5",
   "description": "bk-cli-service-webpack",
   "main": "./dist/index.js",
   "typings": "./index.d.ts",
@@ -55,6 +55,9 @@
     "webpack-chain": "^6.5.1",
     "webpack-dev-server": "^5.0.4",
     "webpack-merge": "^5.10.0"
+  },
+  "overrides": {
+    "@swc/core": "1.5.7"
   },
   "devDependencies": {
     "@blueking/eslint-config-bk": "2.1.0-beta.18",
