@@ -4,7 +4,7 @@ module.exports = async function user(req, res, next) {
     return;
   }
   const request = require('request');
-  request(`${process.env.BK_LOGIN_URL}api/v3/is_login/?bk_token=${req.cookies.bk_token}`, (err, response, body) => {
+  request(`${process.env.BK_LOGIN_URL}/api/v3/is_login/?bk_token=${req.cookies.bk_token}`, (err, response, body) => {
     if (err) {
       res.status(500);
       res.send('');
