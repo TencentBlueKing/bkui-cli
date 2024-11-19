@@ -24,7 +24,7 @@ export const login = (data: ILoginData = {}) => {
 // 打开登录弹框
 export const loginModal = () => {
   const loginUrl = getLoginUrl(
-    `${window.BK_LOGIN_URL}/plain`,
+    `${window.BK_LOGIN_URL}/plain/`,
     `${location.origin + window.SITE_URL}/static/login_success.html`,
     false
   )
