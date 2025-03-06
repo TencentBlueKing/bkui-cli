@@ -135,7 +135,7 @@ export const getVueVersion = () => {
   } catch (error) {
 
   }
-  const vueVersion = vue ? semver.major(vue.version) : 2;
+  const vueVersion = vue ? semver.major(vue.version) : undefined;
   return vueVersion;
 };
 
