@@ -41,7 +41,7 @@ export default (config: Config, context: IContext) => {
           ? 'vue/dist/vue.esm.js'
           : 'vue/dist/vue.runtime.esm.js',
       );
-  } else {
+  } else if (vueVersion === 3) {
     config.resolve
       .alias
       .set(

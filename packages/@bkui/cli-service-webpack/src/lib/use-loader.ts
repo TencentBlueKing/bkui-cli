@@ -81,14 +81,20 @@ const genThreadLoaderOptions = (parallel: boolean | number) => {
 
 // 加速 worker 启动
 export const warmupWorker = (__: Config, context: IContext) => {
+  const warmupLoaders = [
+    'babel-loader',
+    'ts-loader',
+    'swc-loader',
+  ];
+  if (vueVersion === 2) {
+    warmupLoaders.push('vue-loader-bk');
+  }
+  if (vueVersion === 3) {
+    warmupLoaders.push('vue-loader');
+  }
   warmup(
     genThreadLoaderOptions(context.options.parallel),
-    [
-      vueVersion === 2 ? 'vue-loader-bk' : 'vue-loader',
-      'babel-loader',
-      'ts-loader',
-      'swc-loader',
-    ],
+    warmupLoaders,
   );
 };
 
