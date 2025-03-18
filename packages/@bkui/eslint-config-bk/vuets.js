@@ -1,14 +1,18 @@
 const { defineConfig } = require('eslint/config');
-const { rawTsConfig, rawDTsConfig } = require('./ts');
-const { rawVueConfig } = require('./vue');
-const baseConfig = require('./index');
+const tsConfig = require('./tencent/ts');
+const vueConfig = require('./tencent/vue');
+const baseConfig = require('./tencent/base');
+const prettierConfig = require('./tencent/prettier');
+
+const [ts, dts] = tsConfig;
 
 module.exports = defineConfig([
   baseConfig,
   {
-    ...rawTsConfig,
+    ...ts,
     files: ['**/*.?([cm])ts', '**/*.?([cm])tsx', '**/*.vue'],
   },
-  rawDTsConfig,
-  rawVueConfig,
+  dts,
+  vueConfig,
+  prettierConfig,
 ]);
