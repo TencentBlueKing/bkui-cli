@@ -38,7 +38,7 @@ export default (config: Config, __: IContext) => {
     config
       .plugin('vue-loader')
       .use(require('vue-loader-bk').VueLoaderPlugin);
-  } else {
+  } else if (vueVersion === 3) {
     const webpack = require('webpack');
     // vue-loader plugin 15+
     config

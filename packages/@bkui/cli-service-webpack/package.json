@@ -1,6 +1,6 @@
 {
   "name": "@blueking/cli-service-webpack",
-  "version": "0.0.5-beta.6",
+  "version": "0.0.7",
   "description": "bk-cli-service-webpack",
   "main": "./dist/index.js",
   "typings": "./index.d.ts",
@@ -39,6 +39,7 @@
     "path-browserify": "^1.0.1",
     "postcss-loader": "^7.0.1",
     "sass-loader": "^13.0.2",
+    "schema-utils": "^3.2.0",
     "semver": "^7.5.4",
     "stylus-loader": "^7.0.0",
     "swc-loader": "^0.2.6",

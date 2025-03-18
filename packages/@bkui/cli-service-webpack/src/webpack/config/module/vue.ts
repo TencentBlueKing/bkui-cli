@@ -50,7 +50,7 @@ export default (config: Config, context: IContext) => {
           whitespace: 'preserve',
         },
       });
-  } else {
+  } else if (vueVersion === 3) {
     // vue-loader v15+
     genThreadLoader(vueRule, context.options)
       .use('vue-loader')
