@@ -26,31 +26,14 @@
 module.exports = {
   extends: [
     'stylelint-config-standard',
-    'stylelint-config-standard-scss',
     'stylelint-config-recommended-vue',
-    "stylelint-config-recommended-vue/scss"
-  ],
-  plugins: [
-    'stylelint-scss',
-    'stylelint-order',
+    'stylelint-config-recess-order'
   ],
   ignoreFiles: ['**/*.js', '**/*.ts', "./dist/**"],
   rules: {
     // Base rules
     'selector-max-id': 0,
     'declaration-property-value-disallowed-list': { '/^border/': ['none'] },
-
-    // Sass rules
-    'max-nesting-depth': 10,
-    'scss/dollar-variable-pattern': '^_?[a-z]+[\\w-]*$',
-    'scss/at-extend-no-missing-placeholder': true,
-
-    'order/order': [
-      'declarations',
-      { type: 'at-rule' },
-      { type: 'at-rule', hasBlock: true },
-      'rules',
-    ],
     'declaration-no-important': true,
   },
 };
