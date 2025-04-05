@@ -24,15 +24,25 @@
 * IN THE SOFTWARE.
 */
 import type {
-  IOptions,
-} from '../types/type';
+  IContext,
+} from '../../../../types/type';
+import Config from 'webpack-chain';
+import {
+  merge,
+} from 'webpack-merge';
 
-export default (options?: IOptions) => {
-  // 引入依赖
-  const { generateContext } = require('../context');
-  const { dev } = require('../tools/webpack');
-  // 生成上下文
-  const context = generateContext('development', options);
-  // 启动服务
-  dev(context);
+/**
+ * 基于 service 配置生成 webpack 配置后，使用用户配置的 configureWebpack 和 chainWebpack 修改 webpack 配置
+ * @param config webpack 配置
+ * @param context 上下文
+ * @returns webpack 配置
+ */
+export const applyUserConfig = (config: Config, context: IContext) => {
+  const finallyConfig = context.options.chainWebpack(config);
+  if (!(finallyConfig instanceof Config)) {
+    const { log } = require('@blueking/cli-utils');
+    log.error('\nbk.config.js 文件配置有误：\n    chainWebpack 方法需要返回一个 webpack-chain 对象，请修改后重试\n');
+    process.exit(0);
+  }
+  return merge(config.toConfig(), context.options.configureWebpack || {});
 };

@@ -23,16 +23,39 @@
 * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
-import type {
-  IOptions,
-} from '../types/type';
 
-export default (options?: IOptions) => {
-  // 引入依赖
-  const { generateContext } = require('../context');
-  const { dev } = require('../tools/webpack');
-  // 生成上下文
-  const context = generateContext('development', options);
-  // 启动服务
-  dev(context);
+import type {
+  IContext,
+} from '../../../../types/type';
+import Config from 'webpack-chain';
+import type {
+  Configuration,
+} from 'webpack';
+
+// experiments
+export default (config: Config, context: IContext) => {
+  const experiments: Configuration['experiments'] = {};
+
+  // lazyCompilation
+  if (context.options.lazyCompilation && context.mode === 'development') {
+    experiments.lazyCompilation = {
+      entries: true,
+      imports: true,
+      backend: {
+        listen: {
+          host: context.options.lazyCompilationHost,
+        },
+      },
+    };
+  }
+
+  // 构建esm
+  if (context.options.libraryTarget === 'module') {
+    experiments.outputModule = true;
+  }
+
+  config.set(
+    'experiments',
+    experiments,
+  );
 };

@@ -23,16 +23,45 @@
 * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
-import type {
-  IOptions,
-} from '../types/type';
 
-export default (options?: IOptions) => {
-  // 引入依赖
-  const { generateContext } = require('../context');
-  const { dev } = require('../tools/webpack');
-  // 生成上下文
-  const context = generateContext('development', options);
-  // 启动服务
-  dev(context);
+import type {
+  IContext,
+} from '../../../../types/type';
+import Config from 'webpack-chain';
+import { getAssetPath } from '../../../../lib/util';
+
+export default (config: Config, context: IContext) => {
+  const getFileSubPath = (dir: string) => `${dir}/[name].[hash:8][ext]`;
+
+  config.module
+    .rule('svg')
+    .test(/\.(svg)(\?.*)?$/)
+    .set('type', 'asset/resource')
+    .set('generator', {
+      filename: getAssetPath(context.options, getFileSubPath('svg')),
+    });
+
+  config.module
+    .rule('images')
+    .test(/\.(png|jpe?g|gif|webp|avif)(\?.*)?$/)
+    .set('type', 'asset')
+    .set('generator', {
+      filename: getAssetPath(context.options, getFileSubPath('img')),
+    });
+
+  config.module
+    .rule('media')
+    .test(/\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/)
+    .set('type', 'asset')
+    .set('generator', {
+      filename: getAssetPath(context.options, getFileSubPath('media')),
+    });
+
+  config.module
+    .rule('fonts')
+    .test(/\.(woff2?|eot|ttf|otf)(\?.*)?$/i)
+    .set('type', 'asset')
+    .set('generator', {
+      filename: getAssetPath(context.options, getFileSubPath('fonts')),
+    });
 };

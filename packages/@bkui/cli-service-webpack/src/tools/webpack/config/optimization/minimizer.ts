@@ -23,16 +23,34 @@
 * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
-import type {
-  IOptions,
-} from '../types/type';
 
-export default (options?: IOptions) => {
-  // 引入依赖
-  const { generateContext } = require('../context');
-  const { dev } = require('../tools/webpack');
-  // 生成上下文
-  const context = generateContext('development', options);
-  // 启动服务
-  dev(context);
+import type {
+  IContext,
+} from '../../../../types/type';
+import Config from 'webpack-chain';
+
+export default (config: Config, context: IContext) => {
+  config.when((context.mode === 'production'), () => {
+    if (context.options.splitCss) {
+      // 压缩 CSS
+      config.optimization
+        .minimizer('css')
+        .use(require('css-minimizer-webpack-plugin'), [{
+          parallel: context.options.parallel,
+        }]);
+    }
+
+    // 使用 terser-webpack-plugin 压缩 js
+    const terserPlugin = require('terser-webpack-plugin');
+    config.optimization
+      .minimizer('js')
+      .use(terserPlugin, [{
+        minify: terserPlugin.swcMinify,
+        terserOptions: {
+          compress: true,
+          mangle: true,
+        },
+        parallel: context.options.parallel,
+      }]);
+  });
 };

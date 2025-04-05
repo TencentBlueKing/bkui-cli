@@ -23,16 +23,25 @@
 * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
-import type {
-  IOptions,
-} from '../types/type';
 
-export default (options?: IOptions) => {
-  // 引入依赖
-  const { generateContext } = require('../context');
-  const { dev } = require('../tools/webpack');
-  // 生成上下文
-  const context = generateContext('development', options);
-  // 启动服务
-  dev(context);
+import type {
+  IContext,
+} from '../../../../types/type';
+import Config from 'webpack-chain';
+
+import { warmupWorker } from '../../../../lib/use-loader';
+import loadBase from './base';
+import loadJsTs from './js-ts';
+import loadVue from './vue';
+import loadCss from './css';
+import loadAssets from './assets';
+
+// 配置 module
+export default (config: Config, context: IContext) => {
+  warmupWorker(config, context);
+  loadBase(config, context);
+  loadJsTs(config, context);
+  loadVue(config, context);
+  loadCss(config, context);
+  loadAssets(config, context);
 };

@@ -23,16 +23,51 @@
 * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
-import type {
-  IOptions,
-} from '../types/type';
 
-export default (options?: IOptions) => {
-  // 引入依赖
-  const { generateContext } = require('../context');
-  const { dev } = require('../tools/webpack');
-  // 生成上下文
-  const context = generateContext('development', options);
-  // 启动服务
-  dev(context);
+import type {
+  IContext,
+} from '../../../../types/type';
+import Config from 'webpack-chain';
+import { getVueVersion } from '../../../../lib/util';
+
+import {
+  genThreadLoader,
+} from '../../../../lib/use-loader';
+
+export default (config: Config, context: IContext) => {
+  // const vueLoader = require('vue-loader');
+  const vueVersion = getVueVersion();
+  // vue rule
+  const vueRule = config.module
+    .rule('vue')
+    .test(/\.vue$/);
+
+  if (vueVersion === 2) {
+    // vue-loader v15
+    genThreadLoader(vueRule, context.options)
+      .use('vue-loader')
+      .loader(require.resolve('vue-loader-bk'))
+      .options({
+        compilerOptions: {
+          whitespace: context.options.whitespace,
+        },
+      });
+  } else if (vueVersion === 3) {
+    // vue-loader v15+
+    genThreadLoader(vueRule, context.options)
+      .use('vue-loader')
+      .loader(require.resolve('vue-loader'))
+      .options({
+        babelParserPlugins: ['jsx', 'classProperties', 'decorators-legacy'],
+        compilerOptions: {
+          whitespace: context.options.whitespace,
+        },
+      });
+  }
+
+  config.module
+    .rule('vue-style')
+    .test(/\.vue$/)
+    .resourceQuery(/type=style/)
+    .set('sideEffects', true);
 };

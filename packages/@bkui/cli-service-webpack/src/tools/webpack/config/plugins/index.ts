@@ -23,16 +23,37 @@
 * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
-import type {
-  IOptions,
-} from '../types/type';
 
-export default (options?: IOptions) => {
-  // 引入依赖
-  const { generateContext } = require('../context');
-  const { dev } = require('../tools/webpack');
-  // 生成上下文
-  const context = generateContext('development', options);
-  // 启动服务
-  dev(context);
+import type {
+  IContext,
+} from '../../../../types/type';
+import Config from 'webpack-chain';
+
+import loadHtmlWebpackPlugin from './html';
+import loadTypescript from './typescript';
+import loadCss from './css';
+import loadDefine from './define';
+import loadCaseSensitivePath from './case-sensitive-path';
+import loadVue from './vue';
+import loadProgress from './progress';
+// import loadEslint from './eslint';
+import loadCopy from './copy';
+import loadBundleAnalyzer from './bundle-analyzer';
+import loadReplaceStaticUrl from './replace-static-url-plugin';
+import loadLimitChunkCount from './limit-chunk-count-plugin';
+
+// 加载插件
+export default (config: Config, context: IContext) => {
+  loadHtmlWebpackPlugin(config, context);
+  loadTypescript(config, context);
+  loadCss(config, context);
+  loadDefine(config, context);
+  loadCaseSensitivePath(config, context);
+  loadVue(config, context);
+  loadProgress(config, context);
+  // loadEslint(config, context);
+  loadCopy(config, context);
+  loadBundleAnalyzer(config, context);
+  loadReplaceStaticUrl(config, context);
+  loadLimitChunkCount(config, context);
 };

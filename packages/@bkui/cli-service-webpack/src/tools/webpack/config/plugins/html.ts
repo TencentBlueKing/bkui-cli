@@ -23,16 +23,33 @@
 * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
-import type {
-  IOptions,
-} from '../types/type';
 
-export default (options?: IOptions) => {
-  // 引入依赖
-  const { generateContext } = require('../context');
-  const { dev } = require('../tools/webpack');
-  // 生成上下文
-  const context = generateContext('development', options);
-  // 启动服务
-  dev(context);
+import type {
+  IContext,
+} from '../../../../types/type';
+import Config from 'webpack-chain';
+
+import { isEmpty } from '../../../../lib/util';
+import { TARGET_TYPE } from '../../../../lib/constant';
+
+// html-webpack-plugin 配置
+export default (config: Config, context: IContext) => {
+  config.when((context.options.target === TARGET_TYPE.WEB), () => {
+    const HtmlWebpackPlugin = require('html-webpack-plugin');
+    const { resource } = context.options;
+    Object
+      .keys(resource)
+      .forEach((name) => {
+        const htmlPluginOptions = resource[name].html;
+        if (htmlPluginOptions) {
+          htmlPluginOptions.chunks = isEmpty(htmlPluginOptions.chunks) ? [name] : htmlPluginOptions.chunks;
+          config
+            .plugin(`html-${name}`)
+            .use(
+              HtmlWebpackPlugin,
+              [htmlPluginOptions],
+            );
+        }
+      });
+  });
 };

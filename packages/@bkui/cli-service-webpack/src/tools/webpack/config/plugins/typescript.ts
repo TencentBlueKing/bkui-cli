@@ -23,16 +23,43 @@
 * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
-import type {
-  IOptions,
-} from '../types/type';
 
-export default (options?: IOptions) => {
-  // 引入依赖
-  const { generateContext } = require('../context');
-  const { dev } = require('../tools/webpack');
-  // 生成上下文
-  const context = generateContext('development', options);
-  // 启动服务
-  dev(context);
+import type {
+  IContext,
+} from '../../../../types/type';
+import Config from 'webpack-chain';
+
+// ts 相关插件配置
+export default (config: Config, context: IContext) => {
+  config.when(context.options.forkTsChecker, () => {
+    const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+
+    let vueCompiler;
+    try {
+      vueCompiler = require.resolve('vue/compiler-sfc');
+    } catch (e) {
+      vueCompiler = require.resolve('vue-template-compiler');
+    }
+
+    // 独立进程处理类型检查
+    config
+      .plugin('forkTsCheckerWebpackPlugin')
+      .use(
+        ForkTsCheckerWebpackPlugin,
+        [{
+          typescript: {
+            diagnosticOptions: {
+              semantic: true,
+              syntactic: true,
+            },
+            extensions: {
+              vue: {
+                enabled: true,
+                compiler: vueCompiler,
+              },
+            },
+          },
+        }],
+      );
+  });
 };

@@ -23,50 +23,21 @@
 * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
-import type { IOptions } from 'typings';
+import type {
+  IOptions,
+} from '../types/type';
 
-export default (options?: IOptions) => new Promise((resolve, reject) => {
-  const webpack = require('webpack');
-  const { log } = require('@blueking/cli-utils');
-  const generateWebpack = require('../webpack/index');
-  // start build
-  const ora = require('ora');
-  const spinner = ora('Building...');
-  spinner.start();
-  // 构造配置
-  const webpackConfig = generateWebpack('production', options);
-  // 执行构建
-  webpack(webpackConfig, (err: any, stats: any) => {
-    spinner.stop();
-
-    if (err) {
-      log.error(err.message || err);
-      process.exit(1);
-    }
-
-    const statsInfo = stats.toString({
-      colors: true,
-      modules: true,
-      children: true,
-      chunks: true,
-      chunkModules: true,
-      errorDetails: true,
-      errors: true,
-    });
-
-    if (stats.hasErrors()) {
-      log.error(`Build failed with errors. \n ${statsInfo}`);
-      reject(1);
-    }
-
-    log.info(statsInfo);
-
-    log.done('Build complete.');
-
-    if (process.env.BUNDLE_ANALYSIS === '1') {
-      log.info('BundleAnalysis at http://127.0.0.1:8888');
-    } else {
-      resolve(0);
-    }
-  });
-});
+export default async (options?: IOptions) => {
+  // 引入依赖
+  const { generateContext } = require('../context');
+  const { build: webpackBuild } = require('../tools/webpack');
+  // 生成上下文
+  const context = generateContext('production', options);
+  // 使用 webpack 构建
+  await webpackBuild(context);
+  // 使用 rust 构建 preserveModules
+  if (context.options.preserveModules) {
+    const { build: rustBuild } = require('../tools/rust');
+    await rustBuild(context);
+  }
+};

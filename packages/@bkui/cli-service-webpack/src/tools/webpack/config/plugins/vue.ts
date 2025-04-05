@@ -23,16 +23,35 @@
 * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
-import type {
-  IOptions,
-} from '../types/type';
 
-export default (options?: IOptions) => {
-  // 引入依赖
-  const { generateContext } = require('../context');
-  const { dev } = require('../tools/webpack');
-  // 生成上下文
-  const context = generateContext('development', options);
-  // 启动服务
-  dev(context);
+import type {
+  IContext,
+} from '../../../../types/type';
+import Config from 'webpack-chain';
+
+import { getVueVersion } from '../../../../lib/util';
+
+// vue 相关插件配置
+export default (config: Config, __: IContext) => {
+  const vueVersion = getVueVersion();
+
+  if (vueVersion === 2) {
+    // vue-loader-plugin v15
+    config
+      .plugin('vue-loader')
+      .use(require('vue-loader-bk').VueLoaderPlugin);
+  } else if (vueVersion === 3) {
+    const webpack = require('webpack');
+    // vue-loader plugin 15+
+    config
+      .plugin('vue-loader')
+      .use(require('vue-loader').VueLoaderPlugin);
+    // 设置 vue
+    config
+      .plugin('feature-flags')
+      .use(webpack.DefinePlugin, [{
+        __VUE_OPTIONS_API__: 'true',
+        __VUE_PROD_DEVTOOLS__: 'false',
+      }]);
+  }
 };

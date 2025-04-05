@@ -23,16 +23,96 @@
 * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
-import type {
-  IOptions,
-} from '../types/type';
 
-export default (options?: IOptions) => {
-  // 引入依赖
-  const { generateContext } = require('../context');
-  const { dev } = require('../tools/webpack');
-  // 生成上下文
-  const context = generateContext('development', options);
-  // 启动服务
-  dev(context);
+import type {
+  IContext,
+} from '../../../../types/type';
+import Config from 'webpack-chain';
+
+import {
+  loaderChain,
+  excludeNodeModules,
+  genThreadLoader,
+  genSwcLoader,
+  genBabelLoader,
+  genTsLoader,
+} from '../../../../lib/use-loader';
+
+// 处理 js ts tsx
+export default (config: Config, context: IContext) => {
+  const jsRule = config.module
+    .rule('js')
+    .test(/\.m?js$/);
+  const tsRule = config.module
+    .rule('ts')
+    .test(/\.m?ts$/);
+  const jsxRule = config.module
+    .rule('jsx')
+    .test(/\.m?jsx$/);
+  const tsxRule = config.module
+    .rule('tsx')
+    .test(/\.m?tsx$/);
+
+  const commonLoaders: any[] = [
+    {
+      loaderFn: genThreadLoader,
+      options: context.options,
+    },
+  ];
+
+  // 是否解析 node_module
+  if (!context.options.parseNodeModules) {
+    commonLoaders.unshift(excludeNodeModules);
+  }
+
+  // js loader
+  loaderChain(
+    jsRule,
+    [
+      ...commonLoaders,
+      {
+        loaderFn: genSwcLoader,
+      },
+    ],
+  );
+
+  // jsx loader
+  loaderChain(
+    jsxRule,
+    [
+      ...commonLoaders,
+      genBabelLoader,
+    ],
+  );
+
+  // ts loader
+  loaderChain(
+    tsRule,
+    [
+      ...commonLoaders,
+      {
+        loaderFn: genSwcLoader,
+        options: {
+          parser: {
+            syntax: 'typescript',
+          },
+        },
+      },
+    ],
+  );
+
+  // tsx loader
+  loaderChain(
+    tsxRule,
+    [
+      ...commonLoaders,
+      genBabelLoader,
+      {
+        loaderFn: genTsLoader,
+        options: {
+          appendTsxSuffixTo: ['\\.vue$'],
+        },
+      },
+    ],
+  );
 };

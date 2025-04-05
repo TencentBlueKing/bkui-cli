@@ -23,16 +23,30 @@
 * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
-import type {
-  IOptions,
-} from '../types/type';
 
-export default (options?: IOptions) => {
-  // 引入依赖
-  const { generateContext } = require('../context');
-  const { dev } = require('../tools/webpack');
-  // 生成上下文
-  const context = generateContext('development', options);
-  // 启动服务
-  dev(context);
+import type {
+  IContext,
+} from '../../../../types/type';
+import Config from 'webpack-chain';
+
+import { TARGET_TYPE } from '../../../../lib/constant';
+
+// mini-css-extract-plugin 配置
+export default (config: Config, context: IContext) => {
+  config.when((context.mode === 'production' && context.options.splitCss), () => {
+    const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+    const { getAssetPath } = require('../../../lib/util');
+
+    const cssName = context.options.target === TARGET_TYPE.WEB
+      ? `css/[name]${context.options.filenameHashing ? '.[contenthash:8]' : ''}.css`
+      : '[name].css';
+    const fileName = getAssetPath(context.options, cssName);
+    config
+      .plugin('mini-css-extract-plugin')
+      .use(MiniCssExtractPlugin, [{
+        ignoreOrder: true,
+        filename: fileName,
+        chunkFilename: fileName,
+      }]);
+  });
 };

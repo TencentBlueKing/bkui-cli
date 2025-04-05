@@ -24,15 +24,72 @@
 * IN THE SOFTWARE.
 */
 import type {
-  IOptions,
-} from '../types/type';
+  IContext,
+} from '../../types/type';
+import loadConfig from './config/index';
 
-export default (options?: IOptions) => {
+// build
+const build = (context: IContext) => new Promise((resolve, reject) => {
+  const webpack = require('webpack');
+  const { log } = require('@blueking/cli-utils');
+  // start webpack build
+  const ora = require('ora');
+  const spinner = ora('Building...');
+  // 构造配置
+  const webpackConfig = loadConfig(context);
+  // 执行构建
+  webpack(webpackConfig, (err: any, stats: any) => {
+    spinner.stop();
+
+    if (err) {
+      log.error(err.message || err);
+      process.exit(1);
+    }
+
+    const statsInfo = stats.toString({
+      colors: true,
+      modules: true,
+      children: true,
+      chunks: true,
+      chunkModules: true,
+      errorDetails: true,
+      errors: true,
+    });
+
+    if (stats.hasErrors()) {
+      log.error(`Build failed with errors. \n ${statsInfo}`);
+      reject(1);
+    }
+
+    log.info(statsInfo);
+
+    log.done('Build complete.');
+
+    if (process.env.BUNDLE_ANALYSIS === '1') {
+      log.info('BundleAnalysis at http://127.0.0.1:8888');
+    } else {
+      resolve(0);
+    }
+  });
+});
+
+// dev
+const dev = (context: IContext) => {
   // 引入依赖
-  const { generateContext } = require('../context');
-  const { dev } = require('../tools/webpack');
-  // 生成上下文
-  const context = generateContext('development', options);
+  const webpack = require('webpack');
+  const WebpackDevServer = require('webpack-dev-server');
+  // 构造配置
+  const webpackConfig = loadConfig(context);
   // 启动服务
-  dev(context);
+  const compiler = webpack(webpackConfig);
+  const server = new WebpackDevServer(
+    compiler.options.devServer,
+    compiler,
+  );
+  server.start();
+};
+
+export {
+  build,
+  dev,
 };

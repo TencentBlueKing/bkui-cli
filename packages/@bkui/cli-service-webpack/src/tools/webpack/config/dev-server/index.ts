@@ -23,16 +23,40 @@
 * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
-import type {
-  IOptions,
-} from '../types/type';
 
-export default (options?: IOptions) => {
-  // 引入依赖
-  const { generateContext } = require('../context');
-  const { dev } = require('../tools/webpack');
-  // 生成上下文
-  const context = generateContext('development', options);
-  // 启动服务
-  dev(context);
+import type {
+  IContext,
+} from '../../../../types/type';
+import Config from 'webpack-chain';
+
+// dev-server
+export default (config: Config, { options, mode, workDir }: IContext) => {
+  config.when(mode === 'development', () => {
+    const path = require('path');
+
+    config.devServer
+      .host(options.host)
+      .port(options.port)
+      .open(options.open)
+      .hot(true)
+      .compress(true)
+      .historyApiFallback(true)
+      .set('allowedHosts', 'all')
+      .set('static',  {
+        directory: path.join(workDir, options.assetsDir),
+        publicPath: options.publicPath,
+        watch: true,
+      })
+      .set('client', {
+        logging: 'error',
+        overlay: {
+          errors: true,
+          warnings: false,
+          runtimeErrors: false,
+        },
+        progress: true,
+        reconnect: true,
+      })
+      .set('server', options.server);
+  });
 };

@@ -25,7 +25,7 @@
 */
 
 import path from 'path';
-import type { IOptions } from 'typings';
+import type { IOptions } from '../types/type';
 import semver from 'semver';
 
 /**

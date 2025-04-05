@@ -23,16 +23,59 @@
 * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
-import type {
-  IOptions,
-} from '../types/type';
 
-export default (options?: IOptions) => {
-  // 引入依赖
-  const { generateContext } = require('../context');
-  const { dev } = require('../tools/webpack');
-  // 生成上下文
-  const context = generateContext('development', options);
-  // 启动服务
-  dev(context);
+import type {
+  IContext,
+} from '../../../types/type';
+import type {
+  Configuration,
+} from 'webpack';
+import Config from 'webpack-chain';
+
+import {
+  applyUserConfig,
+} from './user/index';
+import loadMode from './mode/index';
+import loadEntry from './entry/index';
+import loadExperiments from './experiments/index';
+import loadModule from './module/index';
+import loadOptimization from './optimization/index';
+import loadOutput from './output/index';
+import loadPlugins from './plugins/index';
+import loadResolve from './resolve/index';
+import loadDevServer from './dev-server/index';
+import loadDevtool from './devtool/index';
+import loadCache from './cache/index';
+import loadStats from './stats/index';
+
+/**
+ * 生成 webpack 的配置
+ */
+export default (context: IContext): Configuration => {
+  try {
+    const config = new Config();
+
+    // load default config
+    loadMode(config, context);
+    loadEntry(config, context);
+    loadExperiments(config, context);
+    loadModule(config, context);
+    loadOptimization(config, context);
+    loadOutput(config, context);
+    loadPlugins(config, context);
+    loadResolve(config, context);
+    loadDevServer(config, context);
+    loadDevtool(config, context);
+    loadCache(config, context);
+    loadStats(config, context);
+
+    // apply user config
+    const finalConfig = applyUserConfig(config, context);
+
+    return finalConfig;
+  } catch (error: any) {
+    const { log } = require('@blueking/cli-utils');
+    log.error(error.message || error);
+    process.exit(1);
+  }
 };

@@ -23,16 +23,34 @@
 * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
-import type {
-  IOptions,
-} from '../types/type';
 
-export default (options?: IOptions) => {
-  // 引入依赖
-  const { generateContext } = require('../context');
-  const { dev } = require('../tools/webpack');
-  // 生成上下文
-  const context = generateContext('development', options);
-  // 启动服务
-  dev(context);
+import type {
+  IContext,
+  ICopy,
+} from '../../../../types/type';
+import Config from 'webpack-chain';
+
+import {
+  resolveUserPath,
+} from '../../../../lib/util';
+
+// copy-webpack-plugin 配置
+export default (config: Config, context: IContext) => {
+  const CopyWebpackPlugin = require('copy-webpack-plugin');
+  const copyOption = context.options.copy as ICopy[];
+
+  config
+    .plugin('copy-webpack-plugin')
+    .use(CopyWebpackPlugin, [{
+      patterns: copyOption.map(copy => ({
+        from: resolveUserPath(context.workDir, copy.from),
+        to: resolveUserPath(context.workDir, copy.to),
+        globOptions: copy?.globOptions || {},
+        toType: 'dir',
+        noErrorOnMissing: true,
+        info: {
+          minimized: true,
+        },
+      })),
+    }]);
 };

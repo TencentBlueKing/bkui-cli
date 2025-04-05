@@ -23,16 +23,40 @@
 * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
-import type {
-  IOptions,
-} from '../types/type';
 
-export default (options?: IOptions) => {
-  // 引入依赖
-  const { generateContext } = require('../context');
-  const { dev } = require('../tools/webpack');
-  // 生成上下文
-  const context = generateContext('development', options);
-  // 启动服务
-  dev(context);
+import type {
+  IContext,
+} from '../../../../types/type';
+import Config from 'webpack-chain';
+
+// splitChunks
+export default (config: Config, context: IContext) => {
+  config.when((context.options.splitChunk), () => {
+    config.optimization
+      .splitChunks({
+        minSize: 1024 * 1024,
+        cacheGroups: {
+          bkMagic: {
+            name: 'chunk-bk-magic-vue',
+            test: /(bk-magic-vue)|(bkui-vue)/,
+            priority: 10,
+            chunks: 'all',
+            reuseExistingChunk: true,
+          },
+          venders: {
+            name: 'chunk-vendors',
+            test: /[\\/]node_modules[\\/]/,
+            priority: -10,
+            chunks: 'initial',
+          },
+          common: {
+            name: 'chunk-common',
+            minChunks: 2,
+            priority: -20,
+            chunks: 'initial',
+            reuseExistingChunk: true,
+          },
+        },
+      });
+  });
 };

@@ -23,16 +23,48 @@
 * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
-import type {
-  IOptions,
-} from '../types/type';
 
-export default (options?: IOptions) => {
-  // 引入依赖
-  const { generateContext } = require('../context');
-  const { dev } = require('../tools/webpack');
-  // 生成上下文
-  const context = generateContext('development', options);
-  // 启动服务
-  dev(context);
+import type { IContext } from '../../../../types/type';
+import Config from 'webpack-chain';
+import {
+  isArray,
+  getAbsolutePath,
+} from '../../../../lib/util';
+import {
+  TARGET_TYPE,
+} from '../../../../lib/constant';
+
+export default (config: Config, context: IContext) => {
+  const { resource } = context.options;
+
+  // 构建 web
+  // 可以是多 entry，每个 entry 可以配置多个路径
+  if (context.options.target === TARGET_TYPE.WEB) {
+    // 可以是多 entry
+    Object
+      .keys(resource)
+      .forEach((name) => {
+        const {
+          entry,
+        } = resource[name];
+
+        const entries = isArray(entry) ? entry : [entry];
+        if (entry) {
+          config
+            .entry(name)
+            .merge((entries as string[]).map(path => getAbsolutePath(context.workDir, path)));
+        }
+      });
+  }
+
+  // 构建 lib
+  // 仅支持单 entry
+  if (context.options.target === TARGET_TYPE.LIB) {
+    const entryKey = Object.keys(context.options.resource)[0];
+    const libEntry = require.resolve('../../../../lib/lib-entry.js');
+
+    config
+      .entry(entryKey)
+      .merge([libEntry]);
+  }
 };

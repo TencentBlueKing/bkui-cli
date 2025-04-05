@@ -26,8 +26,18 @@
 
 import runDev from './actions/dev';
 import runBuild from './actions/build';
+import type {
+  IOptions,
+} from './types/type';
+
+const defineConfig = (options: IOptions) => options;
+
+export type {
+  IOptions,
+};
 
 export {
   runDev,
   runBuild,
+  defineConfig,
 };

@@ -23,7 +23,7 @@
 * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
-import type { IOptions } from 'typings';
+import type { IOptions } from '../types/type';
 
 /**
  * 对用户配置的参数进行校验
@@ -37,6 +37,7 @@ export const validate = async (options: IOptions) => {
     assetsDir: Joi.string().allow(''),
     outputDir: Joi.string(),
     outputAssetsDirName: Joi.string().allow(''),
+    outputPreserveModuleDir: Joi.string().allow(''),
     publicPath: Joi.string().allow(''),
     filenameHashing: Joi.boolean(),
     cache: Joi.boolean(),
@@ -94,12 +95,15 @@ export const validate = async (options: IOptions) => {
     ),
     customEnv: Joi.string().allow(''),
     target: Joi.string().valid('web', 'lib'),
+    whitespace: Joi.string().valid('preserve', 'condense'),
     libraryTarget: Joi.string().allow(''),
     libraryName: Joi.string().allow(''),
     splitChunk: Joi.boolean().allow(''),
     splitCss: Joi.boolean().allow(''),
     clean: Joi.boolean().allow(''),
     parseNodeModules: Joi.boolean().allow(''),
+    preserveModules: Joi.boolean().allow(''),
+    preserveModulesRoot: Joi.string().allow(''),
     lazyCompilation: Joi.boolean().allow(''),
     lazyCompilationHost: Joi.string().allow(''),
     envPrefix: Joi.string().allow(''),

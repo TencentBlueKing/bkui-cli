@@ -23,16 +23,46 @@
 * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
-import type {
-  IOptions,
-} from '../types/type';
 
-export default (options?: IOptions) => {
-  // 引入依赖
-  const { generateContext } = require('../context');
-  const { dev } = require('../tools/webpack');
-  // 生成上下文
-  const context = generateContext('development', options);
-  // 启动服务
-  dev(context);
+import type {
+  IContext,
+} from '../../../../types/type';
+import Config from 'webpack-chain';
+
+import { getAbsolutePath, getAssetPath } from '../../../../lib/util';
+import { TARGET_TYPE } from '../../../../lib/constant';
+
+export default (config: Config, context: IContext) => {
+  // 公共数据
+  const path = getAbsolutePath(context.workDir, context.options.outputDir);
+  const globalObject = '(typeof self !== \'undefined\' ? self : this)';
+
+  // 构建 web 应用
+  if (context.options.target === TARGET_TYPE.WEB) {
+    config.output
+      .path(path)
+      .filename(getAssetPath(context.options, `js/[name]${context.options.filenameHashing && context.mode === 'production'  ? '.[contenthash:8]' : ''}.js`))
+      .publicPath(context.options.publicPath)
+      .set('hashFunction', 'xxhash64')
+      .set('clean', context.options.clean);
+  }
+
+  // 构建库
+  // 目前只支持单 entry
+  // publicPath 根据加载的 script 动态生成
+  if (context.options.target === TARGET_TYPE.LIB) {
+    config.output
+      .path(path)
+      .filename(getAssetPath(context.options, '[name].js'))
+      .publicPath(context.options.publicPath)
+      .globalObject(globalObject)
+      .set('library', {
+        name: context.options.libraryName,
+        type: context.options.libraryTarget,
+      })
+      .set('clean', context.options.clean)
+      .set('environment', {
+        module: context.options.libraryTarget === 'module',
+      });
+  }
 };
