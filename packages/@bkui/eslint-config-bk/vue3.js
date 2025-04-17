@@ -25,7 +25,7 @@
  */
 const { defineConfig } = require('eslint/config');
 const baseConfig = require('./tencent/base');
-const tsConfig = require('./tencent/ts');
+const vue3Config = require('./tencent/vue3');
 const prettierConfig = require('./tencent/prettier');
 
-module.exports = defineConfig([baseConfig, tsConfig, prettierConfig]);
+module.exports = defineConfig([baseConfig, vue3Config, prettierConfig]);

@@ -23,9 +23,31 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-const { defineConfig } = require('eslint/config');
-const baseConfig = require('./tencent/base');
-const tsConfig = require('./tencent/ts');
-const prettierConfig = require('./tencent/prettier');
+const parserVue = require('vue-eslint-parser');
+const parserTypeScript = require('@typescript-eslint/parser');
+const pluginVue = require('eslint-plugin-vue');
+const vue3Rules = require('./vue3.rule');
 
-module.exports = defineConfig([baseConfig, tsConfig, prettierConfig]);
+module.exports = [
+  {
+    files: ['**/*.vue'],
+    languageOptions: {
+      parser: parserVue,
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+        extraFileExtensions: ['.vue'],
+        parser: parserTypeScript,
+        sourceType: 'module',
+      },
+    },
+    plugins: {
+      vue: pluginVue,
+    },
+    extends: [pluginVue.configs['flat/recommended']],
+    rules: {
+      ...vue3Rules,
+    },
+  },
+];

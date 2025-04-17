@@ -23,54 +23,74 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-const parserTypeScript = require('@typescript-eslint/parser');
-const pluginTypeScript = require('@typescript-eslint/eslint-plugin');
+const commonVueRules = require('./vue.common.rule');
 
-module.exports = [
-  {
-    files: ['**/*.?([cm])ts', '**/*.?([cm])tsx'],
-    languageOptions: {
-      parser: parserTypeScript,
-      parserOptions: {
-        sourceType: 'module',
-      },
-    },
-    plugins: {
-      '@typescript-eslint': pluginTypeScript,
-    },
-    rules: {
-      ...pluginTypeScript.configs.recommended.rules,
-      camelcase: 'off',
-      'dot-notation': 'off',
-      'no-array-constructor': 'off',
-      'no-dupe-class-members': 'off',
-      'no-empty-function': 'off',
-      'no-invalid-this': 'off',
-      'no-magic-numbers': 'off',
-      'no-undef': 'off',
-      'no-underscore-dangle': 'off',
-      'no-unused-vars': 'off',
-      'no-useless-constructor': 'off',
-      '@typescript-eslint/no-array-constructor': 'error',
-      '@typescript-eslint/no-dupe-class-members': 'error',
-      '@typescript-eslint/no-unused-vars': [
-        'error',
-        {
-          args: 'after-used',
-          ignoreRestSiblings: true,
-          argsIgnorePattern: '^_.*',
-          varsIgnorePattern: '^_.*',
-        },
+module.exports = {
+  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/define-macros-order.md
+  'vue/define-macros-order': [
+    'error',
+    {
+      order: [
+        'defineOptions',
+        'defineModel',
+        'defineProps',
+        'defineEmits',
+        'defineSlots',
       ],
-      '@typescript-eslint/no-useless-constructor': 'warn',
+      defineExposeLast: true,
     },
-  },
-  {
-    files: ['*.d.ts'],
-    rules: {
-      'eslint-comments/no-unlimited-disable': 'off',
-      'import/no-duplicates': 'off',
-      'unused-imports/no-unused-vars': 'off',
+  ],
+
+  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/component-tags-order.md
+  'vue/block-order': [
+    'error',
+    {
+      order: [['script', 'template'], 'style'],
     },
-  },
-];
+  ],
+
+  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/order-in-components.md
+  'vue/order-in-components': [
+    'error',
+    {
+      order: [
+        'el',
+        'name',
+        'key',
+        'parent',
+        'functional',
+        ['delimiters', 'comments'],
+        ['components', 'directives', 'filters'],
+        'extends',
+        'mixins',
+        ['provide', 'inject'],
+        'ROUTER_GUARDS',
+        'layout',
+        'middleware',
+        'validate',
+        'scrollToTop',
+        'transition',
+        'loading',
+        'inheritAttrs',
+        'model',
+        ['props', 'propsData'],
+        'emits',
+        'setup',
+        'asyncData',
+        'data',
+        'fetch',
+        'head',
+        'computed',
+        'watch',
+        'watchQuery',
+        'LIFECYCLE_HOOKS',
+        'methods',
+        ['template', 'render'],
+        'renderError',
+      ],
+    },
+  ],
+
+  // 引入公共规则
+  ...commonVueRules,
+};

@@ -23,9 +23,53 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-const { defineConfig } = require('eslint/config');
-const baseConfig = require('./tencent/base');
-const tsConfig = require('./tencent/ts');
-const prettierConfig = require('./tencent/prettier');
+const commonVueRules = require('./vue.common.rule');
 
-module.exports = defineConfig([baseConfig, tsConfig, prettierConfig]);
+module.exports = {
+  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/v-on-event-hyphenation.md
+  'vue/v-on-event-hyphenation': [
+    'warn',
+    'always',
+    {
+      autofix: true,
+    },
+  ],
+
+  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/component-tags-order.md
+  'vue/block-order': [
+    'error',
+    {
+      order: ['template', 'script', 'style'],
+    },
+  ],
+
+  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/order-in-components.md
+  'vue/order-in-components': [
+    'error',
+    {
+      order: [
+        'el',
+        'name',
+        'parent',
+        'functional',
+        ['delimiters', 'comments'],
+        ['components', 'directives', 'filters'],
+        'extends',
+        'mixins',
+        'inheritAttrs',
+        'model',
+        ['props', 'propsData'],
+        'data',
+        'computed',
+        'watch',
+        'LIFECYCLE_HOOKS',
+        'methods',
+        ['template', 'render'],
+        'renderError',
+      ],
+    },
+  ],
+
+  // 引入公共规则
+  ...commonVueRules,
+};
