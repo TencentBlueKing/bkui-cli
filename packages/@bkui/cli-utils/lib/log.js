@@ -59,6 +59,7 @@ module.exports = {
 
   error(msg = '') {
     console.error(format(chalk.bgRed.black(' ERROR '), chalk.red(msg)));
+    console.error(msg);
   },
 
   time(label) {

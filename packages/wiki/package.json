@@ -13,8 +13,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "vitepress": "^1.0.0-rc.44",
-    "@vue/theme": "^1.0.1"
+    "@vue/theme": "^1.0.1",
+    "vitepress": "^1.0.0-rc.44"
+  },
+  "overrides": {
+    "vite": "^6.2.3"
   },
   "engines": {
     "node": ">= 16.16.0"
