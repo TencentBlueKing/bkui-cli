@@ -5,11 +5,8 @@ import type {
   IContext,
 } from '../../../types/type';
 import path from 'node:path';
-import {
-  TransformImportPlugin,
-} from '../plugin/transform-import';
 
-export const processTs = async (content: string, filePath: string, context: IContext) => {
+export const processTs = async (content: string, originRelativeFilePath: string, __: IContext) => {
   const result = await transform(
     content,
     {
@@ -21,13 +18,13 @@ export const processTs = async (content: string, filePath: string, context: ICon
         },
         target: 'es2015',
       },
-      plugin: TransformImportPlugin(context, filePath),
     },
   );
-  const outputFilePath = path.join(path.dirname(filePath), `${path.basename(filePath, path.extname(filePath))}.js`);
+  const outputRelativeFilePath = path.join(path.dirname(originRelativeFilePath), `${path.basename(originRelativeFilePath, path.extname(originRelativeFilePath))}.js`);
   return [
     {
-      filePath: outputFilePath,
+      originRelativeFilePath,
+      outputRelativeFilePath,
       content: result.code,
       needProcess: false,
     },

@@ -9,13 +9,9 @@ const scss = (source: string, map: boolean, options: any) => {
     sourceMap: !!map,
   };
 
-  try {
-    const result = nodeSass.renderSync(finalOptions);
-    const dependencies = result.stats.includedFiles;
-    return { code: result.css.toString(), errors: [], dependencies };
-  } catch (e) {
-    return { code: '', errors: [e], dependencies: [] };
-  }
+  const result = nodeSass.renderSync(finalOptions);
+  const dependencies = result.stats.includedFiles;
+  return { code: result.css.toString(), errors: [], dependencies };
 };
 
 // .sass
@@ -25,45 +21,32 @@ const sass = (source: string, map: boolean, options: any) => scss(source, map, {
 });
 
 // .less
-const less = (source: string, map: boolean, options: any) => {
+const less = async (source: string, map: boolean, options: any) => {
   const nodeLess = require('less');
 
-  let result;
-  let error = null;
-  nodeLess.render(
+  const result = await nodeLess.render(
     getSource(source, options.filename, options.additionalData),
-    { ...options, syncImport: true },
-    (err, output) => {
-      error = err;
-      result = output;
-    },
+    { ...options },
   );
-
-  if (error) return { code: '', errors: [error], dependencies: [] };
-  const dependencies = result.imports;
 
   return {
     code: result.css.toString(),
     errors: [],
-    dependencies,
+    dependencies: result.imports,
   };
 };
 
 // .styl
 const styl = (source: string, map: boolean, options: any) => {
   const nodeStylus = require('stylus');
-  try {
-    const ref = nodeStylus(source);
-    Object.keys(options).forEach(key => ref.set(key, options[key]));
-    if (map) ref.set('sourcemap', { inline: false, comment: false });
+  const ref = nodeStylus(source);
+  Object.keys(options).forEach(key => ref.set(key, options[key]));
+  if (map) ref.set('sourcemap', { inline: false, comment: false });
 
-    const result = ref.render();
-    const dependencies = ref.deps();
+  const result = ref.render();
+  const dependencies = ref.deps();
 
-    return { code: result, errors: [], dependencies };
-  } catch (e) {
-    return { code: '', errors: [e], dependencies: [] };
-  }
+  return { code: result, errors: [], dependencies };
 };
 
 // .postcss

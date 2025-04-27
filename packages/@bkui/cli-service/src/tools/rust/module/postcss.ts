@@ -1,5 +1,3 @@
-import path from 'node:path';
-
 import type {
   IContext,
 } from '../../../types/type';
@@ -10,20 +8,21 @@ import {
 
 import {
   transformPreprocessor,
-} from '../plugin/transfrom-preprocessor';
+} from '../helper/preprocessor';
 
 
-export const processPostcss = (source: string, filePath: string, context: IContext) => {
+export const processPostcss = (source: string, originRelativeFilePath: string, context: IContext) => {
   const postcssConfig = require(getAbsolutePath(context.workDir, 'postcss.config.js'));
   const options = {
     ...postcssConfig,
-    filename: path.basename(filePath, path.extname(filePath)),
+    filename: originRelativeFilePath,
   };
   const result = transformPreprocessor(source, 'postcss', options);
-  const outputFilePath = `${filePath}.css`;
+  const outputRelativeFilePath = `${originRelativeFilePath}.css`;
   return [
     {
-      filePath: outputFilePath,
+      originRelativeFilePath,
+      outputRelativeFilePath,
       content: result.code,
       needProcess: false,
     },

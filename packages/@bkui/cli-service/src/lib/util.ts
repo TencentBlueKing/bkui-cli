@@ -49,12 +49,12 @@ export const getAssetPath = (options: IOptions, filePath: string) => (
 export const getRelativePath = (from: string, to: string) => {
   // 获取相对路径
   let relativePath = path.relative(from, to);
-  
+
   // 处理空路径的情况
   if (!relativePath) {
     return '.';
   }
-  
+
   // 如果是当前目录，直接返回 ./
   if (relativePath === '.') {
     return relativePath;
@@ -197,3 +197,22 @@ export const deepMerge = <T extends Object, U extends Object>(target: T, source:
  */
 export const getUniqueId = (len = 8) => Math.random().toString(36)
   .substring(2, 2 + len);
+
+/**
+ * 判断是否是 node 内置模块
+ * @param moduleName 模块名
+ * @returns 是否是 node 内置模块
+ */
+export const isNodeBuiltInModule = (moduleName: string) => {
+  if (moduleName.startsWith('node:')) return true;
+
+  const nodeBuiltinModules = [
+    'fs', 'path', 'http', 'https', 'url', 'os', 'util', 'stream',
+    'events', 'crypto', 'zlib', 'buffer', 'child_process', 'cluster',
+    'dns', 'net', 'querystring', 'readline', 'string_decoder', 'tls',
+    'tty', 'dgram', 'v8', 'vm', 'worker_threads', 'perf_hooks', 'assert',
+    'constants',
+  ];
+
+  return nodeBuiltinModules.includes(moduleName);
+};

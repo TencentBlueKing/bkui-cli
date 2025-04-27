@@ -1,23 +1,22 @@
-import path from 'node:path';
-
 import type {
   IContext,
 } from '../../../types/type';
 
 import {
   transformPreprocessor,
-} from '../plugin/transfrom-preprocessor';
+} from '../helper/preprocessor';
 
-export const processSass = (source: string, filePath: string, context: IContext) => {
+export const processSass = (source: string, originRelativeFilePath: string, context: IContext) => {
   const options = {
     ...context.options.css?.sassLoaderOptions,
-    filename: path.basename(filePath, path.extname(filePath)),
+    filename: originRelativeFilePath,
   };
   const result = transformPreprocessor(source, 'sass', options);
-  const outputFilePath = `${filePath}.css`;
+  const outputRelativeFilePath = `${originRelativeFilePath}.css`;
   return [
     {
-      filePath: outputFilePath,
+      originRelativeFilePath,
+      outputRelativeFilePath,
       content: result.code,
       needProcess: false,
     },

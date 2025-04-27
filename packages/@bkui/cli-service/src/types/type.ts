@@ -14,11 +14,16 @@ export type EntryConfig =  ValueOf<EntryObject>;
 
 export type Mode = 'none' | 'development' | 'production';
 
-export type FileProcessHandler = (content: string, filePath: string, context: IContext) => Promise<Array<{
-  filePath: string;
+export interface IFile {
   content: string;
+  originRelativeFilePath: string;
+  outputRelativeFilePath: string;
   needProcess?: boolean;
-}>>;
+  dependencies?: {
+    originDependencyPath: string;
+    originRelativeDependencyPath: string;
+  }[];
+}
 
 export interface IReplaceStaticUrlPluginOption {
   exclude?: null | RegExp[];
