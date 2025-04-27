@@ -1,35 +1,37 @@
 /*
-* Tencent is pleased to support the open source community by making
-* 蓝鲸智云PaaS平台社区版 (BlueKing PaaS Community Edition) available.
-*
-* Copyright (C) 2021 THL A29 Limited, a Tencent company.  All rights reserved.
-*
-* 蓝鲸智云PaaS平台社区版 (BlueKing PaaS Community Edition) is licensed under the MIT License.
-*
-* License for 蓝鲸智云PaaS平台社区版 (BlueKing PaaS Community Edition):
-*
-* ---------------------------------------------------
-* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
-* documentation files (the "Software"), to deal in the Software without restriction, including without limitation
-* the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and
-* to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of
-* the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
-* THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
-* CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-* IN THE SOFTWARE.
-*/
+ * Tencent is pleased to support the open source community by making
+ * 蓝鲸智云PaaS平台社区版 (BlueKing PaaS Community Edition) available.
+ *
+ * Copyright (C) 2021 THL A29 Limited, a Tencent company.  All rights reserved.
+ *
+ * 蓝鲸智云PaaS平台社区版 (BlueKing PaaS Community Edition) is licensed under the MIT License.
+ *
+ * License for 蓝鲸智云PaaS平台社区版 (BlueKing PaaS Community Edition):
+ *
+ * ---------------------------------------------------
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+ * documentation files (the "Software"), to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and
+ * to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of
+ * the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+ * THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ */
+
+/**
+ * Vue共用ESLint规则
+ * 这个文件包含Vue2和Vue3共用的ESLint规则
+ */
 module.exports = {
-  'vue/define-macros-order': [
-    "error", {
-      "order": ["defineOptions", "defineModel", "defineProps", "defineEmits", "defineSlots"],
-      "defineExposeLast": true
-    }
-  ],
+  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/multi-word-component-names.md
+  'vue/multi-word-component-names': 'off',
+
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/array-bracket-spacing.md
   'vue/array-bracket-spacing': ['error', 'never'],
 
@@ -51,7 +53,10 @@ module.exports = {
 
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/camelcase.md
   // 后端数据字段经常不是驼峰，所以不限制 properties，也不限制解构
-  'vue/camelcase': ['error', { properties: 'never', ignoreDestructuring: true }],
+  'vue/camelcase': [
+    'error',
+    { properties: 'never', ignoreDestructuring: true },
+  ],
 
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/comment-directive.md
   // vue 文件 template 中允许 eslint-disable eslint-enable eslint-disable-line eslint-disable-next-line
@@ -63,8 +68,7 @@ module.exports = {
   'vue/component-name-in-template-casing': 'off',
 
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/dot-location.md
-  // 等待 https://github.com/vuejs/eslint-plugin-vue/pull/794 合入
-  // 'vue/dot-location': ['error', 'property'],
+  'vue/dot-location': ['error', 'property'],
 
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/eqeqeq.md
   'vue/eqeqeq': ['error', 'always', { null: 'ignore' }],
@@ -74,23 +78,30 @@ module.exports = {
   'vue/html-closing-bracket-newline': 'off',
 
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/html-closing-bracket-spacing.md
-  'vue/html-closing-bracket-spacing': ['error', {
-    startTag: 'never',
-    endTag: 'never',
-    selfClosingTag: 'always',
-  }],
+  'vue/html-closing-bracket-spacing': [
+    'error',
+    {
+      startTag: 'never',
+      endTag: 'never',
+      selfClosingTag: 'always',
+    },
+  ],
 
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/html-end-tags.md
   'vue/html-end-tags': 'error',
 
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/html-indent.md
-  'vue/html-indent': ['error', 2, {
-    attribute: 1,
-    baseIndent: 1,
-    closeBracket: 0,
-    alignAttributesVertically: true,
-    ignores: [],
-  }],
+  'vue/html-indent': [
+    'error',
+    2,
+    {
+      attribute: 1,
+      baseIndent: 1,
+      closeBracket: 0,
+      alignAttributesVertically: true,
+      ignores: [],
+    },
+  ],
 
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/html-quotes.md
   'vue/html-quotes': ['error', 'double'],
@@ -108,8 +119,7 @@ module.exports = {
 
   // 关键字周围空格一致性，在关键字前后保留空格，如 if () else {}
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/keyword-spacing.md
-  // 等待 https://github.com/vuejs/eslint-plugin-vue/pull/795 合入
-  // 'vue/keyword-spacing': ['error', {'before': true, 'after': true}],
+  'vue/keyword-spacing': ['error', { before: true, after: true }],
 
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/match-component-file-name.md
   // 组件名称属性与其文件名匹配，不限制
@@ -130,47 +140,20 @@ module.exports = {
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/name-property-casing.md
   'vue/name-property-casing': 'off',
 
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/no-async-in-computed-properties.md
-  'vue/no-async-in-computed-properties': 'error',
-
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/no-boolean-default.md
   'vue/no-boolean-default': 'off',
 
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/no-use-v-if-with-v-for.md
-  'vue/no-use-v-if-with-v-for': 'error',
-
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/no-dupe-keys.md
-  // 二级属性名禁止重复
-  'vue/no-dupe-keys': 'error',
-
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/no-duplicate-attributes.md
-  // 禁止 html 元素中出现重复的属性
-  'vue/no-duplicate-attributes': 'error',
-
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/no-empty-pattern.md
-  // 等待 https://github.com/vuejs/eslint-plugin-vue/pull/798 合入
   // 禁止解构中出现空 {} 或 []
-  // 'vue/no-empty-pattern': 'error',
+  'vue/no-empty-pattern': 'error',
 
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/no-multi-spaces.md
   // 删除 html 标签中连续多个不用于缩进的空格
   'vue/no-multi-spaces': 'error',
 
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/no-parsing-error.md
-  // 禁止语法错误
-  'vue/no-parsing-error': 'error',
-
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/no-reserved-keys.md
-  // 禁止使用保留字
-  'vue/no-reserved-keys': 'error',
-
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/no-restricted-syntax.md
   // 禁止使用特定的语法
   'vue/no-restricted-syntax': 'off',
-
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/no-shared-component-data.md
-  // data 属性必须是函数
-  'vue/no-shared-component-data': 'error',
 
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/no-side-effects-in-computed-properties.md
   // 禁止在计算属性对属性进行修改，不限制
@@ -186,20 +169,6 @@ module.exports = {
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/no-template-shadow.md
   'vue/no-template-shadow': 'error',
 
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/no-textarea-mustache.md
-  'vue/no-textarea-mustache': 'error',
-
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/no-unused-components.md
-  // 禁止 components 中声明的组件在 template 中没有使用
-  'vue/no-unused-components': 'error',
-
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/no-unused-vars.md
-  'vue/no-unused-vars': 'error',
-
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/no-use-v-if-with-v-for.md
-  // 禁止 v-for 和 v-if 在同一元素上使用，不限制
-  'vue/no-use-v-if-with-v-for': 'off',
-
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/no-v-html.md
   // 禁止使用 v-html，防止 xss
   'vue/no-v-html': 'error',
@@ -208,53 +177,9 @@ module.exports = {
   // 对象写在一行时，大括号里需要空格
   'vue/object-curly-spacing': ['error', 'always'],
 
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/order-in-components.md
-  // 官方推荐顺序
-  "vue/order-in-components": ["error", {
-    "order": [
-      "el",
-      "name",
-      "key",
-      "parent",
-      "functional",
-      ["delimiters", "comments"],
-      ["components", "directives", "filters"],
-      "extends",
-      "mixins",
-      ["provide", "inject"],
-      "ROUTER_GUARDS",
-      "layout",
-      "middleware",
-      "validate",
-      "scrollToTop",
-      "transition",
-      "loading",
-      "inheritAttrs",
-      "model",
-      ["props", "propsData"],
-      "emits",
-      "setup",
-      "asyncData",
-      "data",
-      "fetch",
-      "head",
-      "computed",
-      "watch",
-      "watchQuery",
-      "LIFECYCLE_HOOKS",
-      "methods",
-      ["template", "render"],
-      "renderError"
-    ]
-  }],
-
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/prop-name-casing.md
   // 组件 props 属性名驼峰命名
   'vue/prop-name-casing': ['error', 'camelCase'],
-
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/require-component-is.md
-  // <component> 元素必须要有 :is 属性
-  'vue/require-component-is': 'error',
 
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/require-default-prop.md
   // props 必须要有默认值，不限制
@@ -264,29 +189,13 @@ module.exports = {
   // 组件必须要直接被 export。不限制
   'vue/require-direct-export': 'off',
 
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/require-prop-type-constructor.md
-  // props 的 type 必须为构造函数，不能为字符串。
-  'vue/require-prop-type-constructor': 'error',
-
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/require-prop-types.md
   // props 必须要有 type。
   'vue/require-prop-types': 'error',
 
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/require-render-return.md
-  // render 函数必须要有返回值
-  'vue/require-render-return': 'error',
-
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/require-v-for-key.md
-  // v-for 指令必须要有 key 属性
-  'vue/require-v-for-key': 'error',
-
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/require-valid-default-prop.md
   // props 默认值必须有效。不限制
   'vue/require-valid-default-prop': 'off',
-
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/return-in-computed-property.md
-  // 计算属性必须要有返回值
-  'vue/return-in-computed-property': 'error',
 
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/singleline-html-element-content-newline.md
   // 单行 html 元素后面必须换行。不限制
@@ -319,64 +228,4 @@ module.exports = {
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/v-on-style.md
   // v-on 指令的写法。限制简写
   'vue/v-on-style': ['error', 'shorthand'],
-
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/valid-template-root.md
-  // 根节点必须合法
-  'vue/valid-template-root': 'error',
-
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/valid-v-bind.md
-  // v-bind 指令必须合法
-  'vue/valid-v-bind': 'error',
-
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/valid-v-cloak.md
-  // v-cloak 指令必须合法
-  'vue/valid-v-cloak': 'error',
-
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/valid-v-else-if.md
-  // v-else-if 指令必须合法
-  'vue/valid-v-else-if': 'error',
-
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/valid-v-else.md
-  // v-else 指令必须合法
-  'vue/valid-v-else': 'error',
-
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/valid-v-for.md
-  // valid-v-for 指令必须合法
-  'vue/valid-v-for': 'error',
-
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/valid-v-html.md
-  // v-html 指令必须合法
-  'vue/valid-v-html': 'error',
-
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/valid-v-if.md
-  // v-if 指令必须合法
-  'vue/valid-v-if': 'error',
-
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/valid-v-model.md
-  // v-model 指令必须合法
-  'vue/valid-v-model': 'error',
-
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/valid-v-on.md
-  // v-on 指令必须合法
-  'vue/valid-v-on': 'error',
-
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/valid-v-once.md
-  // v-once 指令必须合法
-  'vue/valid-v-once': 'error',
-
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/valid-v-pre.md
-  // v-pre 指令必须合法
-  'vue/valid-v-pre': 'error',
-
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/valid-v-show.md
-  // v-show 指令必须合法
-  'vue/valid-v-show': 'error',
-
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/valid-v-text.md
-  // v-text 指令必须合法
-  'vue/valid-v-text': 'error',
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/component-tags-order.md
-  'vue/component-tags-order': ['error', {
-    order: [ [ "script", "template" ], "style" ],
-  }],
 };

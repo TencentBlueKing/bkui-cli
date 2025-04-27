@@ -1,0 +1,15 @@
+{
+  "name": "@blueking/prettier-config-bk",
+  "version": "1.0.0",
+  "description": "Prettier configuration for BlueKing projects",
+  "main": "index.js",
+  "dependencies": {
+    "prettier": "^3.5.3"
+  },
+  "keywords": [
+    "prettier-config-bk",
+    "blueking"
+  ],
+  "author": "bkfe",
+  "license": "MIT"
+}

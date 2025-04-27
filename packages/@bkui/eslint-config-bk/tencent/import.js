@@ -1,1 +1,0 @@
-module.exports={plugins:["import"],rules:{"import/first":"error","import/no-duplicates":"error","import/no-mutable-exports":"warn","import/no-webpack-loader-syntax":"warn","import/prefer-default-export":"off"}};
