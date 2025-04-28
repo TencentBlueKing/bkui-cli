@@ -43,7 +43,14 @@ const visitJSNode = (
 
   // 直接 import
   if (node.type === 'ImportDeclaration') {
-    if (node.source.type === 'StringLiteral') {
+    if (node.source?.type === 'StringLiteral') {
+      callback(node.source);
+    }
+  }
+
+  // export * from 'xxx' 或 export { x } from 'xxx'
+  if (node.type === 'ExportAllDeclaration' || node.type === 'ExportNamedDeclaration') {
+    if (node.source?.type === 'StringLiteral') {
       callback(node.source);
     }
   }
@@ -175,6 +182,7 @@ export const getCssDependencies = (nodes: ChildNode[], originRelativeFilePath: s
   const dependencies: IFile['dependencies'] = [];
 
   nodes.forEach((node) => {
+    // 处理 @import 规则
     if (node.type === 'atrule' && node.name === 'import') {
       const originDependencyPath = node.params.slice(1, -1);
       const originRelativeDependencyPath = getDependencyPath(originDependencyPath, originRelativeFilePath, context);
@@ -184,6 +192,32 @@ export const getCssDependencies = (nodes: ChildNode[], originRelativeFilePath: s
           originRelativeDependencyPath,
         });
       }
+    }
+
+    // 处理普通规则中的 url
+    if (node.type === 'rule' || (node.type === 'atrule' && node.name === 'font-face')) {
+      node.walkDecls((decl) => {
+        const { value } = decl;
+        // 匹配 url() 和 url('') 和 url("") 的情况
+        const urlRegex = /url\(['"]?([^'"()]+)['"]?\)/g;
+        let match;
+
+        while ((match = urlRegex.exec(value)) !== null) {
+          const originDependencyPath = match[1].trim();
+          // 排除数据 URL 和 http(s) 链接
+          if (originDependencyPath.startsWith('data:') || originDependencyPath.startsWith('http')) {
+            continue;
+          }
+
+          const originRelativeDependencyPath = getDependencyPath(originDependencyPath, originRelativeFilePath, context);
+          if (originRelativeDependencyPath) {
+            dependencies.push({
+              originDependencyPath,
+              originRelativeDependencyPath,
+            });
+          }
+        }
+      });
     }
   });
 
@@ -204,8 +238,19 @@ export const transformDependencies = (file: IFile) => {
     } = dependency;
     const dependencyFile = fileMap[originRelativeDependencyPath];
     const relativeDependencyPath = `'${getRelativePath(path.dirname(file.outputRelativeFilePath), dependencyFile.outputRelativeFilePath)}'`;
+
+    // 替换普通引号包裹的路径（如 import 和 require）
     const pathReg = new RegExp(`'${originDependencyPath}'`, 'g');
     content = content.replace(pathReg, relativeDependencyPath);
+
+    // 替换双引号包裹的路径
+    const doubleQuotePathReg = new RegExp(`"${originDependencyPath}"`, 'g');
+    content = content.replace(doubleQuotePathReg, relativeDependencyPath);
+
+    // 替换 CSS 中 url() 引用
+    const urlPathReg = new RegExp(`url\\(['"]?${originDependencyPath}['"]?\\)`, 'g');
+    const urlRelativePath = `url(${relativeDependencyPath.substring(1, relativeDependencyPath.length - 1)})`;
+    content = content.replace(urlPathReg, urlRelativePath);
   });
   return content;
 };
