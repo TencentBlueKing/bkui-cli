@@ -1,4 +1,3 @@
-import path from 'node:path';
 import fs from 'node:fs';
 
 import type {
@@ -30,23 +29,23 @@ export const resolveFilePath = (filePath: string) => {
   if (fs.existsSync(jsxPath)) {
     return jsxPath;
   }
-  const indexJsPath = path.resolve(filePath, 'index.js');
+  const indexJsPath = `${filePath}/index.js`;
   if (fs.existsSync(indexJsPath)) {
     return indexJsPath;
   }
-  const indexTsPath = path.resolve(filePath, 'index.ts');
+  const indexTsPath = `${filePath}/index.ts`;
   if (fs.existsSync(indexTsPath)) {
     return indexTsPath;
   }
-  const indexVuePath = path.resolve(filePath, 'index.vue');
+  const indexVuePath = `${filePath}/index.vue`;
   if (fs.existsSync(indexVuePath)) {
     return indexVuePath;
   }
-  const indexTsxPath = path.resolve(filePath, 'index.tsx');
+  const indexTsxPath = `${filePath}/index.tsx`;
   if (fs.existsSync(indexTsxPath)) {
     return indexTsxPath;
   }
-  const indexJsxPath = path.resolve(filePath, 'index.jsx');
+  const indexJsxPath = `${filePath}/index.jsx`;
   if (fs.existsSync(indexJsxPath)) {
     return indexJsxPath;
   }

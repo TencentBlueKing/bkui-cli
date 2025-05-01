@@ -26,7 +26,7 @@ const processVue3 = (content: string, relativeFilePath: string, context: IContex
     compileScript,
     compileStyle,
     compileEntry,
-  } = require('../helper/transform-vue3');
+  } = require('../helper/vue3');
   // 数据
   const scopeId = getUniqueId();
   const processResults: IFile[] = [];
