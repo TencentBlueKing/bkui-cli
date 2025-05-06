@@ -13,6 +13,7 @@ export const processOther = async (content: string, originRelativeFilePath: stri
     outputRelativeFilePath: resolveOutputRelativeFilePath(originRelativeFilePath, context),
     content,
     needProcess: false,
+    keepOriginFile: true,
   },
 ];
 

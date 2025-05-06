@@ -26,6 +26,10 @@ export const emit = async (context: IContext) => {
       });
     }
     // 写入文件
-    fs.writeFileSync(outputFilePath, file.content);
+    if (file.keepOriginFile) {
+      fs.cpSync(file.originRelativeFilePath, outputFilePath);
+    } else {
+      fs.writeFileSync(outputFilePath, file.content);
+    }
   }
 };

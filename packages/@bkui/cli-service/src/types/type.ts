@@ -19,6 +19,7 @@ export interface IFile {
   originRelativeFilePath: string;
   outputRelativeFilePath: string;
   needProcess?: boolean;
+  keepOriginFile?: boolean;
   dependencies?: {
     originDependencyPath: string;
     originRelativeDependencyPath: string;
