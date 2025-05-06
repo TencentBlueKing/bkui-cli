@@ -7,12 +7,15 @@ import type {
 import path from 'node:path';
 import type {
   SFCDescriptor,
+  SFCScriptBlock,
   SFCTemplateCompileOptions,
+  SFCTemplateCompileResults,
 } from 'vue/compiler-sfc';
 import {
   parse as compileSFCParse,
   compileScript as compileSFCScript,
   compileStyle as compileSFCStyle,
+  compileTemplate as compileSFCTemplate,
 } from 'vue/compiler-sfc';
 import {
   getRelativePath,
@@ -45,11 +48,9 @@ const getTemplateOptions = (
   descriptor: SFCDescriptor,
   options: IOptions,
   scopeId: string,
-): Partial<SFCTemplateCompileOptions> => {
+  filename: string,
+): SFCTemplateCompileOptions => {
   const block = descriptor.template;
-  if (!block) {
-    return {};
-  }
   const hasScoped = descriptor.styles.some(s => s.scoped);
   const lang = descriptor.script?.lang || descriptor.scriptSetup?.lang;
   const isTS = !!(lang && /tsx?$/.test(lang));
@@ -59,10 +60,12 @@ const getTemplateOptions = (
   } = getPreprocessOptions(descriptor, options);
   return {
     id: scopeId,
+    source: block?.content || '',
+    filename,
     scoped: hasScoped,
     slotted: descriptor.slotted,
     isProd: true,
-    inMap: block.src ? undefined : block.map,
+    inMap: block?.src ? undefined : block?.map,
     preprocessLang,
     preprocessOptions,
     ssr: false,
@@ -89,22 +92,32 @@ export const compileScript = (
   scopeId: string,
   originRelativeFilePath: string,
   context: IContext,
-): IFile => {
-  const compileScriptResult = compileSFCScript(descriptor, {
-    id: scopeId,
-    isProd: true,
-    inlineTemplate: true,
-    templateOptions: getTemplateOptions(descriptor, context.options, scopeId),
-  });
-
+): IFile | null => {
   const fileName = getFileName(originRelativeFilePath);
-  const scriptOutputRelativeFilePath = getFilePath(originRelativeFilePath, `${fileName}.script.vue.${compileScriptResult.lang || 'js'}`, context);
+  const hasScript = descriptor.script || descriptor.scriptSetup;
+  const templateOptions = getTemplateOptions(descriptor, context.options, scopeId, fileName);
+  // compile
+  const compileScriptResult = hasScript
+    ? compileSFCScript(descriptor, {
+      id: scopeId,
+      isProd: true,
+      inlineTemplate: true,
+      templateOptions,
+    })
+    : compileSFCTemplate({
+      ...templateOptions,
+    });
+  // 输出
+  const content = hasScript
+    ? (compileScriptResult as SFCScriptBlock).content
+    : (compileScriptResult as SFCTemplateCompileResults).code;
+  const scriptOutputRelativeFilePath = getFilePath(originRelativeFilePath, `${fileName}.script.vue.${(compileScriptResult as SFCScriptBlock).lang || 'js'}`, context);
   const scriptOriginRelativeFilePath = getFilePath(originRelativeFilePath, `${fileName}.script.vue.js`, context);
 
   return {
     originRelativeFilePath: scriptOriginRelativeFilePath,
     outputRelativeFilePath: scriptOutputRelativeFilePath,
-    content: compileScriptResult.content,
+    content,
     needProcess: true,
   };
 };
@@ -159,7 +172,10 @@ export const compileEntry = (
   const outputRelativeFilePath = getFilePath(originRelativeFilePath, `${fileName}.vue.js`, context);
 
   // 引入脚本
-  const scriptImportCode = `import script from './${fileName}.script.vue.js';\n`;
+  const hasScript = descriptor.script || descriptor.scriptSetup;
+  const scriptImportCode = hasScript
+    ? `import script from './${fileName}.script.vue.js';\n`
+    : `import { render } from './${fileName}.script.vue.js';\nconst script = { render };\n`;
 
   // 注入scopeId
   const hasScoped = descriptor.styles.some(s => s.scoped);
