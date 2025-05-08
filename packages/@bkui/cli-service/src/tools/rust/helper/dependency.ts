@@ -10,6 +10,7 @@ import {
 } from '../file';
 import {
   resolveFilePath,
+  isPathMatchExternal,
 } from './path';
 
 import type {
@@ -122,8 +123,7 @@ const getDependencyPath = (dependency: string, originRelativeFilePath: string, c
   // 空字符串不构建
   if (!dependency) return null;
   // external 的依赖不构建
-  const externals = context.options.configureWebpack?.externals || {};
-  if (externals[dependency]) return null;
+  if (isPathMatchExternal(dependency, context)) return null;
 
   // node 内置模块也不构建
   if (isNodeBuiltInModule(dependency)) return null;
