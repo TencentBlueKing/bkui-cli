@@ -64,3 +64,24 @@ export const resolveOutputRelativeFilePath = (outputRelativeFilePath: string, co
   }
   return outputRelativeFilePath;
 };
+
+/**
+ * 判断路径是否是 External 的路径
+ * @param filePath 文件路径
+ * @param context 上下文
+ * @returns 是否匹配
+ */
+export const isPathMatchExternal = (filePath: string, context: IContext) => {
+  const externals = context.options.configureWebpack?.externals || {};
+  const externalKeys = Object.keys(externals);
+  let isMatch = false;
+  externalKeys.forEach((key) => {
+    if (key === filePath) {
+      isMatch = true;
+    }
+    if (filePath.startsWith(`${key}/`)) {
+      isMatch = true;
+    }
+  });
+  return isMatch;
+};
