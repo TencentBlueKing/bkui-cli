@@ -1,6 +1,5 @@
 import type {
   IFile,
-  IOptions,
   IContext,
 } from '../../../types/type';
 
@@ -19,6 +18,7 @@ import {
 } from 'vue/compiler-sfc';
 import {
   getRelativePath,
+  getAbsolutePath,
 } from '../../../lib/util';
 
 const getFilePath = (relativeFilePath: string, fileName: string, context: IContext) => {
@@ -29,7 +29,11 @@ const getFileName = (relativeFilePath: string) => {
   return path.basename(relativeFilePath, path.extname(relativeFilePath));
 };
 
-const getPreprocessOptions = (descriptor: SFCDescriptor, options: IOptions) => {
+const getPreprocessOptions = (descriptor: SFCDescriptor, context: IContext) => {
+  const {
+    options,
+    workDir,
+  } = context;
   const preprocessLangMap = {
     sass: options.css?.sassLoaderOptions,
     scss: options.css?.scssLoaderOptions,
@@ -37,16 +41,20 @@ const getPreprocessOptions = (descriptor: SFCDescriptor, options: IOptions) => {
     stylus: options.css?.stylusLoaderOptions,
   };
   const preprocessLang = descriptor.template!.lang as keyof typeof preprocessLangMap;
-  const preprocessOptions = preprocessLangMap[preprocessLang] || options.css?.cssLoaderOptions;
+  const preprocessOptions = preprocessLangMap[preprocessLang];
+  const postcssConfig = require(getAbsolutePath(workDir, 'postcss.config.js'));
   return {
     preprocessLang,
     preprocessOptions,
+    postcssOptions: postcssConfig,
+    postcssPlugins: postcssConfig?.plugins,
   };
 };
 
+
 const getTemplateOptions = (
   descriptor: SFCDescriptor,
-  options: IOptions,
+  context: IContext,
   scopeId: string,
   filename: string,
 ): SFCTemplateCompileOptions => {
@@ -57,7 +65,7 @@ const getTemplateOptions = (
   const {
     preprocessLang,
     preprocessOptions,
-  } = getPreprocessOptions(descriptor, options);
+  } = getPreprocessOptions(descriptor, context);
   return {
     id: scopeId,
     source: block?.content || '',
@@ -72,7 +80,7 @@ const getTemplateOptions = (
     ssrCssVars: descriptor.cssVars,
     compilerOptions: {
       isTS,
-      whitespace: options.whitespace,
+      whitespace: context.options.whitespace,
       scopeId: `data-v-${scopeId}`,
       prefixIdentifiers: true,
       bindingMetadata: descriptor.script?.bindings,
@@ -95,7 +103,7 @@ export const compileScript = (
 ): IFile | null => {
   const fileName = getFileName(originRelativeFilePath);
   const hasScript = descriptor.script || descriptor.scriptSetup;
-  const templateOptions = getTemplateOptions(descriptor, context.options, scopeId, fileName);
+  const templateOptions = getTemplateOptions(descriptor, context, scopeId, fileName);
   // compile
   const compileScriptResult = hasScript
     ? compileSFCScript(descriptor, {
@@ -138,7 +146,9 @@ export const compileStyle = (
   const {
     preprocessLang,
     preprocessOptions,
-  } = getPreprocessOptions(descriptor, context.options);
+    postcssOptions,
+    postcssPlugins,
+  } = getPreprocessOptions(descriptor, context);
 
   const styles = descriptor.styles.map((style) => {
     const compileStyleResult = compileSFCStyle({
@@ -150,6 +160,8 @@ export const compileStyle = (
       // modules: !!style.module,
       preprocessLang,
       preprocessOptions,
+      postcssOptions,
+      postcssPlugins,
     });
     return compileStyleResult.code;
   });
