@@ -4,8 +4,9 @@ import {
 
 import type {
   IFile,
+  IFileMap,
 } from '../../../types/type';
 
-export const transformJs = (file: IFile) => {
-  return transformDependencies(file);
+export const transformJs = (file: IFile, fileMap: IFileMap) => {
+  return transformDependencies(file, fileMap);
 };

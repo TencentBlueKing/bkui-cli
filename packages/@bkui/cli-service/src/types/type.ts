@@ -26,6 +26,10 @@ export interface IFile {
   }[];
 }
 
+export interface IFileMap {
+  [key: string]: IFile;
+}
+
 export interface IReplaceStaticUrlPluginOption {
   exclude?: null | RegExp[];
   key: string;
@@ -66,6 +70,7 @@ export interface IOptions {
   preserveModules: boolean
   preserveModulesRoot: string
   preserveModulesOnly: boolean
+  preserveModuleType: 'es6' | 'commonjs'
   cache: boolean
   resource: { [pageName: string]: IResource }
   copy: ICopy[] | ICopy

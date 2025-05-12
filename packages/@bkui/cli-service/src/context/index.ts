@@ -65,6 +65,7 @@ const generateContext = (mode: Mode, options?: IOptions): IContext => {
         preserveModules: false,
         preserveModulesRoot: 'src',
         preserveModulesOnly: false,
+        preserveModuleType: 'es6',
         customEnv: '',
         whitespace: 'preserve',
         target: 'web',

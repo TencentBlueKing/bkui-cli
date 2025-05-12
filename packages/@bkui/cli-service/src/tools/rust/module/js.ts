@@ -33,6 +33,9 @@ export const processJs = async (
           },
           target: 'es2015',
         },
+        module: {
+          type: context.options.preserveModuleType,
+        },
       },
     )
     : {

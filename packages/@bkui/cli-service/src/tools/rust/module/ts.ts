@@ -6,7 +6,7 @@ import type {
 } from '../../../types/type';
 import path from 'node:path';
 
-export const processTs = async (content: string, originRelativeFilePath: string, __: IContext) => {
+export const processTs = async (content: string, originRelativeFilePath: string, context: IContext) => {
   const result = await transform(
     content,
     {
@@ -17,6 +17,9 @@ export const processTs = async (content: string, originRelativeFilePath: string,
           syntax: 'typescript',
         },
         target: 'es2015',
+      },
+      module: {
+        type: context.options.preserveModuleType,
       },
     },
   );

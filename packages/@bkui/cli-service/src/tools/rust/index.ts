@@ -13,6 +13,7 @@ import {
 
 import type {
   IContext,
+  IFileMap,
 } from '../../types/type';
 
 // 使用 rust 构建
@@ -22,14 +23,15 @@ export const build = async (context: IContext) => {
   } = require('@blueking/cli-utils');
   try {
     const startTime = Date.now();
+    const fileMap: IFileMap = {};
     // clean
     await clean(context);
     // build module
-    await buildModule(context);
+    await buildModule(fileMap, context);
     // transform
-    await transform(context);
+    await transform(fileMap, context);
     // emit
-    await emit(context);
+    await emit(fileMap, context);
     log.done(`Build preserveModules complete in ${Date.now() - startTime} ms.`);
   } catch (error: any) {
     log.error(error);
