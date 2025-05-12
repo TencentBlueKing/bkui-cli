@@ -6,9 +6,6 @@ import {
   isNodeBuiltInModule,
 } from '../../../lib/util';
 import {
-  fileMap,
-} from '../file';
-import {
   resolveFilePath,
   isPathMatchExternal,
 } from './path';
@@ -28,6 +25,7 @@ import type {
 import type {
   IContext,
   IFile,
+  IFileMap,
 } from '../../../types/type';
 
 /**
@@ -229,7 +227,7 @@ export const getCssDependencies = (nodes: ChildNode[], originRelativeFilePath: s
  * @param file 文件
  * @returns 依赖路径
  */
-export const transformDependencies = (file: IFile) => {
+export const transformDependencies = (file: IFile, fileMap: IFileMap) => {
   let { content } = file;
   file.dependencies?.forEach((dependency) => {
     const {

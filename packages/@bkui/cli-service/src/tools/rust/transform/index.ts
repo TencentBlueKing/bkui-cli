@@ -1,9 +1,6 @@
 import path from 'path';
 
 import {
-  fileMap,
-} from '../file';
-import {
   transformJs,
 } from './js';
 import {
@@ -15,6 +12,7 @@ import {
 
 import type {
   IContext,
+  IFileMap,
 } from '../../../types/type';
 
 // 获取文件处理函数
@@ -28,10 +26,10 @@ const getFileTransform = (relativeFilePath: string): typeof transformJs => {
 };
 
 // 对文件内容进行转换
-export const transform = async (__: IContext) => {
+export const transform = async (fileMap: IFileMap, __: IContext) => {
   const files = Object.values(fileMap);
   for (const file of files) {
     const transform = getFileTransform(file.outputRelativeFilePath);
-    file.content = transform(file);
+    file.content = transform(file, fileMap);
   }
 };

@@ -43,12 +43,9 @@ import {
   parseCss,
 } from './css';
 
-import {
-  fileMap,
-} from '../file';
-
 import type {
   IContext,
+  IFileMap,
 } from '../../../types/type';
 
 // 获取文件处理函数
@@ -81,7 +78,7 @@ const getFileParse = (relativeFilePath: string): typeof parseJs => {
 };
 
 // 处理单个文件
-const build = async (originRelativeFilePath: string, context: IContext) => {
+const build = async (originRelativeFilePath: string, fileMap: IFileMap, context: IContext) => {
   // 1. 构建单文件
   // 如果文件已经处理过，则跳过
   if (fileMap[originRelativeFilePath]) return;
@@ -114,13 +111,13 @@ const build = async (originRelativeFilePath: string, context: IContext) => {
     file.dependencies = dependencies;
     // 递归构建依赖文件
     for (const dependency of dependencies) {
-      await build(dependency.originRelativeDependencyPath, context);
+      await build(dependency.originRelativeDependencyPath, fileMap, context);
     }
   }
 };
 
 // 执行转换
-export const buildModule = async (context: IContext) => {
+export const buildModule = async (fileMap: IFileMap, context: IContext) => {
   // 获取 entry 的文件列表
   const entries = Object
     .values(context.options.resource)
@@ -132,5 +129,5 @@ export const buildModule = async (context: IContext) => {
       },
       [] as string[],
     );
-  return Promise.all(entries.map(entry => build(entry, context)));
+  return Promise.all(entries.map(entry => build(entry, fileMap, context)));
 };

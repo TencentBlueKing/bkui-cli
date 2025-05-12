@@ -3,14 +3,11 @@ import path from 'node:path';
 
 import type {
   IContext,
+  IFileMap,
 } from '../../../types/type';
 
-import {
-  fileMap,
-} from '../file';
-
 // 输出文件
-export const emit = async (context: IContext) => {
+export const emit = async (fileMap: IFileMap, context: IContext) => {
   const files = Object.values(fileMap);
   for (const file of files) {
     // 替换 outputRelativeFilePath 中的 context.options.preserveModulesRoot 为 context.options.outputPreserveModuleDir

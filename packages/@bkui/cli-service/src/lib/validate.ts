@@ -105,6 +105,7 @@ export const validate = async (options: IOptions) => {
     preserveModules: Joi.boolean().allow(''),
     preserveModulesRoot: Joi.string().allow(''),
     preserveModulesOnly: Joi.boolean().allow(''),
+    preserveModuleType: Joi.string().valid('es6', 'commonjs'),
     lazyCompilation: Joi.boolean().allow(''),
     lazyCompilationHost: Joi.string().allow(''),
     envPrefix: Joi.string().allow(''),
