@@ -12,16 +12,16 @@ import {
 } from '../helper/dependency';
 
 import {
-  resolveOutputRelativeFilePath,
+  resolveOutputAbsoluteFilePath,
 } from '../helper/path';
 
 // 转义
 export const processJs = async (
   content: string,
-  originRelativeFilePath: string,
+  originAbsoluteFilePath: string,
   context: IContext,
 ): Promise<IFile[]> => {
-  const result = !originRelativeFilePath.includes('node_modules')
+  const result = !originAbsoluteFilePath.includes('node_modules')
     ? await transform(
       content,
       {
@@ -42,16 +42,16 @@ export const processJs = async (
       code: content,
     };
   // 原始文件是js的，输出可以不改名字。
-  const outputRelativeFilePath = resolveOutputRelativeFilePath(
-    originRelativeFilePath.endsWith('.js')
-      ? originRelativeFilePath
-      : `${originRelativeFilePath}.js`,
+  const outputAbsoluteFilePath = resolveOutputAbsoluteFilePath(
+    originAbsoluteFilePath.endsWith('.js')
+      ? originAbsoluteFilePath
+      : `${originAbsoluteFilePath}.js`,
     context,
   );
   return [
     {
-      originRelativeFilePath,
-      outputRelativeFilePath,
+      originAbsoluteFilePath,
+      outputAbsoluteFilePath,
       content: result.code,
       needProcess: false,
     },
@@ -59,8 +59,8 @@ export const processJs = async (
 };
 
 // 解析
-export const parseJs = async (content: string, originRelativeFilePath: string, context: IContext) => {
+export const parseJs = async (content: string, originAbsoluteFilePath: string, context: IContext) => {
   const result = await parse(content);
-  const dependencies = getJsDependencies(result, originRelativeFilePath, context);
+  const dependencies = getJsDependencies(result, originAbsoluteFilePath, context);
   return dependencies;
 };

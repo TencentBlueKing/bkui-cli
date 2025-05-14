@@ -16,12 +16,12 @@ import type {
 } from '../../../types/type';
 
 // 获取文件处理函数
-const getFileTransform = (relativeFilePath: string): typeof transformJs => {
+const getFileTransform = (outputAbsoluteFilePath: string): typeof transformJs => {
   const transformMap = {
     '.js': transformJs,
     '.css': transformCss,
   };
-  const fileExt = path.extname(relativeFilePath);
+  const fileExt = path.extname(outputAbsoluteFilePath);
   return transformMap[fileExt] || transformOther;
 };
 
@@ -29,7 +29,7 @@ const getFileTransform = (relativeFilePath: string): typeof transformJs => {
 export const transform = async (fileMap: IFileMap, __: IContext) => {
   const files = Object.values(fileMap);
   for (const file of files) {
-    const transform = getFileTransform(file.outputRelativeFilePath);
+    const transform = getFileTransform(file.outputAbsoluteFilePath);
     file.content = transform(file, fileMap);
   }
 };

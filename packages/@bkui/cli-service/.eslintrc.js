@@ -39,6 +39,7 @@ module.exports = {
       rules: {
         'no-param-reassign': 'off',
         'arrow-body-style': 'off',
+        'function-paren-newline': 'off',
         '@typescript-eslint/no-require-imports': 'off',
         '@typescript-eslint/explicit-member-accessibility': 'off',
         '@typescript-eslint/naming-convention': 'off'

@@ -1,22 +1,27 @@
 import type {
   IContext,
+  IFile,
 } from '../../../types/type';
 
 import {
   transformPreprocessor,
 } from '../helper/preprocessor';
 
-export const processStyl = (source: string, originRelativeFilePath: string, context: IContext) => {
+export const processStyl = async (
+  source: string,
+  originAbsoluteFilePath: string,
+  context: IContext,
+): Promise<IFile[]> => {
   const options = {
     ...context.options.css?.stylusLoaderOptions,
-    filename: originRelativeFilePath,
+    filename: originAbsoluteFilePath,
   };
   const result = transformPreprocessor(source, 'styl', options);
-  const outputRelativeFilePath = `${originRelativeFilePath}.css`;
+  const outputAbsoluteFilePath = `${originAbsoluteFilePath}.css`;
   return [
     {
-      originRelativeFilePath,
-      outputRelativeFilePath,
+      originAbsoluteFilePath,
+      outputAbsoluteFilePath,
       content: result.code,
       needProcess: false,
     },

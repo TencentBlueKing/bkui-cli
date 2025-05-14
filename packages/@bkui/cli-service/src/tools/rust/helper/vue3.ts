@@ -3,7 +3,6 @@ import type {
   IContext,
 } from '../../../types/type';
 
-import path from 'node:path';
 import type {
   SFCDescriptor,
   SFCScriptBlock,
@@ -17,17 +16,11 @@ import {
   compileTemplate as compileSFCTemplate,
 } from 'vue/compiler-sfc';
 import {
-  getRelativePath,
   getAbsolutePath,
+  getRelativePath,
+  getFileName,
+  getDirName,
 } from '../../../lib/util';
-
-const getFilePath = (relativeFilePath: string, fileName: string, context: IContext) => {
-  return getRelativePath(context.workDir, path.join(path.dirname(relativeFilePath), fileName));
-};
-
-const getFileName = (relativeFilePath: string) => {
-  return path.basename(relativeFilePath, path.extname(relativeFilePath));
-};
 
 const getPreprocessOptions = (descriptor: SFCDescriptor, context: IContext) => {
   const {
@@ -98,10 +91,10 @@ export const parse = (content: string): SFCDescriptor => {
 export const compileScript = (
   descriptor: SFCDescriptor,
   scopeId: string,
-  originRelativeFilePath: string,
+  originAbsoluteFilePath: string,
   context: IContext,
 ): IFile | null => {
-  const fileName = getFileName(originRelativeFilePath);
+  const fileName = getFileName(originAbsoluteFilePath);
   const hasScript = descriptor.script || descriptor.scriptSetup;
   const templateOptions = getTemplateOptions(descriptor, context, scopeId, fileName);
   // compile
@@ -119,12 +112,12 @@ export const compileScript = (
   const content = hasScript
     ? (compileScriptResult as SFCScriptBlock).content
     : (compileScriptResult as SFCTemplateCompileResults).code;
-  const scriptOutputRelativeFilePath = getFilePath(originRelativeFilePath, `${fileName}.script.vue.${(compileScriptResult as SFCScriptBlock).lang || 'js'}`, context);
-  const scriptOriginRelativeFilePath = getFilePath(originRelativeFilePath, `${fileName}.script.vue.js`, context);
+  const scriptOutputAbsoluteFilePath = `${getDirName(originAbsoluteFilePath)}/${fileName}.script.vue.${(compileScriptResult as SFCScriptBlock).lang || 'js'}`;
+  const scriptOriginAbsoluteFilePath = `${getDirName(originAbsoluteFilePath)}/${fileName}.script.vue.js`;
 
   return {
-    originRelativeFilePath: scriptOriginRelativeFilePath,
-    outputRelativeFilePath: scriptOutputRelativeFilePath,
+    originAbsoluteFilePath: scriptOriginAbsoluteFilePath,
+    outputAbsoluteFilePath: scriptOutputAbsoluteFilePath,
     content,
     needProcess: true,
   };
@@ -133,15 +126,15 @@ export const compileScript = (
 export const compileStyle = (
   descriptor: SFCDescriptor,
   scopeId: string,
-  originRelativeFilePath: string,
+  originAbsoluteFilePath: string,
   context: IContext,
 ): IFile | null => {
   if (descriptor.styles.length <= 0) {
     return null;
   }
 
-  const fileName = getFileName(originRelativeFilePath);
-  const outputRelativeFilePath = getFilePath(originRelativeFilePath, `${fileName}.vue.css`, context);
+  const fileName = getFileName(originAbsoluteFilePath);
+  const outputAbsoluteFilePath = `${getDirName(originAbsoluteFilePath)}/${fileName}.vue.css`;
 
   const {
     preprocessLang,
@@ -153,7 +146,7 @@ export const compileStyle = (
   const styles = descriptor.styles.map((style) => {
     const compileStyleResult = compileSFCStyle({
       id: scopeId,
-      filename: originRelativeFilePath,
+      filename: originAbsoluteFilePath,
       source: style.content,
       scoped: style.scoped,
       isProd: true,
@@ -167,8 +160,8 @@ export const compileStyle = (
   });
 
   return {
-    originRelativeFilePath: outputRelativeFilePath,
-    outputRelativeFilePath,
+    originAbsoluteFilePath: outputAbsoluteFilePath,
+    outputAbsoluteFilePath,
     content: styles.join('\n'),
     needProcess: false,
   };
@@ -177,11 +170,12 @@ export const compileStyle = (
 export const compileEntry = (
   descriptor: SFCDescriptor,
   scopeId: string,
-  originRelativeFilePath: string,
+  originAbsoluteFilePath: string,
   context: IContext,
 ): IFile => {
-  const fileName = getFileName(originRelativeFilePath);
-  const outputRelativeFilePath = getFilePath(originRelativeFilePath, `${fileName}.vue.js`, context);
+  const fileName = getFileName(originAbsoluteFilePath);
+  const outputAbsoluteFilePath = `${getDirName(originAbsoluteFilePath)}/${fileName}.vue.js`;
+  const originRelativeFilePath = getRelativePath(context.workDir, originAbsoluteFilePath);
 
   // 引入脚本
   const hasScript = descriptor.script || descriptor.scriptSetup;
@@ -206,8 +200,8 @@ export const compileEntry = (
   const content = `${scriptImportCode}${scopedCode}${fileNameCode}${styleImportCode}${exportCode}`;
 
   return {
-    originRelativeFilePath,
-    outputRelativeFilePath,
+    originAbsoluteFilePath,
+    outputAbsoluteFilePath,
     content,
     needProcess: false,
   };

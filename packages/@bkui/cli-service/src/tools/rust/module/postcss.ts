@@ -1,5 +1,6 @@
 import type {
   IContext,
+  IFile,
 } from '../../../types/type';
 
 import {
@@ -11,18 +12,22 @@ import {
 } from '../helper/preprocessor';
 
 
-export const processPostcss = (source: string, originRelativeFilePath: string, context: IContext) => {
+export const processPostcss = async (
+  content: string,
+  originAbsoluteFilePath: string,
+  context: IContext,
+): Promise<IFile[]> => {
   const postcssConfig = require(getAbsolutePath(context.workDir, 'postcss.config.js'));
   const options = {
     ...postcssConfig,
-    filename: originRelativeFilePath,
+    filename: originAbsoluteFilePath,
   };
-  const result = transformPreprocessor(source, 'postcss', options);
-  const outputRelativeFilePath = `${originRelativeFilePath}.css`;
+  const result = transformPreprocessor(content, 'postcss', options);
+  const outputAbsoluteFilePath = `${originAbsoluteFilePath}.css`;
   return [
     {
-      originRelativeFilePath,
-      outputRelativeFilePath,
+      originAbsoluteFilePath,
+      outputAbsoluteFilePath,
       content: result.code,
       needProcess: false,
     },

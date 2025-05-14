@@ -3,10 +3,14 @@ import {
 } from '@swc/core';
 import type {
   IContext,
+  IFile,
 } from '../../../types/type';
-import path from 'node:path';
 
-export const processTs = async (content: string, originRelativeFilePath: string, context: IContext) => {
+export const processTs = async (
+  content: string,
+  originAbsoluteFilePath: string,
+  context: IContext,
+): Promise<IFile[]> => {
   const result = await transform(
     content,
     {
@@ -23,11 +27,11 @@ export const processTs = async (content: string, originRelativeFilePath: string,
       },
     },
   );
-  const outputRelativeFilePath = path.join(path.dirname(originRelativeFilePath), `${path.basename(originRelativeFilePath, path.extname(originRelativeFilePath))}.js`);
+  const outputAbsoluteFilePath = `${originAbsoluteFilePath}.js`;
   return [
     {
-      originRelativeFilePath,
-      outputRelativeFilePath,
+      originAbsoluteFilePath,
+      outputAbsoluteFilePath,
       content: result.code,
       needProcess: false,
     },

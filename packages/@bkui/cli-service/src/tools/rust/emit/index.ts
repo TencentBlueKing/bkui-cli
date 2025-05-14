@@ -11,7 +11,7 @@ export const emit = async (fileMap: IFileMap, context: IContext) => {
   const files = Object.values(fileMap);
   for (const file of files) {
     // 替换 outputRelativeFilePath 中的 context.options.preserveModulesRoot 为 context.options.outputPreserveModuleDir
-    const outputFilePath = file.outputRelativeFilePath.replace(
+    const outputFilePath = file.outputAbsoluteFilePath.replace(
       context.options.preserveModulesRoot,
       context.options.outputPreserveModuleDir,
     );
@@ -24,7 +24,7 @@ export const emit = async (fileMap: IFileMap, context: IContext) => {
     }
     // 写入文件
     if (file.keepOriginFile) {
-      fs.cpSync(file.originRelativeFilePath, outputFilePath);
+      fs.cpSync(file.originAbsoluteFilePath, outputFilePath);
     } else {
       fs.writeFileSync(outputFilePath, file.content);
     }

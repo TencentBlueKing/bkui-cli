@@ -1,16 +1,21 @@
 import type {
   IContext,
+  IFile,
 } from '../../../types/type';
 
 import {
-  resolveOutputRelativeFilePath,
+  resolveOutputAbsoluteFilePath,
 } from '../helper/path';
 
 // 处理
-export const processOther = async (content: string, originRelativeFilePath: string, context: IContext) => [
+export const processOther = async (
+  content: string,
+  originAbsoluteFilePath: string,
+  context: IContext,
+): Promise<IFile[]> => [
   {
-    originRelativeFilePath,
-    outputRelativeFilePath: resolveOutputRelativeFilePath(originRelativeFilePath, context),
+    originAbsoluteFilePath,
+    outputAbsoluteFilePath: resolveOutputAbsoluteFilePath(originAbsoluteFilePath, context),
     content,
     needProcess: false,
     keepOriginFile: true,

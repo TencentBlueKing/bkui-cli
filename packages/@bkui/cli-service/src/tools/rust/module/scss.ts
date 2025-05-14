@@ -1,22 +1,27 @@
 import type {
   IContext,
+  IFile,
 } from '../../../types/type';
 
 import {
   transformPreprocessor,
 } from '../helper/preprocessor';
 
-export const processScss = (source: string, originRelativeFilePath: string, context: IContext) => {
+export const processScss = async (
+  source: string,
+  originAbsoluteFilePath: string,
+  context: IContext,
+): Promise<IFile[]> => {
   const options = {
     ...context.options.css?.sassLoaderOptions,
-    filename: originRelativeFilePath,
+    filename: originAbsoluteFilePath,
   };
   const result = transformPreprocessor(source, 'scss', options);
-  const outputRelativeFilePath = `${originRelativeFilePath}.css`;
+  const outputAbsoluteFilePath = `${originAbsoluteFilePath}.css`;
   return [
     {
-      originRelativeFilePath,
-      outputRelativeFilePath,
+      originAbsoluteFilePath,
+      outputAbsoluteFilePath,
       content: result.code,
       needProcess: false,
     },

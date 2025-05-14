@@ -1,13 +1,17 @@
 import type {
   IContext,
+  IFile,
 } from '../../../types/type';
 
 import {
   transformJsx,
 } from '../helper/jsx';
-import path from 'node:path';
 
-export const processTsx = async (content: string, originRelativeFilePath: string, __: IContext) => {
+export const processTsx = async (
+  content: string,
+  originAbsoluteFilePath: string,
+  __: IContext,
+): Promise<IFile[]> => {
   // 先转义 ts
   const ts = require('typescript');
   const tsTranspileResult = ts.transpileModule(content, {
@@ -18,12 +22,11 @@ export const processTsx = async (content: string, originRelativeFilePath: string
   });
   // 再转义 jsx
   const result = await transformJsx(tsTranspileResult.outputText);
-  const fileName = path.basename(originRelativeFilePath, path.extname(originRelativeFilePath));
-  const outputRelativeFilePath = path.join(path.dirname(originRelativeFilePath), `${fileName}.tsx.js`);
+  const outputAbsoluteFilePath = `${originAbsoluteFilePath}.js`;
   return [
     {
-      originRelativeFilePath,
-      outputRelativeFilePath,
+      originAbsoluteFilePath,
+      outputAbsoluteFilePath,
       content: result.code,
       needProcess: true,
     },
