@@ -1,20 +1,19 @@
-import path from 'node:path';
 import type {
   IContext,
+  IFile,
 } from '../../../types/type';
 
 import {
   transformJsx,
 } from '../helper/jsx';
 
-export const processJsx = async (content: string, originRelativeFilePath: string, __: IContext) => {
+export const processJsx = async (content: string, originAbsoluteFilePath: string, __: IContext): Promise<IFile[]> => {
   const result = await transformJsx(content);
-  const fileName = path.basename(originRelativeFilePath, path.extname(originRelativeFilePath));
-  const outputRelativeFilePath = path.join(path.dirname(originRelativeFilePath), `${fileName}.jsx.js`);
+  const outputAbsoluteFilePath = `${originAbsoluteFilePath}.js`;
   return [
     {
-      originRelativeFilePath,
-      outputRelativeFilePath,
+      originAbsoluteFilePath,
+      outputAbsoluteFilePath,
       content: result.code,
       needProcess: true,
     },

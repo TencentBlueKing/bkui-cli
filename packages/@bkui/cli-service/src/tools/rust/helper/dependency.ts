@@ -1,11 +1,12 @@
-import path from 'node:path';
-
 import {
-  getAbsolutePath,
   getRelativePath,
+  getDirName,
   isNodeBuiltInModule,
 } from '../../../lib/util';
 import {
+  getAbsoluteDependencyPath,
+  getDependencyQueryAndHash,
+  parseDependencyQueryAndHash,
   resolveFilePath,
   isPathMatchExternal,
 } from './path';
@@ -26,6 +27,7 @@ import type {
   IContext,
   IFile,
   IFileMap,
+  IFileDependency,
 } from '../../../types/type';
 
 /**
@@ -81,83 +83,80 @@ const visitJSNode = (
 };
 
 /**
- * 转换成相对路径
- * @param originPath 原始路径
- * @param originRelativeFilePath 原始相对路径
- * @param context 上下文
- * @returns 相对路径
- */
-const transfromToRelativePath = (dependencyPath: string, originRelativeFilePath: string, context: IContext) => {
-  let toPath = dependencyPath;
-
-  const aliasMap = {
-    '@': getAbsolutePath(context.workDir, 'src'),
-  };
-
-  // 用户配置的 alias
-  Object.keys(context.options.configureWebpack?.resolve?.alias || {}).forEach((key) => {
-    aliasMap[key] = context.options.configureWebpack!.resolve!.alias![key];
-  });
-
-  // 遍历 aliasMap 替换路径
-  Object.keys(aliasMap).forEach((key) => {
-    // 命中别名
-    if (toPath.startsWith(key)) {
-      toPath = toPath.replace(key, aliasMap[key]);
-    }
-  });
-
-  return getRelativePath(context.workDir, getAbsolutePath(path.dirname(originRelativeFilePath), toPath));
-};
-
-/**
  * 获取依赖路径
  * @param dependency 依赖
- * @param originRelativeFilePath 原始相对路径
+ * @param originAbsoluteFilePath 原始绝对路径
  * @param context 上下文
- * @returns 依赖路径
+ * @returns 依赖绝对路径
  */
-const getDependencyPath = (dependency: string, originRelativeFilePath: string, context: IContext) => {
+const getDependency = (
+  originDependencyPath: string,
+  originAbsoluteFilePath: string,
+  context: IContext,
+): IFileDependency | null => {
   // 空字符串不构建
-  if (!dependency) return null;
+  if (!originDependencyPath) return null;
+
   // external 的依赖不构建
-  if (isPathMatchExternal(dependency, context)) return null;
+  if (isPathMatchExternal(originDependencyPath, context)) return null;
 
   // node 内置模块也不构建
-  if (isNodeBuiltInModule(dependency)) return null;
+  if (isNodeBuiltInModule(originDependencyPath)) return null;
 
+  // 1. 构造 dependency
+  const dependency: IFileDependency = {
+    originDependencyPath,
+    originAbsoluteDependencyPath: '',
+  };
+
+  // 2. 解析 query 和 hash
+  const {
+    dependencyPath,
+    hash,
+    query,
+  } = parseDependencyQueryAndHash(dependency.originDependencyPath);
+  if (hash) {
+    dependency.hash = hash;
+  }
+  if (query) {
+    dependency.query = query;
+  }
+
+  // 3. 生成 originAbsoluteDependencyPath
   // 处理 node_modules 的依赖
   try {
-    const dependencyPath = require.resolve(dependency);
-    if (dependencyPath.includes('node_modules')) {
-      return resolveFilePath(dependencyPath);
+    const originAbsoluteDependencyPath = require.resolve(dependencyPath);
+    if (originAbsoluteDependencyPath.includes('node_modules')) {
+      dependency.originAbsoluteDependencyPath = resolveFilePath(originAbsoluteDependencyPath);
+      return dependency;
     }
   } catch (error) {
 
   }
   // 处理自己项目中的依赖
-  return resolveFilePath(transfromToRelativePath(dependency, originRelativeFilePath, context));
+  dependency.originAbsoluteDependencyPath = resolveFilePath(
+    getAbsoluteDependencyPath(dependencyPath, originAbsoluteFilePath, context),
+  );
+  return dependency;
 };
 
 /**
  * 获取js依赖路径
  * @param program 程序
+ * @param originAbsoluteFilePath 原始文件绝对路径
  * @param context 上下文
  * @returns 依赖路径
  */
-export const getJsDependencies = (program: Program, originRelativeFilePath: string, context: IContext) => {
+export const getJsDependencies = (program: Program, originAbsoluteFilePath: string, context: IContext) => {
   // 依赖路径
   const dependencies: IFile['dependencies'] = [];
 
   // 找到引入路径，转换成相对路径
   const handleVisitImportNode = (node: StringLiteral) => {
     const originDependencyPath = node.value;
-    const originRelativeDependencyPath = getDependencyPath(originDependencyPath, originRelativeFilePath, context);
-    if (originRelativeDependencyPath) {
-      dependencies.push({
-        originDependencyPath,
-        originRelativeDependencyPath,
-      });
+    const dependency = getDependency(originDependencyPath, originAbsoluteFilePath, context);
+    if (dependency) {
+      dependencies.push(dependency);
     }
   };
 
@@ -172,23 +171,20 @@ export const getJsDependencies = (program: Program, originRelativeFilePath: stri
 /**
  * 获取css依赖路径
  * @param nodes 节点
- * @param originRelativeFilePath 原始相对路径
+ * @param originAbsoluteFilePath 原始绝对路径
  * @param context 上下文
  * @returns 依赖路径
  */
-export const getCssDependencies = (nodes: ChildNode[], originRelativeFilePath: string, context: IContext) => {
+export const getCssDependencies = (nodes: ChildNode[], originAbsoluteFilePath: string, context: IContext) => {
   const dependencies: IFile['dependencies'] = [];
 
   nodes.forEach((node) => {
     // 处理 @import 规则
     if (node.type === 'atrule' && node.name === 'import') {
       const originDependencyPath = node.params.slice(1, -1);
-      const originRelativeDependencyPath = getDependencyPath(originDependencyPath, originRelativeFilePath, context);
-      if (originRelativeDependencyPath) {
-        dependencies.push({
-          originDependencyPath,
-          originRelativeDependencyPath,
-        });
+      const dependency = getDependency(originDependencyPath, originAbsoluteFilePath, context);
+      if (dependency) {
+        dependencies.push(dependency);
       }
     }
 
@@ -207,12 +203,9 @@ export const getCssDependencies = (nodes: ChildNode[], originRelativeFilePath: s
             continue;
           }
 
-          const originRelativeDependencyPath = getDependencyPath(originDependencyPath, originRelativeFilePath, context);
-          if (originRelativeDependencyPath) {
-            dependencies.push({
-              originDependencyPath,
-              originRelativeDependencyPath,
-            });
+          const dependency = getDependency(originDependencyPath, originAbsoluteFilePath, context);
+          if (dependency) {
+            dependencies.push(dependency);
           }
         }
       });
@@ -225,6 +218,7 @@ export const getCssDependencies = (nodes: ChildNode[], originRelativeFilePath: s
 /**
  * 转换依赖路径
  * @param file 文件
+ * @param fileMap 文件列表
  * @returns 依赖路径
  */
 export const transformDependencies = (file: IFile, fileMap: IFileMap) => {
@@ -232,10 +226,12 @@ export const transformDependencies = (file: IFile, fileMap: IFileMap) => {
   file.dependencies?.forEach((dependency) => {
     const {
       originDependencyPath,
-      originRelativeDependencyPath,
+      originAbsoluteDependencyPath,
     } = dependency;
-    const dependencyFile = fileMap[originRelativeDependencyPath];
-    const relativeDependencyPath = `'${getRelativePath(path.dirname(file.outputRelativeFilePath), dependencyFile.outputRelativeFilePath)}'`;
+    const dependencyFile = fileMap[originAbsoluteDependencyPath];
+    const dependencyPath = `'${getRelativePath(getDirName(file.outputAbsoluteFilePath), dependencyFile.outputAbsoluteFilePath)}'`;
+    const dependencyQueryHash = getDependencyQueryAndHash(dependency);
+    const relativeDependencyPath = dependencyPath + dependencyQueryHash;
 
     // 替换普通引号包裹的路径（如 import 和 require）
     const pathReg = new RegExp(`'${originDependencyPath}'`, 'g');

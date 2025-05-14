@@ -14,16 +14,20 @@ export type EntryConfig =  ValueOf<EntryObject>;
 
 export type Mode = 'none' | 'development' | 'production';
 
+export interface IFileDependency {
+  originDependencyPath: string;
+  originAbsoluteDependencyPath: string;
+  query?: string;
+  hash?: string;
+}
+
 export interface IFile {
   content: string;
-  originRelativeFilePath: string;
-  outputRelativeFilePath: string;
+  originAbsoluteFilePath: string;
+  outputAbsoluteFilePath: string;
   needProcess?: boolean;
   keepOriginFile?: boolean;
-  dependencies?: {
-    originDependencyPath: string;
-    originRelativeDependencyPath: string;
-  }[];
+  dependencies?: IFileDependency[];
 }
 
 export interface IFileMap {

@@ -216,3 +216,21 @@ export const isNodeBuiltInModule = (moduleName: string) => {
 
   return nodeBuiltinModules.includes(moduleName);
 };
+
+/**
+ * 获取文件名
+ * @param filePath 文件路径
+ * @returns 文件名
+ */
+export const getFileName = (filePath: string) => {
+  return path.basename(filePath, path.extname(filePath));
+};
+
+/**
+ * 获取文件所在文件夹的名称
+ * @param filePath 文件路径
+ * @returns 文件夹名称
+ */
+export const getDirName = (filePath: string) => {
+  return path.dirname(filePath);
+};

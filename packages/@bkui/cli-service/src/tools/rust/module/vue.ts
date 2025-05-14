@@ -9,18 +9,19 @@ import {
   getUniqueId,
 } from '../../../lib/util';
 
-const processVue2 = (content: string, relativeFilePath: string, __: IOptions) => {
+const processVue2 = (content: string, originAbsoluteFilePath: string, __: IOptions) => {
   console.error('vue2 not supported, please contact the author to support');
   return [
     {
-      relativeFilePath,
+      originAbsoluteFilePath,
+      outputAbsoluteFilePath: originAbsoluteFilePath,
       content,
       needProcess: false,
     },
   ];
 };
 
-const processVue3 = (content: string, relativeFilePath: string, context: IContext) => {
+const processVue3 = (content: string, originAbsoluteFilePath: string, context: IContext) => {
   const {
     parse,
     compileScript,
@@ -33,19 +34,23 @@ const processVue3 = (content: string, relativeFilePath: string, context: IContex
   // 解析
   const descriptor = parse(content);
   // 编译脚本
-  processResults.push(compileScript(descriptor, scopeId, relativeFilePath, context));
+  processResults.push(compileScript(descriptor, scopeId, originAbsoluteFilePath, context));
   // 编译样式
-  processResults.push(compileStyle(descriptor, scopeId, relativeFilePath, context));
+  processResults.push(compileStyle(descriptor, scopeId, originAbsoluteFilePath, context));
   // 编译入口
-  processResults.push(compileEntry(descriptor, scopeId, relativeFilePath, context));
+  processResults.push(compileEntry(descriptor, scopeId, originAbsoluteFilePath, context));
   // 过滤空值
   return processResults.filter(Boolean);
 };
 
-export const processVue = async (content: string, relativeFilePath: string, context: IContext) => {
+export const processVue = async (
+  content: string,
+  originAbsoluteFilePath: string,
+  context: IContext,
+): Promise<IFile[]> => {
   const vueVersion = getVueVersion();
   if (vueVersion === 2) {
-    return processVue2(content, relativeFilePath, context.options);
+    return processVue2(content, originAbsoluteFilePath, context.options);
   }
-  return processVue3(content, relativeFilePath, context);
+  return processVue3(content, originAbsoluteFilePath, context);
 };
