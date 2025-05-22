@@ -1,13 +1,15 @@
 {
   "name": "@blueking/eslint-config-bk",
-  "version": "3.0.0-beta.1",
+  "version": "3.0.0-beta.2",
   "description": "ESLint configuration for BlueKing projects",
   "main": "index.js",
   "exports": {
     ".": "./index.js",
     "./ts": "./ts.js",
     "./vue": "./vue.js",
-    "./vuets": "./vuets.js"
+    "./vuets": "./vuets.js",
+    "./vue3": "./vue.js",
+    "./vue3ts": "./vuets.js"
   },
   "keywords": [
     "eslint"

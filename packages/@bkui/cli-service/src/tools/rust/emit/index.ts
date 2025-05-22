@@ -5,15 +5,20 @@ import type {
   IContext,
   IFileMap,
 } from '../../../types/type';
+import {
+  getAbsolutePath,
+} from '../../../lib/util';
 
 // 输出文件
 export const emit = async (fileMap: IFileMap, context: IContext) => {
   const files = Object.values(fileMap);
+  const absolutePreserveModuleRoot = getAbsolutePath(context.workDir, context.options.preserveModulesRoot);
+  const absoluteOutputPreserveModuleDir = getAbsolutePath(context.workDir, context.options.outputPreserveModuleDir);
   for (const file of files) {
     // 替换 outputRelativeFilePath 中的 context.options.preserveModulesRoot 为 context.options.outputPreserveModuleDir
     const outputFilePath = file.outputAbsoluteFilePath.replace(
-      context.options.preserveModulesRoot,
-      context.options.outputPreserveModuleDir,
+      absolutePreserveModuleRoot,
+      absoluteOutputPreserveModuleDir,
     );
     // 创建目录
     const outputDir = path.dirname(outputFilePath);
