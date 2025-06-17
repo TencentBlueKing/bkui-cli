@@ -69,7 +69,7 @@ export const resolveOutputAbsoluteFilePath = (outputAbsoluteFilePath: string, co
   if (outputAbsoluteFilePath.includes('node_modules')) {
     return outputAbsoluteFilePath.replace(
       /.+node_modules\/(.+)/,
-      `${context.workDir}/${context.options.preserveModulesRoot ? context.options.preserveModulesRoot : ''}/node_modules/$1`,
+      `${context.workDir}/${context.options.preserveModulesRoot ? `${context.options.preserveModulesRoot}/` : ''}node_modules/$1`,
     );
   }
   return outputAbsoluteFilePath;
