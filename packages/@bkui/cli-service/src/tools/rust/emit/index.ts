@@ -10,11 +10,11 @@ import {
 } from '../../../lib/util';
 
 // 输出文件
-export const emit = async (fileMap: IFileMap, context: IContext) => {
+export const emit = (fileMap: IFileMap, context: IContext) => {
   const files = Object.values(fileMap);
   const absolutePreserveModuleRoot = getAbsolutePath(context.workDir, context.options.preserveModulesRoot);
   const absoluteOutputPreserveModuleDir = getAbsolutePath(context.workDir, context.options.outputPreserveModuleDir);
-  for (const file of files) {
+  const tasks: Array<Promise<void>> = files.map(async (file) => {
     // 替换 outputRelativeFilePath 中的 context.options.preserveModulesRoot 为 context.options.outputPreserveModuleDir
     const outputFilePath = file.outputAbsoluteFilePath.replace(
       absolutePreserveModuleRoot,
@@ -33,5 +33,6 @@ export const emit = async (fileMap: IFileMap, context: IContext) => {
     } else {
       fs.writeFileSync(outputFilePath, file.content);
     }
-  }
+  });
+  return Promise.all(tasks);
 };
