@@ -23,15 +23,15 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-const { defineConfig } = require('eslint/config');
-const tsConfig = require('./tencent/ts');
-const vueConfig = require('./tencent/vue');
-const baseConfig = require('./tencent/base');
-const prettierConfig = require('./tencent/prettier');
+import { defineConfig } from 'eslint/config';
+
+import baseConfig from './tencent/base.js';
+import tsConfig from './tencent/ts.js';
+import vueConfig from './tencent/vue.js';
 
 const [ts, dts] = tsConfig;
 
-module.exports = defineConfig([
+export default defineConfig([
   baseConfig,
   {
     ...ts,
@@ -39,5 +39,4 @@ module.exports = defineConfig([
   },
   dts,
   vueConfig,
-  prettierConfig,
 ]);

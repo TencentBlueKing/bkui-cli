@@ -28,7 +28,85 @@
  * Vue共用ESLint规则
  * 这个文件包含Vue2和Vue3共用的ESLint规则
  */
-module.exports = {
+const stylisticRules = {
+  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/array-bracket-spacing.md
+  // 数组括号内是否有空格
+  'vue/array-bracket-spacing': ['error', 'never'],
+
+  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/arrow-spacing.md
+  // 箭头函数箭头前后空格
+  'vue/arrow-spacing': ['error', { before: true, after: true }],
+
+  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/block-spacing.md
+  // 代码块大括号内空格
+  'vue/block-spacing': ['error', 'always'],
+
+  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/brace-style.md
+  // 大括号风格
+  'vue/brace-style': ['error', '1tbs', { allowSingleLine: false }],
+
+  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/html-closing-bracket-spacing.md
+  // 标签闭合括号前的空格
+  'vue/html-closing-bracket-spacing': [
+    'error',
+    { startTag: 'never', endTag: 'never', selfClosingTag: 'always' },
+  ],
+
+  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/html-end-tags.md
+  // 强制要求结束标签
+  'vue/html-end-tags': 'error',
+
+  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/html-indent.md
+  // html 缩进风格
+  'vue/html-indent': [
+    'error',
+    2,
+    {
+      attribute: 1,
+      baseIndent: 1,
+      closeBracket: 0,
+      alignAttributesVertically: true,
+      ignores: [],
+    },
+  ],
+
+  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/html-quotes.md
+  // html 属性值必须使用双引号
+  'vue/html-quotes': ['error', 'double'],
+
+  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/key-spacing.md
+  // 对象键值冒号空格
+  'vue/key-spacing': [
+    'error',
+    { beforeColon: false, afterColon: true },
+  ],
+
+  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/keyword-spacing.md
+  // 关键字前后空格
+  'vue/keyword-spacing': ['error', { before: true, after: true }],
+
+  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/no-multi-spaces.md
+  // 删除 html 标签中连续多个不用于缩进的空格
+  'vue/no-multi-spaces': 'error',
+
+  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/no-spaces-around-equal-signs-in-attribute.md
+  // 属性等号两边不能有空格
+  'vue/no-spaces-around-equal-signs-in-attribute': 'error',
+
+  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/object-curly-spacing.md
+  // 对象写在一行时，大括号里需要空格
+  'vue/object-curly-spacing': ['error', 'always'],
+
+  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/space-infix-ops.md
+  // 操作符两边空格
+  'vue/space-infix-ops': 'error',
+
+  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/space-unary-ops.md
+  // 一元操作符前后空格
+  'vue/space-unary-ops': ['error', { words: true, nonwords: false }],
+};
+
+export default {
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/multi-word-component-names.md
   'vue/multi-word-component-names': 'off',
 
@@ -189,10 +267,6 @@ module.exports = {
   // 组件必须要直接被 export。不限制
   'vue/require-direct-export': 'off',
 
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/require-prop-types.md
-  // props 必须要有 type。
-  'vue/require-prop-types': 'error',
-
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/require-valid-default-prop.md
   // props 默认值必须有效。不限制
   'vue/require-valid-default-prop': 'off',
@@ -200,18 +274,6 @@ module.exports = {
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/singleline-html-element-content-newline.md
   // 单行 html 元素后面必须换行。不限制
   'vue/singleline-html-element-content-newline': 'off',
-
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/space-infix-ops.md
-  // 二元操作符两边要有空格
-  'vue/space-infix-ops': 'error',
-
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/space-unary-ops.md
-  // new, delete, typeof, void, yield 等后面必须有空格，一元操作符 -, +, --, ++, !, !! 禁止有空格
-  'vue/space-unary-ops': ['error', { words: true, nonwords: false }],
-
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/this-in-template.md
-  // 不允许在 template 中使用 this
-  'vue/this-in-template': ['error', 'never'],
 
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/use-v-on-exact.md
   // 强制使用精确修饰词。不限制
@@ -228,4 +290,7 @@ module.exports = {
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/v-on-style.md
   // v-on 指令的写法。限制简写
   'vue/v-on-style': ['error', 'shorthand'],
+
+  // 格式化相关
+  ...stylisticRules,
 };

@@ -3,6 +3,7 @@
   "version": "3.0.0-beta.3",
   "description": "ESLint configuration for BlueKing projects",
   "main": "index.js",
+  "type": "module",
   "exports": {
     ".": "./index.js",
     "./ts": "./ts.js",
@@ -19,12 +20,12 @@
     "@typescript-eslint/eslint-plugin": "^8.26.1",
     "@typescript-eslint/parser": "^8.26.1",
     "eslint": "^9.22.0",
-    "eslint-config-prettier": "^10.1.1",
-    "eslint-plugin-prettier": "^5.2.3",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
     "eslint-plugin-vue": "^10.0.0",
     "typescript-eslint": "^8.26.1",
     "vue-eslint-parser": "^10.1.1",
-    "eslint-plugin-import": "^2.31.0"
+    "eslint-plugin-oxlint": "^1.6.0"
   },
   "author": "bkfe",
   "license": "MIT"
