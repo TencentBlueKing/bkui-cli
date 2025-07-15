@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import path from 'node:path';
 
 import {
   getAbsolutePath,
@@ -19,6 +20,16 @@ import type {
 export const resolveFilePath = (filePath: string) => {
   if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
     return filePath;
+  }
+  // 如果是目录且存在 package.json，则认为是一个包
+  if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory() && fs.existsSync(`${filePath}/package.json`)) {
+    const packageJson = JSON.parse(fs.readFileSync(`${filePath}/package.json`, 'utf-8'));
+    if (packageJson.main) {
+      return path.resolve(filePath, packageJson.main);
+    }
+    if (packageJson.module) {
+      return path.resolve(filePath, packageJson.module);
+    }
   }
   const jsPath = `${filePath}.js`;
   if (fs.existsSync(jsPath)) {
@@ -119,13 +130,20 @@ export const getAbsoluteDependencyPath = (
     aliasMap[key] = resolveUserPath(context.workDir, context.options.configureWebpack!.resolve!.alias![key]);
   });
 
+  // 替换 alias 路径
+  let aliasKey = '';
+  let aliasValue = '';
   // 遍历 aliasMap 替换路径
   Object.keys(aliasMap).forEach((key) => {
-    // 命中别名
-    if (toPath.startsWith(key)) {
-      toPath = toPath.replace(key, aliasMap[key]);
+    // 命中别名，最长命中优先级更高
+    if (toPath.startsWith(key) && key.length > aliasKey.length) {
+      aliasKey = key;
+      aliasValue = aliasMap[key];
     }
   });
+  if (aliasKey && aliasValue) {
+    toPath = toPath.replace(aliasKey, aliasValue);
+  }
 
   return resolveUserPath(getDirName(originAbsoluteFilePath), toPath);
 };
