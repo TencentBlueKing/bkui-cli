@@ -23,9 +23,10 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-const { defineConfig } = require('eslint/config');
-const baseConfig = require('./tencent/base');
-const prettierConfig = require('./tencent/prettier');
+// ESM rewrite
+import { defineConfig } from 'eslint/config';
+
+import baseConfig from './tencent/base.js';
 
 // base
-module.exports = defineConfig([baseConfig, prettierConfig]);
+export default defineConfig([baseConfig]);

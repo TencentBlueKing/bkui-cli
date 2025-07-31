@@ -23,9 +23,10 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-const commonVueRules = require('./vue.common.rule');
+// ESM rewrite
+import commonVueRules from './vue.common.rule.js';
 
-module.exports = {
+export default {
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/define-macros-order.md
   'vue/define-macros-order': [
     'error',

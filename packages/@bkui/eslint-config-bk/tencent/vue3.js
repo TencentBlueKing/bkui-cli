@@ -23,23 +23,26 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-const parserVue = require('vue-eslint-parser');
-const parserTypeScript = require('@typescript-eslint/parser');
-const pluginVue = require('eslint-plugin-vue');
-const vue3Rules = require('./vue3.rule');
+// ESM rewrite
+import pluginVue from 'eslint-plugin-vue';
+import parserVue from 'vue-eslint-parser';
 
-module.exports = [
+import parserTypeScript from '@typescript-eslint/parser';
+
+import vue3Rules from './vue3.rule.js';
+
+export default [
   {
     files: ['**/*.vue'],
     languageOptions: {
       parser: parserVue,
+      sourceType: 'module',
       parserOptions: {
         ecmaFeatures: {
           jsx: true,
         },
         extraFileExtensions: ['.vue'],
         parser: parserTypeScript,
-        sourceType: 'module',
       },
     },
     plugins: {

@@ -23,9 +23,9 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-const { defineConfig } = require('eslint/config');
-const baseConfig = require('./tencent/base');
-const vue3Config = require('./tencent/vue3');
-const prettierConfig = require('./tencent/prettier');
+import { defineConfig } from 'eslint/config';
 
-module.exports = defineConfig([baseConfig, vue3Config, prettierConfig]);
+import baseConfig from './tencent/base.js';
+import vue3Config from './tencent/vue3.js';
+
+export default defineConfig([baseConfig, vue3Config]);
