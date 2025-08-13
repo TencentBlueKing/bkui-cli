@@ -312,5 +312,5 @@ export default [
       },
     },
   },
-  ...oxlint.buildFromOxlintConfigFile('./oxlint.config.js'),
+  ...oxlint.buildFromOxlintConfigFile('./.oxlint.json'),
 ];
