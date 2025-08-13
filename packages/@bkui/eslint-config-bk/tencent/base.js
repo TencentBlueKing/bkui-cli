@@ -24,7 +24,6 @@
  * IN THE SOFTWARE.
  */
 import importPlugin from 'eslint-plugin-import';
-import oxlint from 'eslint-plugin-oxlint';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import globals from 'globals';
 
@@ -312,5 +311,4 @@ export default [
       },
     },
   },
-  ...oxlint.buildFromOxlintConfigFile('./.oxlint.json'),
 ];
