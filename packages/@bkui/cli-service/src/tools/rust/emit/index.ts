@@ -1,5 +1,4 @@
 import fs from 'node:fs';
-import path from 'node:path';
 
 import type {
   IContext,
@@ -8,6 +7,9 @@ import type {
 import {
   getAbsolutePath,
 } from '../../../lib/util';
+import {
+  dirname,
+} from '../../../lib/path';
 
 // 输出文件
 export const emit = (fileMap: IFileMap, context: IContext) => {
@@ -21,7 +23,7 @@ export const emit = (fileMap: IFileMap, context: IContext) => {
       absoluteOutputPreserveModuleDir,
     );
     // 创建目录
-    const outputDir = path.dirname(outputFilePath);
+    const outputDir = dirname(outputFilePath);
     if (!fs.existsSync(outputDir)) {
       fs.mkdirSync(outputDir, {
         recursive: true,

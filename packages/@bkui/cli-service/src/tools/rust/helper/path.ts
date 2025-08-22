@@ -1,11 +1,13 @@
 import fs from 'node:fs';
-import path from 'node:path';
 
 import {
   getAbsolutePath,
   getDirName,
   resolveUserPath,
 } from '../../../lib/util';
+import {
+  resolve,
+} from '../../../lib/path';
 
 import type {
   IContext,
@@ -25,10 +27,10 @@ export const resolveFilePath = (filePath: string) => {
   if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory() && fs.existsSync(`${filePath}/package.json`)) {
     const packageJson = JSON.parse(fs.readFileSync(`${filePath}/package.json`, 'utf-8'));
     if (packageJson.main) {
-      return path.resolve(filePath, packageJson.main);
+      return resolve(filePath, packageJson.main);
     }
     if (packageJson.module) {
-      return path.resolve(filePath, packageJson.module);
+      return resolve(filePath, packageJson.module);
     }
   }
   const jsPath = `${filePath}.js`;
