@@ -1,5 +1,3 @@
-import path from 'path';
-
 import {
   transformJs,
 } from './js';
@@ -9,6 +7,9 @@ import {
 import {
   transformOther,
 } from './other';
+import {
+  extname,
+} from '../../../lib/path';
 
 import type {
   IContext,
@@ -21,7 +22,7 @@ const getFileTransform = (outputAbsoluteFilePath: string): typeof transformJs =>
     '.js': transformJs,
     '.css': transformCss,
   };
-  const fileExt = path.extname(outputAbsoluteFilePath);
+  const fileExt = extname(outputAbsoluteFilePath);
   return transformMap[fileExt] || transformOther;
 };
 

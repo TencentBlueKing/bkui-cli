@@ -23,10 +23,21 @@
 * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
-
-import path from 'path';
-import type { IOptions } from '../types/type';
 import semver from 'semver';
+import {
+  relative,
+  resolve,
+  isAbsolute,
+  join,
+  basename,
+  extname,
+  dirname,
+  posix,
+} from './path';
+
+import type {
+  IOptions,
+} from '../types/type';
 
 /**
  * 获取资源路径
@@ -36,7 +47,7 @@ import semver from 'semver';
  */
 export const getAssetPath = (options: IOptions, filePath: string) => (
   options.outputAssetsDirName
-    ? path.posix.join(options.outputAssetsDirName, filePath)
+    ? posix.join(options.outputAssetsDirName, filePath)
     : filePath
 );
 
@@ -48,7 +59,7 @@ export const getAssetPath = (options: IOptions, filePath: string) => (
  */
 export const getRelativePath = (from: string, to: string) => {
   // 获取相对路径
-  let relativePath = path.relative(from, to);
+  let relativePath = relative(from, to);
 
   // 处理空路径的情况
   if (!relativePath) {
@@ -62,7 +73,7 @@ export const getRelativePath = (from: string, to: string) => {
 
   // 如果不是以 . 或 .. 开头，添加 ./
   if (!relativePath.startsWith('.')) {
-    relativePath = `.${path.sep}${relativePath}`;
+    relativePath = `./${relativePath}`;
   }
 
   return relativePath;
@@ -74,14 +85,14 @@ export const getRelativePath = (from: string, to: string) => {
  * @param paths 资源相对路径
  * @returns 绝对路径
  */
-export const getAbsolutePath = (workDir: string, ...paths: string[]) => path.resolve(workDir, ...paths.filter(v => v));
+export const getAbsolutePath = (workDir: string, ...paths: string[]) => resolve(workDir, ...paths.filter(v => v));
 
 /**
  * 判断是否是绝对路径
  * @param userPath 路径
  * @returns 是否是绝对路径
  */
-export const isAbsolutePath = (userPath: string) => path.isAbsolute(userPath);
+export const isAbsolutePath = (userPath: string) => isAbsolute(userPath);
 
 /**
  * 处理用户输入的路径，如果是绝对路径直接返回，如果是相对路径，返回绝对路径
@@ -102,7 +113,7 @@ export const resolveUserPath = (workDir: string, userPath: string) => {
  * @param _path 文件路径
  * @returns 文件绝对路径
  */
-export const resolveLocal = (...dirs) => path.join(__dirname, '../../', ...dirs);
+export const resolveLocal = (...dirs) => join(__dirname, '../../', ...dirs);
 
 /**
  * 判断值是否为对象
@@ -223,7 +234,7 @@ export const isNodeBuiltInModule = (moduleName: string) => {
  * @returns 文件名
  */
 export const getFileName = (filePath: string) => {
-  return path.basename(filePath, path.extname(filePath));
+  return basename(filePath, extname(filePath));
 };
 
 /**
@@ -232,5 +243,5 @@ export const getFileName = (filePath: string) => {
  * @returns 文件夹名称
  */
 export const getDirName = (filePath: string) => {
-  return path.dirname(filePath);
+  return dirname(filePath);
 };
