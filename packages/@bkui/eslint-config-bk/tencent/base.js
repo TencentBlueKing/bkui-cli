@@ -23,8 +23,8 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript';
 import importPlugin from 'eslint-plugin-import';
-import oxlint from 'eslint-plugin-oxlint';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import globals from 'globals';
 
@@ -303,14 +303,11 @@ export default [
         node: {
           extensions: ['.js', '.jsx', '.ts', '.tsx', '.vue', '.json'],
         },
-        alias: {
-          map: [
-            ['@', './src'],
-          ],
-          extensions: ['.js', '.jsx', '.ts', '.tsx', '.vue', '.json'],
-        },
+        typescript: createTypeScriptImportResolver({
+          alwaysTryTypes: true,
+          project: './tsconfig.json', // 指定 tsconfig 路径
+        }),
       },
     },
   },
-  ...oxlint.buildFromOxlintConfigFile('./.oxlint.json'),
 ];
