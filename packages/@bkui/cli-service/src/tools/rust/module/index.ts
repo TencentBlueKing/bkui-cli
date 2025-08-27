@@ -1,9 +1,11 @@
-import path from 'node:path';
 import fs from 'node:fs';
 
 import {
   getAbsolutePath,
 } from '../../../lib/util';
+import {
+  extname,
+} from '../../../lib/path';
 
 import {
   processJs,
@@ -69,7 +71,7 @@ const getFileProcess = (relativeFilePath: string): typeof processJs => {
     '.stylus': processStylus,
     '.postcss': processPostcss,
   };
-  const fileExt = path.extname(relativeFilePath);
+  const fileExt = extname(relativeFilePath);
   return processMap[fileExt] || processOther;
 };
 
@@ -81,7 +83,7 @@ const getFileParse = (relativeFilePath: string): typeof parseJs => {
     '.mjs': parseJs,
     '.css': parseCss,
   };
-  const fileExt = path.extname(relativeFilePath);
+  const fileExt = extname(relativeFilePath);
   return parseMap[fileExt] || parseOther;
 };
 
