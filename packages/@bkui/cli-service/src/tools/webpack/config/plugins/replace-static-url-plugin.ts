@@ -56,14 +56,12 @@ class ReplaceStaticUrlPlugin {
       return '../';
     };
     return ext === '.css'
-      ? content.replace(
-        new RegExp(encodeURI(this.opts.key), 'g'),
-        getFilePath(),
-      )
-      : content.replace(
-        new RegExp(`"${this.opts.key}"`, 'g'),
-        'window.BK_STATIC_URL + "/"',
-      );
+      ? content
+        .replace(new RegExp(encodeURI(this.opts.key), 'g'), getFilePath())
+        .replaceAll(this.opts.key, getFilePath())
+      : content
+        .replace(new RegExp(`"${this.opts.key}"`, 'g'), 'window.BK_STATIC_URL + "/"')
+        .replaceAll(this.opts.key, 'window.BK_STATIC_URL + "/"');
   }
 
   apply(compiler) {
