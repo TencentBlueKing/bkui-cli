@@ -40,16 +40,15 @@ export default (config: Config, context: IContext) => {
         }]);
     }
 
-    // 使用 terser-webpack-plugin 压缩 js
     const terserPlugin = require('terser-webpack-plugin');
     config.optimization
       .minimizer('js')
       .use(terserPlugin, [{
-        minify: terserPlugin.swcMinify,
         terserOptions: {
-          compress: true,
+          ecma: 2015,
           mangle: true,
         },
+        extractComments: false,
         parallel: context.options.parallel,
       }]);
   });
