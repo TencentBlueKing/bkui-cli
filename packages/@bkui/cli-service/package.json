@@ -1,6 +1,6 @@
 {
   "name": "@blueking/cli-service",
-  "version": "0.1.3",
+  "version": "0.1.4-beta.9",
   "description": "bk-cli-service",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -28,6 +28,7 @@
     "css-minimizer-webpack-plugin": "^7.0.0",
     "dotenv": "^16.3.1",
     "dotenv-expand": "^10.0.0",
+    "esbuild": "^0.27.2",
     "eslint-webpack-plugin": "^4.0.1",
     "follow-redirects": "^1.15.6",
     "fork-ts-checker-webpack-plugin": "^9.1.0",
@@ -44,7 +45,7 @@
     "semver": "^7.5.4",
     "stylus-loader": "^8.1.1",
     "swc-loader": "^0.2.6",
-    "terser-webpack-plugin": "^5.3.10",
+    "terser-webpack-plugin": "^5.3.16",
     "thread-loader": "^4.0.2",
     "ts-loader": "^9.5.2",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
@@ -53,10 +54,10 @@
     "vue-loader": "^17.4.2",
     "vue-loader-bk": "^15.10.0",
     "vue-style-loader": "^4.1.3",
-    "webpack": "^5.101.0",
-    "webpack-bundle-analyzer": "^4.10.1",
+    "webpack": "^5.104.1",
+    "webpack-bundle-analyzer": "^5.1.1",
     "webpack-chain": "^6.5.1",
-    "webpack-dev-server": "^5.2.2",
+    "webpack-dev-server": "^5.2.3",
     "webpack-merge": "^6.0.1"
   },
   "devDependencies": {
