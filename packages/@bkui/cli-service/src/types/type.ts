@@ -7,6 +7,9 @@ import type {
 import type {
   ServerConfiguration,
 } from 'webpack-dev-server';
+import type {
+  CompilerOptions,
+} from '@vue/compiler-sfc';
 
 type ValueOf<T> = T[keyof T];
 
@@ -93,7 +96,7 @@ export interface IOptions {
   customEnv: string
   replaceStatic: boolean | IReplaceStaticUrlPluginOption
   target: 'web' | 'lib'
-  whitespace: 'preserve' | 'condense'
+  vueCompilerOptions: CompilerOptions
   libraryTarget: string
   libraryName: string
   splitChunk: boolean

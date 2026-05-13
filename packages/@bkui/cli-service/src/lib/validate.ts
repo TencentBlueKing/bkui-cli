@@ -95,7 +95,7 @@ export const validate = async (options: IOptions) => {
     ),
     customEnv: Joi.string().allow(''),
     target: Joi.string().valid('web', 'lib'),
-    whitespace: Joi.string().valid('preserve', 'condense'),
+    vueCompilerOptions: Joi.object(),
     libraryTarget: Joi.string().allow(''),
     libraryName: Joi.string().allow(''),
     splitChunk: Joi.boolean().allow(''),

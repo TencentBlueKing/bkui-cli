@@ -67,7 +67,6 @@ const generateContext = (mode: Mode, options?: IOptions): IContext => {
         preserveModulesOnly: false,
         preserveModuleType: 'es6',
         customEnv: '',
-        whitespace: 'preserve',
         target: 'web',
         libraryTarget: 'umd',
         libraryName: 'MyLibrary',
@@ -77,6 +76,9 @@ const generateContext = (mode: Mode, options?: IOptions): IContext => {
         lazyCompilation: false,
         lazyCompilationHost: 'localhost',
         envPrefix: 'BK_',
+        vueCompilerOptions: {
+          whitespace: 'preserve',
+        },
         copy: [{
           from: './static',
           to: './dist/static',

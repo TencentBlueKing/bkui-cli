@@ -43,25 +43,52 @@ class ReplaceStaticUrlPlugin {
     this.target = target;
   }
 
-  replaceStatic(content, ext) {
-    const getFilePath = () => {
-      if (this.target === 'lib') {
-        // lib 的情况下是平铺
-        return './';
-      } if (this.outputAssetsDirName) {
-        // web & assetsdir 的情况下，需要往上找两级
-        return '../../';
+  getCssPath() {
+    if (this.target === 'lib') {
+      // lib 的情况下是平铺
+      return './';
+    } if (this.outputAssetsDirName) {
+      // web & assetsdir 的情况下，需要往上找两级
+      return '../../';
+    }
+    // web & no assetsdir 的情况下，往上找一层即可
+    return '../';
+  }
+
+  getJsReplacement(isWorker) {
+    if (!isWorker) {
+      return 'window.BK_STATIC_URL + "/"';
+    }
+    return (
+      '(typeof self!=="undefined"&&self.BK_STATIC_URL'
+      + '?self.BK_STATIC_URL+"/"'
+      + ':(typeof self!=="undefined"&&self.location'
+      + '?self.location.href.replace(/\\/static\\/js\\/[^\\/]+$/,"/")'
+      + ':"/"))'
+    );
+  }
+
+  isWorkerChunk(filePath, contentStr, compilation) {
+    for (const chunk of compilation.chunks) {
+      if (chunk.files.has(filePath)) {
+        if (chunk.chunkLoading === 'import-scripts') return true;
+        break;
       }
-      // web & no assetsdir 的情况下，往上找一层即可
-      return '../';
-    };
-    return ext === '.css'
-      ? content
-        .replace(new RegExp(encodeURI(this.opts.key), 'g'), getFilePath())
-        .replaceAll(this.opts.key, getFilePath())
-      : content
-        .replace(new RegExp(`"${this.opts.key}"`, 'g'), 'window.BK_STATIC_URL + "/"')
-        .replaceAll(this.opts.key, 'window.BK_STATIC_URL + "/"');
+    }
+    return /\bimportScripts\s*\(/.test(contentStr);
+  }
+
+  replaceStatic(content, ext, filePath, compilation) {
+    if (ext === '.css') {
+      return content
+        .replace(new RegExp(encodeURI(this.opts.key), 'g'), this.getCssPath())
+        .replaceAll(this.opts.key, this.getCssPath());
+    }
+    const isWorker = this.isWorkerChunk(filePath, content, compilation);
+    const replacement = this.getJsReplacement(isWorker);
+    return content
+      .replace(new RegExp(`"${this.opts.key}"`, 'g'), replacement)
+      .replaceAll(this.opts.key, replacement);
   }
 
   apply(compiler) {
@@ -87,7 +114,7 @@ class ReplaceStaticUrlPlugin {
             }
             compilation.updateAsset(
               filePath,
-              new sources.RawSource(this.replaceStatic(contents.toString(), ext)),
+              new sources.RawSource(this.replaceStatic(contents.toString(), ext, filePath, compilation)),
             );
           });
         },

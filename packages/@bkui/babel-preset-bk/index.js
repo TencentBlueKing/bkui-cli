@@ -30,7 +30,12 @@ module.exports = function (__, options) {
   try {
     var Vue = require('vue')
     vueVersion = semver.major(Vue.version)
-  } catch (e) {}
+  } catch (e) { }
+
+  const {
+    vue3Options,
+    ...restOptions
+  } = options || {}
 
   var envOptions = {
     loose: false,
@@ -46,7 +51,7 @@ module.exports = function (__, options) {
         '> 0.2%'
       ],
     },
-    ...options
+    ...restOptions
   }
 
   var presets = [
@@ -72,10 +77,10 @@ module.exports = function (__, options) {
   if (vueVersion === 2) {
     presets.push([require('@vue/babel-preset-jsx'), { compositionAPI: 'auto' }]);
   } else if (vueVersion === 3) {
-    plugins.push([require('@vue/babel-plugin-jsx')]);
+    plugins.push([require('@vue/babel-plugin-jsx'), vue3Options]);
   }
 
-  return  {
+  return {
     sourceType: 'unambiguous',
     overrides: [{
       exclude: [/@babel[/|\\\\]runtime/, /core-js/],

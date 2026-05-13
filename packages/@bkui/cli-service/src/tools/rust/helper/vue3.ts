@@ -73,10 +73,10 @@ const getTemplateOptions = (
     ssrCssVars: descriptor.cssVars,
     compilerOptions: {
       isTS,
-      whitespace: context.options.whitespace,
       scopeId: `data-v-${scopeId}`,
       prefixIdentifiers: true,
       bindingMetadata: descriptor.script?.bindings,
+      ...context.options.vueCompilerOptions,
     },
   };
 };

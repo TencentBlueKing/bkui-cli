@@ -48,9 +48,7 @@ export default (config: Config, context: IContext) => {
       .use('vue-loader')
       .loader(require.resolve('vue-loader-bk'))
       .options({
-        compilerOptions: {
-          whitespace: context.options.whitespace,
-        },
+        compilerOptions: context.options.vueCompilerOptions,
       });
   } else if (vueVersion === 3) {
     // vue-loader v15+
@@ -59,9 +57,7 @@ export default (config: Config, context: IContext) => {
       .loader(require.resolve('vue-loader'))
       .options({
         babelParserPlugins: ['jsx', 'classProperties', 'decorators-legacy'],
-        compilerOptions: {
-          whitespace: context.options.whitespace,
-        },
+        compilerOptions: context.options.vueCompilerOptions,
       });
   }
 
