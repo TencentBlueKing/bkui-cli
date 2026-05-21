@@ -93,6 +93,10 @@ export const validate = async (options: IOptions) => {
       Joi.boolean(),
       Joi.number(),
     ),
+    minimizerParallel: Joi.alternatives().try(
+      Joi.boolean(),
+      Joi.number(),
+    ),
     customEnv: Joi.string().allow(''),
     target: Joi.string().valid('web', 'lib'),
     vueCompilerOptions: Joi.object(),

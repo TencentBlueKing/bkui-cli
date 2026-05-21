@@ -62,6 +62,7 @@ const generateContext = (mode: Mode, options?: IOptions): IContext => {
         parseNodeModules: false,
         replaceStatic: false,
         parallel: true,
+        minimizerParallel: true,
         preserveModules: false,
         preserveModulesRoot: 'src',
         preserveModulesOnly: false,

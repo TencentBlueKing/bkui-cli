@@ -93,6 +93,7 @@ export interface IOptions {
   bundleAnalysis: boolean | any
   parseNodeModules: boolean
   parallel: boolean | number
+  minimizerParallel: boolean | number
   customEnv: string
   replaceStatic: boolean | IReplaceStaticUrlPluginOption
   target: 'web' | 'lib'
