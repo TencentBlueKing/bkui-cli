@@ -36,7 +36,7 @@ export default (config: Config, context: IContext) => {
       config.optimization
         .minimizer('css')
         .use(require('css-minimizer-webpack-plugin'), [{
-          parallel: context.options.parallel,
+          parallel: context.options.minimizerParallel,
         }]);
     }
 
@@ -49,7 +49,7 @@ export default (config: Config, context: IContext) => {
           mangle: true,
         },
         extractComments: false,
-        parallel: context.options.parallel,
+        parallel: context.options.minimizerParallel,
       }]);
   });
 };

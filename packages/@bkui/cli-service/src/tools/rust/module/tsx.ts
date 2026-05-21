@@ -21,7 +21,7 @@ export const processTsx = async (
     },
   });
   // 再转义 jsx
-  const result = await transformJsx(tsTranspileResult.outputText);
+  const result = await transformJsx(tsTranspileResult.outputText, originAbsoluteFilePath);
   const outputAbsoluteFilePath = `${originAbsoluteFilePath}.js`;
   return [
     {

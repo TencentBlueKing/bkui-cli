@@ -3,7 +3,7 @@ import {
 } from '../../../lib/util';
 
 // 使用 babel transform jsx
-export const transformJsx = (content: string) => {
+export const transformJsx = (content: string, filename: string) => {
   const babel = require('@babel/core');
 
   const vueVersion = getVueVersion();
@@ -17,6 +17,7 @@ export const transformJsx = (content: string) => {
   }
 
   return babel.transform(content, {
+    filename,
     plugins,
     presets,
   });
