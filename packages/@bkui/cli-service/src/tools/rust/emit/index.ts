@@ -9,6 +9,7 @@ import {
 } from '../../../lib/util';
 import {
   dirname,
+  normalize,
 } from '../../../lib/path';
 
 // 输出文件
@@ -18,7 +19,7 @@ export const emit = (fileMap: IFileMap, context: IContext) => {
   const absoluteOutputPreserveModuleDir = getAbsolutePath(context.workDir, context.options.outputPreserveModuleDir);
   const tasks: Array<Promise<void>> = files.map(async (file) => {
     // 替换 outputRelativeFilePath 中的 context.options.preserveModulesRoot 为 context.options.outputPreserveModuleDir
-    const outputFilePath = file.outputAbsoluteFilePath.replace(
+    const outputFilePath = normalize(file.outputAbsoluteFilePath).replace(
       absolutePreserveModuleRoot,
       absoluteOutputPreserveModuleDir,
     );

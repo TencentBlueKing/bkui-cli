@@ -7,7 +7,11 @@ import {
 } from '../../../lib/util';
 import {
   resolve,
+  normalize,
 } from '../../../lib/path';
+import {
+  createRequire,
+} from 'node:module';
 
 import type {
   IContext,
@@ -79,13 +83,14 @@ export const resolveFilePath = (filePath: string) => {
  * @returns 解析后的路径
  */
 export const resolveOutputAbsoluteFilePath = (outputAbsoluteFilePath: string, context: IContext) => {
-  if (outputAbsoluteFilePath.includes('node_modules')) {
-    return outputAbsoluteFilePath.replace(
+  const normalizedOutputAbsoluteFilePath = normalize(outputAbsoluteFilePath);
+  if (normalizedOutputAbsoluteFilePath.includes('node_modules')) {
+    return normalizedOutputAbsoluteFilePath.replace(
       /.+node_modules\/(.+)/,
       `${context.workDir}/${context.options.preserveModulesRoot ? `${context.options.preserveModulesRoot}/` : ''}node_modules/$1`,
     );
   }
-  return outputAbsoluteFilePath;
+  return normalizedOutputAbsoluteFilePath;
 };
 
 /**
@@ -189,4 +194,14 @@ export const parseDependencyQueryAndHash = (originDependencyPath: string) => {
     hash,
     query,
   };
+};
+
+/**
+ * 获取依赖的原始绝对路径
+ * @param dependencyPath 依赖路径
+ * @param originAbsoluteFilePath 引入方的绝对路径
+ * @returns 依赖的原始绝对路径
+ */
+export const getOriginAbsoluteDependencyPath = (dependencyPath: string, originAbsoluteFilePath: string) => {
+  return normalize(createRequire(originAbsoluteFilePath).resolve(dependencyPath));
 };
