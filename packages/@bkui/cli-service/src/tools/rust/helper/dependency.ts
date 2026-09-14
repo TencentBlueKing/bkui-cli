@@ -9,6 +9,7 @@ import {
   parseDependencyQueryAndHash,
   resolveFilePath,
   isPathMatchExternal,
+  getOriginAbsoluteDependencyPath,
 } from './path';
 
 import type {
@@ -125,7 +126,7 @@ const getDependency = (
   // 3. 生成 originAbsoluteDependencyPath
   // 处理 node_modules 的依赖
   try {
-    const originAbsoluteDependencyPath = require.resolve(dependencyPath);
+    const originAbsoluteDependencyPath = getOriginAbsoluteDependencyPath(dependencyPath, originAbsoluteFilePath);
     if (originAbsoluteDependencyPath.includes('node_modules')) {
       dependency.originAbsoluteDependencyPath = resolveFilePath(originAbsoluteDependencyPath);
       return dependency;
