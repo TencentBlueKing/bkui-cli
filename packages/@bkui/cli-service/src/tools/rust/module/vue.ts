@@ -32,7 +32,7 @@ const processVue3 = (content: string, originAbsoluteFilePath: string, context: I
   const scopeId = getUniqueId();
   const processResults: IFile[] = [];
   // 解析
-  const descriptor = parse(content);
+  const descriptor = parse(content, context);
   // 编译脚本
   processResults.push(compileScript(descriptor, scopeId, originAbsoluteFilePath, context));
   // 编译样式
