@@ -10,7 +10,7 @@ import {
 export const processTsx = async (
   content: string,
   originAbsoluteFilePath: string,
-  __: IContext,
+  context: IContext,
 ): Promise<IFile[]> => {
   // 先转义 ts
   const ts = require('typescript');
@@ -21,7 +21,7 @@ export const processTsx = async (
     },
   });
   // 再转义 jsx
-  const result = await transformJsx(tsTranspileResult.outputText, originAbsoluteFilePath);
+  const result = await transformJsx(tsTranspileResult.outputText, originAbsoluteFilePath, context);
   const outputAbsoluteFilePath = `${originAbsoluteFilePath}.js`;
   return [
     {

@@ -81,10 +81,15 @@ const getTemplateOptions = (
   };
 };
 
-export const parse = (content: string): SFCDescriptor => {
+export const parse = (content: string, context: IContext): SFCDescriptor => {
   const {
     descriptor,
-  } = compileSFCParse(content);
+  } = compileSFCParse(
+    content,
+    {
+      templateParseOptions: context.options.vueCompilerOptions,
+    },
+  );
   return descriptor;
 };
 
