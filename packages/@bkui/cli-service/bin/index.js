@@ -25,7 +25,7 @@
 * IN THE SOFTWARE.
 */
 
-const program = require('commander');
+const { program } = require('commander');
 const path = require('path');
 const packageConfig = require('../package.json');
 

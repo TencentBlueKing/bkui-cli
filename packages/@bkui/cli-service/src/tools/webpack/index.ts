@@ -33,7 +33,7 @@ const build = (context: IContext) => new Promise((resolve, reject) => {
   const webpack = require('webpack');
   const { log } = require('@blueking/cli-utils');
   // start webpack build
-  const ora = require('ora');
+  const ora = require('ora').default;
   const spinner = ora('Building...');
   // 构造配置
   const webpackConfig = loadConfig(context);

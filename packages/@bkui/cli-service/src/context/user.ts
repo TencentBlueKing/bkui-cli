@@ -105,6 +105,7 @@ const loadEnv = (workDir: string, fileName: string, config = {}) => {
   if (fileName && fs.existsSync(filePath)) {
     const env = dotenv.config({
       path: filePath,
+      quiet: true,
     });
     return dotenvExpand.expand({
       ...config,
@@ -144,7 +145,8 @@ export const loadUserConfig = (context: IContext, options?: IOptions) => {
     // 校验用户配置
     validate(localConfig);
     // 加载项目自定义 env 文件，因为用户可能会在配置中使用变量，所以需要最后读取这个文件，手动塞到 process.env，让优先级最高
-    const env = loadEnv(context.workDir, localConfig.customEnv || '', { ignoreProcessEnv: true });
+    // 展开结果写入独立对象，不写入 process.env（替代 dotenv-expand 12 移除的 ignoreProcessEnv）
+    const env = loadEnv(context.workDir, localConfig.customEnv || '', { processEnv: {} });
     Object.keys(env.parsed || {}).forEach((key) => {
       process.env[key] = env.parsed?.[key];
     });

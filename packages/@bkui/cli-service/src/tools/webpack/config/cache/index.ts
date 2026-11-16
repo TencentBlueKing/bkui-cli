@@ -24,26 +24,34 @@
 * IN THE SOFTWARE.
 */
 
-module.exports = {
-  parserOptions: {
-    tsconfigRootDir: __dirname,
-    project: [
-      'tsconfig.json',
-    ],
-  },
-  extends: ['@blueking/eslint-config-bk/ts'],
-  ignorePatterns: ['.eslintrc.js', 'bin/index.js', './index.d.ts'],
-  overrides: [
-    {
-      files: ['*.js', '*.ts'],
-      rules: {
-        'no-param-reassign': 'off',
-        'arrow-body-style': 'off',
-        'function-paren-newline': 'off',
-        '@typescript-eslint/no-require-imports': 'off',
-        '@typescript-eslint/explicit-member-accessibility': 'off',
-        '@typescript-eslint/naming-convention': 'off'
+import fs from 'fs';
+import type {
+  IContext,
+} from '../../../../types/type';
+import Config from 'webpack-chain';
+import { getAbsolutePath } from '../../../../lib/util';
+
+// 影响构建结果的项目配置文件，变更后需要让持久化缓存失效
+const BUILD_DEPENDENCY_FILES = [
+  'bk.config.js',
+  'postcss.config.js',
+  'babel.config.js',
+  '.browserslistrc',
+  'tsconfig.json',
+  'package.json',
+];
+
+// cache
+export default (config: Config, { options, workDir }: IContext) => {
+  config.when(options.cache, () => {
+    config.cache({
+      type: 'filesystem',
+      allowCollectingMemory: true,
+      buildDependencies: {
+        config: BUILD_DEPENDENCY_FILES
+          .map(file => getAbsolutePath(workDir, file))
+          .filter(file => fs.existsSync(file)),
       },
-    },
-  ],
+    });
+  });
 };

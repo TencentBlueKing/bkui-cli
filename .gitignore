@@ -9,7 +9,6 @@ webpack_cache
 .idea
 build.yml
 dist/
-cache
 v3logs
 
 pre-*-bkcodeai

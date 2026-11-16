@@ -24,7 +24,7 @@
  * IN THE SOFTWARE.
  */
 import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript';
-import importPlugin from 'eslint-plugin-import';
+import importPlugin, { createNodeResolver } from 'eslint-plugin-import-x';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import globals from 'globals';
 
@@ -32,7 +32,6 @@ import js from '@eslint/js';
 import stylistic from '@stylistic/eslint-plugin';
 
 const stylisticRules = {
-  '@stylistic/array-bracket-spacing': ['error', 'never'], // 数组括号内是否有空格
   '@stylistic/function-call-spacing': ['error', 'never'], // 函数调用括号前空格
   '@stylistic/arrow-parens': [
     'warn',
@@ -47,7 +46,6 @@ const stylisticRules = {
   '@stylistic/comma-style': ['error', 'last'], // 逗号位置
   '@stylistic/computed-property-spacing': ['warn', 'never'], // 计算属性括号内空格
   '@stylistic/eol-last': ['error', 'always'], // 文件末尾换行
-  '@stylistic/function-paren-newline': ['warn', 'multiline'], // 函数参数括号换行
   '@stylistic/generator-star-spacing': ['warn', { before: false, after: true }], // generator 星号空格
   '@stylistic/implicit-arrow-linebreak': ['warn', 'beside'], // 箭头函数箭头换行
   '@stylistic/indent': [
@@ -98,6 +96,13 @@ const stylisticRules = {
     },
   ], // 关键字前后空格
   '@stylistic/linebreak-style': ['warn', 'unix'], // 换行符风格
+  '@stylistic/list-style': [
+    'warn',
+    {
+      singleLine: { spacing: 'never' },
+      overrides: { '{}': { singleLine: { spacing: 'always' } } },
+    },
+  ], // 列表括号内空格与换行（替代 array-bracket-spacing / object-curly-spacing / function-paren-newline）
   '@stylistic/max-len': [
     'error',
     {
@@ -127,7 +132,6 @@ const stylisticRules = {
   ], // 禁止混用不同优先级操作符
   '@stylistic/no-multiple-empty-lines': 'error', // 禁止多行空行
   '@stylistic/no-trailing-spaces': 'error', // 禁止行尾空格
-  '@stylistic/object-curly-spacing': ['warn', 'always'], // 对象大括号内空格
   '@stylistic/operator-linebreak': [
     'error',
     'before',
@@ -135,7 +139,7 @@ const stylisticRules = {
   ], // 操作符换行
   '@stylistic/padded-blocks': ['error', 'never'], // 代码块内空行
   '@stylistic/quote-props': ['error', 'as-needed', { keywords: false }], // 属性名加引号
-  '@stylistic/quotes': ['warn', 'single', { allowTemplateLiterals: false }], // 字符串引号
+  '@stylistic/quotes': ['warn', 'single', { allowTemplateLiterals: 'never' }], // 字符串引号
   '@stylistic/semi': ['error', 'always'], // 语句分号
   '@stylistic/space-before-blocks': 'error', // 代码块前空格
   '@stylistic/space-before-function-paren': [
@@ -174,7 +178,7 @@ const baseRules = {
   'no-multi-assign': 'error', // 禁止链式赋值
   'no-nested-ternary': 'warn', // 禁止嵌套三元
   'no-new-func': 'error', // 禁止 Function 构造函数
-  'no-new-object': 'error', // 禁止 Object 构造函数
+  'no-object-constructor': 'error', // 禁止 Object 构造函数
   'no-new-wrappers': 'warn', // 禁止包装类
   'no-param-reassign': [
     'warn',
@@ -267,13 +271,15 @@ export default [
     },
     plugins: {
       '@stylistic': stylistic,
+      // eslint-plugin-import 不支持 eslint 10，换成 import-x；插件名仍用 import，保持 import/* 规则名不变
       import: importPlugin,
       'simple-import-sort': simpleImportSort,
     },
     rules: {
       ...baseRules,
       ...stylisticRules,
-      ...importPlugin.configs.recommended.rules,
+      ...Object.fromEntries(Object.entries(importPlugin.flatConfigs.recommended.rules)
+        .map(([name, level]) => [name.replace(/^import-x\//, 'import/'), level])),
       'simple-import-sort/exports': 'error',
       'import/first': 'error',
       'import/newline-after-import': 'error',
@@ -299,15 +305,15 @@ export default [
       }],
     },
     settings: {
-      'import/resolver': {
-        node: {
+      'import-x/resolver-next': [
+        createNodeResolver({
           extensions: ['.js', '.jsx', '.ts', '.tsx', '.vue', '.json'],
-        },
-        typescript: createTypeScriptImportResolver({
+        }),
+        createTypeScriptImportResolver({
           alwaysTryTypes: true,
           project: './tsconfig.json', // 指定 tsconfig 路径
         }),
-      },
+      ],
     },
   },
 ];

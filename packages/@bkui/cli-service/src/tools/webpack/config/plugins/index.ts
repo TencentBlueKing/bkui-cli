@@ -36,7 +36,6 @@ import loadDefine from './define';
 import loadCaseSensitivePath from './case-sensitive-path';
 import loadVue from './vue';
 import loadProgress from './progress';
-// import loadEslint from './eslint';
 import loadCopy from './copy';
 import loadBundleAnalyzer from './bundle-analyzer';
 import loadReplaceStaticUrl from './replace-static-url-plugin';
@@ -51,7 +50,6 @@ export default (config: Config, context: IContext) => {
   loadCaseSensitivePath(config, context);
   loadVue(config, context);
   loadProgress(config, context);
-  // loadEslint(config, context);
   loadCopy(config, context);
   loadBundleAnalyzer(config, context);
   loadReplaceStaticUrl(config, context);

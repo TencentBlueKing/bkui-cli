@@ -79,7 +79,7 @@ const stylisticRules = {
       after: true,
     },
   ], // 关键字空格
-  '@stylistic/quotes': ['warn', 'single', { allowTemplateLiterals: false }], // 字符串引号
+  '@stylistic/quotes': ['warn', 'single', { allowTemplateLiterals: 'never' }], // 字符串引号
   '@stylistic/semi': ['error', 'always'], // 分号
   '@stylistic/space-before-function-paren': [
     'error',
@@ -148,10 +148,6 @@ const tsRules = {
   // 禁止类成员重复
   '@typescript-eslint/no-dupe-class-members': 'error',
 
-  // https://typescript-eslint.io/rules/no-empty-interface/
-  // 禁止空接口
-  '@typescript-eslint/no-empty-interface': 'error',
-
   // https://typescript-eslint.io/rules/no-inferrable-types/
   // 禁止多余的类型推断
   '@typescript-eslint/no-inferrable-types': 'warn',
@@ -166,10 +162,6 @@ const tsRules = {
   // https://typescript-eslint.io/rules/no-non-null-asserted-optional-chain/
   // 禁止在可选链后使用非空断言
   '@typescript-eslint/no-non-null-asserted-optional-chain': 'error',
-
-  // https://typescript-eslint.io/rules/no-parameter-properties/
-  // 禁止构造函数参数属性，不强制
-  '@typescript-eslint/no-parameter-properties': 'off',
 
   // https://typescript-eslint.io/rules/no-require-imports/
   // 禁止 require 导入
@@ -225,21 +217,6 @@ const tsRules = {
     { path: 'never', types: 'always', lib: 'always' },
   ],
 
-  // https://typescript-eslint.io/rules/typedef/
-  // 类型定义要求
-  '@typescript-eslint/typedef': [
-    'error',
-    {
-      arrayDestructuring: false,
-      arrowParameter: false,
-      memberVariableDeclaration: false,
-      objectDestructuring: false,
-      parameter: false,
-      propertyDeclaration: true,
-      variableDeclaration: false,
-    },
-  ],
-
   // https://typescript-eslint.io/rules/unified-signatures/
   // 合并可统一的函数重载签名
   '@typescript-eslint/unified-signatures': 'error',
@@ -276,9 +253,7 @@ export default [
   {
     files: ['*.d.ts'],
     rules: {
-      'eslint-comments/no-unlimited-disable': 'off',
       'import/no-duplicates': 'off',
-      'unused-imports/no-unused-vars': 'off',
     },
   },
 ];

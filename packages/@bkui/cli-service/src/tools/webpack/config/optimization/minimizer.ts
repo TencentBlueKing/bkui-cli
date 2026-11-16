@@ -40,10 +40,12 @@ export default (config: Config, context: IContext) => {
         }]);
     }
 
-    const terserPlugin = require('terser-webpack-plugin');
+    // 压缩 JS，使用 swc 替代默认的 terser
+    const TerserPlugin = require('terser-webpack-plugin');
     config.optimization
       .minimizer('js')
-      .use(terserPlugin, [{
+      .use(TerserPlugin, [{
+        minify: TerserPlugin.swcMinify,
         terserOptions: {
           ecma: 2015,
           mangle: true,
