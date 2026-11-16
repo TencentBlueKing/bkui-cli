@@ -31,8 +31,10 @@ import Config from 'webpack-chain';
 
 // progress-plugin 配置
 export default (config: Config, __: IContext) => {
-  const webpack = require('webpack');
-  config
-    .plugin('progress-plugin')
-    .use(webpack.ProgressPlugin);
+  config.when(!!process.stdout.isTTY, () => {
+    const webpack = require('webpack');
+    config
+      .plugin('progress-plugin')
+      .use(webpack.ProgressPlugin);
+  });
 };

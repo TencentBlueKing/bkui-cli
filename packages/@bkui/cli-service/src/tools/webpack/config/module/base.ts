@@ -35,7 +35,4 @@ export default (config: Config, __: IContext) => {
     .test(/\.m?jsx?$/)
     .resolve
     .set('fullySpecified', false);
-
-  config.module
-    .noParse(/^(vue|vue-router|vuex|vuex-router-sync)$/);
 };

@@ -72,6 +72,9 @@ export default (config: Config, context: IContext) => {
       ...commonLoaders,
       {
         loaderFn: genSwcLoader,
+        options: {
+          workDir: context.workDir,
+        },
       },
     ],
   );
@@ -93,8 +96,11 @@ export default (config: Config, context: IContext) => {
       {
         loaderFn: genSwcLoader,
         options: {
-          parser: {
-            syntax: 'typescript',
+          workDir: context.workDir,
+          jsc: {
+            parser: {
+              syntax: 'typescript',
+            },
           },
         },
       },

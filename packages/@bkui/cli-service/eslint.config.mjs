@@ -24,21 +24,21 @@
 * IN THE SOFTWARE.
 */
 
-import type {
-  IContext,
-} from '../../../../types/type';
-import Config from 'webpack-chain';
+import { defineConfig } from 'eslint/config';
+import bkTsConfig from '@blueking/eslint-config-bk/ts';
 
-// eslint-webpack-plugin 配置
-export default (config: Config, context: IContext) => {
-  config.when((context.mode === 'development'), () => {
-    const ESLintPlugin = require('eslint-webpack-plugin');
-
-    config
-      .plugin('eslint-webpack-plugin')
-      .use(ESLintPlugin, [{
-        lintDirtyModulesOnly: true,
-        threads: true,
-      }]);
-  });
-};
+export default defineConfig([
+  {
+    ignores: ['dist/**', 'node_modules/**', 'bin/index.js', 'eslint.config.mjs'],
+  },
+  bkTsConfig,
+  {
+    files: ['**/*.js', '**/*.ts'],
+    rules: {
+      'no-param-reassign': 'off',
+      'arrow-body-style': 'off',
+      '@typescript-eslint/no-require-imports': 'off',
+      '@typescript-eslint/explicit-member-accessibility': 'off',
+    },
+  },
+]);

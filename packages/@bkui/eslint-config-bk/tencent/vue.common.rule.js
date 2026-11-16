@@ -29,10 +29,6 @@
  * 这个文件包含Vue2和Vue3共用的ESLint规则
  */
 const stylisticRules = {
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/array-bracket-spacing.md
-  // 数组括号内是否有空格
-  'vue/array-bracket-spacing': ['error', 'never'],
-
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/arrow-spacing.md
   // 箭头函数箭头前后空格
   'vue/arrow-spacing': ['error', { before: true, after: true }],
@@ -93,10 +89,6 @@ const stylisticRules = {
   // 属性等号两边不能有空格
   'vue/no-spaces-around-equal-signs-in-attribute': 'error',
 
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/object-curly-spacing.md
-  // 对象写在一行时，大括号里需要空格
-  'vue/object-curly-spacing': ['error', 'always'],
-
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/space-infix-ops.md
   // 操作符两边空格
   'vue/space-infix-ops': 'error',
@@ -109,9 +101,6 @@ const stylisticRules = {
 export default {
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/multi-word-component-names.md
   'vue/multi-word-component-names': 'off',
-
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/array-bracket-spacing.md
-  'vue/array-bracket-spacing': ['error', 'never'],
 
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/arrow-spacing.md
   'vue/arrow-spacing': ['error', { before: true, after: true }],
@@ -215,9 +204,6 @@ export default {
   // template 中 {{var}}，不限制
   'vue/mustache-interpolation-spacing': 'off',
 
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/name-property-casing.md
-  'vue/name-property-casing': 'off',
-
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/no-boolean-default.md
   'vue/no-boolean-default': 'off',
 
@@ -251,10 +237,6 @@ export default {
   // 禁止使用 v-html，防止 xss
   'vue/no-v-html': 'error',
 
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/object-curly-spacing.md
-  // 对象写在一行时，大括号里需要空格
-  'vue/object-curly-spacing': ['error', 'always'],
-
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/prop-name-casing.md
   // 组件 props 属性名驼峰命名
   'vue/prop-name-casing': ['error', 'camelCase'],
@@ -282,10 +264,6 @@ export default {
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/v-bind-style.md
   // v-bind 指令的写法。不限制
   'vue/v-bind-style': 'off',
-
-  // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/v-on-function-call.md
-  // 强制或禁止在 v-on 指令中不带参数的方法调用后使用括号。不限制
-  'vue/v-on-function-call': 'off',
 
   // https://github.com/vuejs/eslint-plugin-vue/blob/master/docs/rules/v-on-style.md
   // v-on 指令的写法。限制简写

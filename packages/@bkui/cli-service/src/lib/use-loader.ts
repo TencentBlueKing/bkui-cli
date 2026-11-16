@@ -24,6 +24,7 @@
 * IN THE SOFTWARE.
 */
 import type { IContext } from '../types/type';
+import os from 'os';
 import Config from 'webpack-chain';
 import { warmup } from 'thread-loader';
 import { isFunction, getVueVersion } from './util';
@@ -60,9 +61,11 @@ const tsLoaderOptions = {
   happyPackMode: true,
 };
 
-const swcLoaderJscOptions = {
-  target: 'es2015',
-};
+// 项目未配置 browserslist 时 swc 使用的编译目标
+const defaultSwcTarget = 'es2015';
+
+// cpu - 1，与 thread-loader 内置的计算方式一致
+const defaultWorkers = Math.max(1, (os.cpus() || []).length - 1);
 
 // 生成 thread-loader 的 options
 const genThreadLoaderOptions = (parallel: boolean | number) => {
@@ -71,8 +74,8 @@ const genThreadLoaderOptions = (parallel: boolean | number) => {
     poolRespawn: false,
     poolTimeout: 2000,
     poolParallelJobs: 50,
+    workers: defaultWorkers,
   };
-  // 等于 true 的情况下，使用内置 cpu -1 的配置
   if (parallel !== true) {
     threadLoaderOptions.workers = parallel === false ? 1 : parallel;
   }
@@ -136,20 +139,26 @@ export const genTsLoader = (rule: Config.Rule, options: any) => rule
 
 /**
  * 生成 swc-loader 配置
+ * 项目配置了 browserslist 时按其作为编译目标，否则编译到 es2015
  * @param rule 配置
- * @param options 配置
+ * @param options.workDir 项目目录
+ * @param options.jsc swc 的 jsc 配置
  * @returns 配置
  */
-export const genSwcLoader = (rule: Config.Rule, options: any) => rule
-  .use('swc-loader')
-  .loader(swcLoaderPath)
-  .options({
-    jsc: {
-      ...swcLoaderJscOptions,
-      ...options,
-    },
-  })
-  .end();
+export const genSwcLoader = (rule: Config.Rule, options: { workDir: string, jsc?: any }) => {
+  const browserslist = require('browserslist');
+  // 与 webpack 一致：读取 .browserslistrc / package.json#browserslist / BROWSERSLIST 环境变量
+  const targets = browserslist.loadConfig({ path: options.workDir });
+  // swc 不允许同时设置 env 和 jsc.target
+  const swcOptions = targets
+    ? { env: { targets }, jsc: { ...options.jsc } }
+    : { jsc: { target: defaultSwcTarget, ...options.jsc } };
+  return rule
+    .use('swc-loader')
+    .loader(swcLoaderPath)
+    .options(swcOptions)
+    .end();
+};
 
 /**
  * 排除 node_modules
